@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
 
         $Factory  = new Factory();
         $Shipping = $Factory->createChild([
-            'shipping_type' => \get_class($Type)
+            'shipping_type' => $Type->getType()
         ]);
 
         return $Shipping->getId();

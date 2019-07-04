@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_getShippingTypes',
     function () {
         return \array_map(function ($Shipping) {
-            /* @var $Shipping \QUI\ERP\Shipping\Methods\Free\ShippingType */
+            /* @var $Shipping \QUI\ERP\Shipping\Api\ShippingTypeInterface */
             return $Shipping->toArray(QUI::getLocale());
         }, Shipping::getInstance()->getShippingTypes());
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace QUI\ERP\Shipping\Types;
+namespace QUI\ERP\Shipping\Api;
 
 use QUI;
 
@@ -9,14 +9,14 @@ use QUI;
  *
  * @package QUI\ERP\Accounting\Shipping\Types
  */
-interface ShippingInterface
+interface ShippingTypeInterface
 {
     //region general
 
     /**
-     * @return integer
+     * @return string
      */
-    public function getId();
+    public function getType();
 
     /**
      * @param null|QUI\Locale $Locale
@@ -39,15 +39,10 @@ interface ShippingInterface
     //endregion
 
     /**
+     * @param QUI\Locale|null $Locale
      * @return array
      */
-    public function toArray();
-
-    /**
-     * @param string $hash - order hash
-     * @return bool
-     */
-    public function isSuccessful($hash);
+    public function toArray($Locale = null);
 
     /**
      * @return \QUI\ERP\Shipping\Api\AbstractShippingEntry

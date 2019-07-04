@@ -348,7 +348,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                                 }
 
                                 new Element('option', {
-                                    value: result[i].name,
+                                    value: result[i].shippingType,
                                     html : result[i].title
                                 }).inject(Select);
                             }

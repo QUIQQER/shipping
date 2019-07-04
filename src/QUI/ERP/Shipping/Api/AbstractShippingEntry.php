@@ -90,6 +90,11 @@ abstract class AbstractShippingEntry implements ShippingInterface
     abstract public function getDescription();
 
     /**
+     * @return string
+     */
+    abstract public function getWorkingTitle();
+
+    /**
      * Return the shipping icon (the URL path)
      * Can be overwritten
      *

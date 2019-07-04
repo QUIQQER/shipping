@@ -57,30 +57,19 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Order = $this->getOrder();
         $Order->recalculate();
 
-        $Customer = $Order->getCustomer();
-        $Payment  = $Order->getPayment();
-        $Articles = $Order->getArticles();
+        $Customer     = $Order->getCustomer();
+        $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
+        $shippingList = $Shipping->getUserShipping($User);
 
-        $calculations = $Articles->getCalculations();
-        $shippingList = [];
+        $shippingList = \array_filter($shippingList, function ($Shipping) use ($Order) {
+            /* @var $Shipping QUI\ERP\Shipping\Types\ShippingEntry */
+            if ($Shipping->canUsedInOrder($Order) === false) {
+                return false;
+            }
 
-        // leave this line even if it's curios
-        // floatval sum === 0 doesn't work -> floatval => float, 0 = int
-        if ($calculations['sum'] >= 0 && $calculations['sum'] <= 0) {
-            $shippingList[] = new QUI\ERP\Accounting\Payments\Methods\Free\PaymentType();
-        } else {
-            $shippingList = QUI\ERP\Accounting\Payments\Payments::getInstance();
-            $shippingList = $Payments->getUserPayments($User);
+            return $Shipping->getShippingType()->isVisible();
+        });
 
-            $shippingList = array_filter($payments, function ($Payment) use ($Order) {
-                /* @var $Payment QUI\ERP\Accounting\Payments\Types\Payment */
-                if ($Payment->canUsedInOrder($Order) === false) {
-                    return false;
-                }
-
-                return $Payment->getPaymentType()->isVisible();
-            });
-        }
 
         $Engine->assign([
             'User'             => $User,

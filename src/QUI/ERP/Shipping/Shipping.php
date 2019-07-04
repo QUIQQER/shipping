@@ -7,9 +7,8 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
-use QUI\ERP\Shipping\Api\ShippingInterface;
+use QUI\ERP\Shipping\Types\ShippingTypeInterface;
 use QUI\ERP\Shipping\Types\Factory;
-use QUI\ERP\Shipping\Types\ShippingEntry;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 use QUI\ERP\Shipping\Api\AbstractShippingEntry;
 
@@ -92,17 +91,17 @@ class Shipping extends QUI\Utils\Singleton
         $providers = $this->getShippingProviders();
 
         foreach ($providers as $Provider) {
-            $providerShipping = $Provider->getShippingTypes();
+            $types = $Provider->getShippingTypes();
 
-            foreach ($providerShipping as $providerShippingEntry) {
-                if (!\class_exists($providerShippingEntry)) {
+            foreach ($types as $type) {
+                if (!\class_exists($type)) {
                     continue;
                 }
 
-                $ShippingEntry = new $providerShippingEntry();
+                $ShippingType = new $type();
 
-                if ($ShippingEntry instanceof AbstractShippingEntry) {
-                    $shipping[$ShippingEntry->getName()] = $ShippingEntry;
+                if ($ShippingType instanceof QUI\ERP\Shipping\Api\ShippingTypeInterface) {
+                    $shipping[$ShippingType->getType()] = $ShippingType;
                 }
             }
         }
@@ -111,17 +110,19 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
-     * @param $shippingHash
-     * @return AbstractShippingEntry
+     * Return a wanted shipping type
+     *
+     * @param string $shippingType - type of the shipping type
+     * @return QUI\ERP\Shipping\Api\ShippingTypeInterface
      * @throws Exception
      */
-    public function getShippingType($shippingHash)
+    public function getShippingType($shippingType)
     {
         $types = $this->getShippingTypes();
 
-        /* @var $Shipping AbstractShippingEntry */
+        /* @var $Shipping QUI\ERP\Shipping\Api\ShippingTypeInterface */
         foreach ($types as $Shipping) {
-            if ($Shipping->getName() === $shippingHash) {
+            if ($Shipping->getType() === $shippingType) {
                 return $Shipping;
             }
         }
@@ -129,7 +130,7 @@ class Shipping extends QUI\Utils\Singleton
         throw new Exception([
             'quiqqer/shipping',
             'exception.shipping.type.not.found',
-            ['shippingType' => $shippingHash]
+            ['shippingType' => $shippingType]
         ]);
     }
 
@@ -180,7 +181,7 @@ class Shipping extends QUI\Utils\Singleton
      * Return all shipping entries for the user
      *
      * @param \QUI\Interfaces\Users\User|null $User - optional
-     * @return array
+     * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
     public function getUserShipping($User = null)
     {

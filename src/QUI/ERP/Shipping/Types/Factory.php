@@ -70,27 +70,6 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateBegin', [$data['shipping_type']]);
 
-        $shipping       = $data['shipping_type'];
-        $ShippingMethod = new $shipping();
-
-        /* @var $ShippingMethod QUI\ERP\Shipping\Api\AbstractShippingEntry */
-        if ($ShippingMethod->isUnique()) {
-            // if the shipping is unique, we must check, if a shipping method already exists
-            $Shipping = QUI\ERP\Shipping\Shipping::getInstance();
-            $children = $Shipping->getShippingList([
-                'where' => [
-                    'shipping_type' => $shipping
-                ]
-            ]);
-
-            if (count($children)) {
-                throw new QUI\ERP\Shipping\Exception([
-                    'quiqqer/shipping',
-                    'exception.create.unique.shipping.already.exists'
-                ]);
-            }
-        }
-
         /* @var $NewChild ShippingEntry */
         $NewChild = parent::createChild($data);
 

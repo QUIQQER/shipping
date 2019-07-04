@@ -40,6 +40,19 @@
             <de><![CDATA[Darf Versandarten anlegen]]></de>
             <en><![CDATA[Can create shipping type]]></en>
         </locale>
+
+        <locale name="shipping.standard.title">
+            <de><![CDATA[Standard Versand Methode]]></de>
+            <en><![CDATA[Standard shipping type]]></en>
+        </locale>
+        <locale name="shipping.free.description">
+            <de><![CDATA[Standard Versand Methode]]></de>
+            <en><![CDATA[Standard shipping type]]></en>
+        </locale>
+        <locale name="shipping.free.workingTitle">
+            <de><![CDATA[Standard Versand Methode]]></de>
+            <en><![CDATA[Standard shipping type]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">

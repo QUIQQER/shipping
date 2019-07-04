@@ -25,7 +25,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
     /**
      * @var null|AbstractShippingEntry
      */
-    protected $Payment = null;
+    protected $Shipping = null;
 
     /**
      * @param OrderProcessSteps $OrderProcessSteps
@@ -45,7 +45,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
         }
 
         $OrderProcessSteps->append(
-            new Order\Payment([
+            new Order\Shipping([
                 'orderId'  => $orderId,
                 'Order'    => $Order,
                 'priority' => 30
@@ -55,51 +55,30 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
 
     /**
      * @param AbstractOrder $Order
-     *
-     * @return string
-     *
-     * @throws \QUI\ERP\Accounting\Payments\Exception
-     */
-    public function onOrderStart(AbstractOrder $Order)
-    {
-        $this->Payment = $Order->getPayment()->getPaymentType();
-
-        if ($this->Payment->isGateway()) {
-            $this->currentStatus = self::PROCESSING_STATUS_PROCESSING;
-
-            return $this->currentStatus;
-        }
-
-        $this->currentStatus = self::PROCESSING_STATUS_FINISH;
-
-        return $this->currentStatus;
-    }
-
-    /**
-     * @param AbstractOrder $Order
      * @param AbstractOrderingStep|null $Step
      * @return string
      */
     public function getDisplay(AbstractOrder $Order, $Step = null)
     {
-        if ($this->Payment === null) {
+        if ($this->Shipping === null) {
             return '';
         }
 
-        try {
-            return $this->Payment->getGatewayDisplay($Order, $Step);
-        } catch (QUI\ERP\Order\ProcessingException $Exception) {
-            $this->hasErrors = true;
-
-            return '<div class="message-error">'.$Exception->getMessage().'</div>';
-        } catch (\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-
-            $this->hasErrors = true;
-
-            return '<div class="message-error">'.
-                   QUI::getLocale()->get('quiqqer/order', 'exception.processing.error').
-                   '</div>';
-        }
+//        try {
+//            return $this->Payment->getGatewayDisplay($Order, $Step);
+//        } catch (QUI\ERP\Order\ProcessingException $Exception) {
+//            $this->hasErrors = true;
+//
+//            return '<div class="message-error">'.$Exception->getMessage().'</div>';
+//        } catch (\Exception $Exception) {
+//            QUI\System\Log::writeException($Exception);
+//
+//            $this->hasErrors = true;
+//
+//            return '<div class="message-error">'.
+//                   QUI::getLocale()->get('quiqqer/order', 'exception.processing.error').
+//                   '</div>';
+//        }
+        return '';
     }
 }

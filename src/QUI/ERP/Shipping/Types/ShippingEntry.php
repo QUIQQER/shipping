@@ -21,7 +21,7 @@ use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
  *
  * @package QUI\ERP\Shipping\Types
  */
-class ShippingEntry extends QUI\CRUD\Child implements ShippingInterface
+class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 {
     /**
      * Shipping constructor.
@@ -101,20 +101,6 @@ class ShippingEntry extends QUI\CRUD\Child implements ShippingInterface
         }
 
         return $attributes;
-    }
-
-    /**
-     * Is the shipping successful?
-     * This method returns the shipping success type
-     *
-     * @param string $hash - Vorgangsnummer - hash number - procedure number
-     * @return bool
-     *
-     * @throws QUI\ERP\Shipping\Exception
-     */
-    public function isSuccessful($hash)
-    {
-        return $this->getShippingType()->isSuccessful($hash);
     }
 
     /**
