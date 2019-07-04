@@ -106,14 +106,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the shipping type of the type
      *
-     * @return Api\AbstractShippingEntry
+     * @return Api\ShippingTypeInterface
      * @throws QUI\ERP\Shipping\Exception
      */
     public function getShippingType()
     {
         $type = $this->getAttribute('shipping_type');
 
-        if (!class_exists($type)) {
+        if (!\class_exists($type)) {
             throw new QUI\ERP\Shipping\Exception([
                 'quiqqer/shipping',
                 'exception.shipping.type.not.found',
@@ -123,7 +123,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         $Type = new $type();
 
-        if (!($Type instanceof Api\AbstractShippingEntry)) {
+        if (!($Type instanceof Api\ShippingTypeInterface)) {
             throw new QUI\ERP\Shipping\Exception([
                 'quiqqer/shipping',
                 'exception.shipping.type.not.abstractShipping',
@@ -142,89 +142,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function canUsedBy(QUI\Interfaces\Users\User $User)
     {
-        if ($this->isActive() === false) {
-            return false;
-        }
-
-        try {
-            QUI::getEvents()->fireEvent('quiqqerShippingCanUsedBy', [$this, $User]);
-        } catch (ShippingCanNotBeUsed $Exception) {
-            return false;
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return false;
-        }
-
-
-        try {
-            $this->getShippingType();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-
-            return false;
-        }
-
-        // usage definitions / limits
-        $dateFrom  = $this->getAttribute('date_from');
-        $dateUntil = $this->getAttribute('date_until');
-        $now       = time();
-
-        if ($dateFrom && strtotime($dateFrom) > $now) {
-            return false;
-        }
-
-        if ($dateUntil && strtotime($dateUntil) < $now) {
-            return false;
-        }
-
-        // assignment
-        $userGroupValue = $this->getAttribute('user_groups');
-        $areasValue     = $this->getAttribute('areas');
-
-        // if groups and areas are empty, everybody is allowed
-        if (empty($userGroupValue) && empty($areasValue)) {
-            return true;
-        }
-
-        // not in area
-        $areasValue = explode(',', $areasValue);
-
-        if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
-            return false;
-        }
-
-        $userGroups = QUI\Utils\UserGroups::parseUsersGroupsString(
-            $this->getAttribute('user_groups')
-        );
-
-        $discountUsers  = $userGroups['users'];
-        $discountGroups = $userGroups['groups'];
-
-        if (empty($discountUsers) && empty($discountGroups)) {
-            return true;
-        }
-
-        // user checking
-        foreach ($discountUsers as $uid) {
-            if ($User->getId() == $uid) {
-                return true;
-            }
-        }
-
-        // group checking
-        $groupsOfUser = $User->getGroups();
-
-        /* @var $Group QUI\Groups\Group */
-        foreach ($discountGroups as $gid) {
-            foreach ($groupsOfUser as $Group) {
-                if ($Group->getId() == $gid) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        // @todo check shipping rules
     }
 
     /**

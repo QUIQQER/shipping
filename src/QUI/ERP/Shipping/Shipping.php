@@ -144,10 +144,6 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getShippingEntry($shippingId)
     {
-        if ((int)$shippingId == Methods\Free\Shipping::ID) {
-            return new Methods\Free\Shipping();
-        }
-
         try {
             return Factory::getInstance()->getChild($shippingId);
         } catch (QUI\Exception $Exception) {

@@ -17,11 +17,6 @@ use QUI\ERP\Shipping\Shipping as ShippingHandler;
 class Shipping extends QUI\ERP\Shipping\Api\AbstractShippingEntry
 {
     /**
-     * Standard shipping id
-     */
-    const ID = -1;
-
-    /**
      * @return array|string
      */
     public function getTitle()

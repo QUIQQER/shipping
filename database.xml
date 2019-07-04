@@ -7,6 +7,16 @@
             <field type="INT(1) NOT NULL DEFAULT 0">active</field>
             <field type="VARCHAR(255) NOT NULL">shipping_type</field>
             <field type="VARCHAR(255) NOT NULL">icon</field>
+            <field type="TEXT">shipping_rules</field>
+            <field type="INT(4) NULL">priority</field>
+
+            <primary>id</primary>
+            <auto_increment>id</auto_increment>
+        </table>
+
+        <table name="shipping_rules">
+            <field type="INT(11) NOT NULL">id</field>
+            <field type="INT(1) NOT NULL DEFAULT 0">active</field>
             <field type="text NULL">date_from</field>
             <field type="text NULL">date_until</field>
             <field type="INT(10) NULL DEFAULT 0">purchase_quantity_from</field>

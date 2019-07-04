@@ -24,7 +24,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(dirname(__FILE__).'/Shipping.css');
+        $this->addCSSFile(\dirname(__FILE__).'/Shipping.css');
     }
 
     /**
@@ -78,7 +78,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'shippingList'     => $shippingList
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/Shipping.html');
+        return $Engine->fetch(\dirname(__FILE__).'/Shipping.html');
     }
 
     /**

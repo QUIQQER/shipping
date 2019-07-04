@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Shipping\Types\Factory
+ * This file contains QUI\ERP\Shipping\Rules\Factory
  */
 
-namespace QUI\ERP\Shipping\Types;
+namespace QUI\ERP\Shipping\Rules;
 
 use QUI;
 use QUI\Permissions\Permission;
@@ -26,7 +26,7 @@ class Factory extends QUI\CRUD\Factory
         $self = $this;
 
         $this->Events->addEvent('onCreateBegin', function () {
-            Permission::checkPermission('quiqqer.shipping.create');
+            Permission::checkPermission('quiqqer.shipping.rule.create');
         });
 
         // create new translation var for the area
@@ -38,9 +38,8 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @param array $data
      *
-     * @return ShippingEntry
+     * @return ShippingRule
      *
-     * @throws QUI\ERP\Shipping\Exception
      * @throws QUI\Exception
      */
     public function createChild($data = [])
@@ -49,43 +48,26 @@ class Factory extends QUI\CRUD\Factory
             $data['active'] = 0;
         }
 
-//        if (!isset($data['purchase_quantity_from']) || !\is_integer($data['purchase_quantity_from'])) {
-//            $data['purchase_quantity_from'] = 0;
-//        }
-//
-//        if (!isset($data['purchase_quantity_until']) || !\is_integer($data['purchase_quantity_until'])) {
-//            $data['purchase_quantity_until'] = 0;
-//        }
+        if (!isset($data['purchase_quantity_from']) || !\is_integer($data['purchase_quantity_from'])) {
+            $data['purchase_quantity_from'] = 0;
+        }
+
+        if (!isset($data['purchase_quantity_until']) || !\is_integer($data['purchase_quantity_until'])) {
+            $data['purchase_quantity_until'] = 0;
+        }
 
         if (!isset($data['priority']) || !\is_integer($data['priority'])) {
             $data['priority'] = 0;
         }
 
-        if (!isset($data['shipping_type']) || !\class_exists($data['shipping_type'])) {
-            throw new QUI\ERP\Shipping\Exception([
-                'quiqqer/shipping',
-                'exception.create.shipping.class.not.found'
-            ]);
-        }
+        QUI::getEvents()->fireEvent('shippingRuleCreateBegin', [$data]);
 
-        QUI::getEvents()->fireEvent('shippingCreateBegin', [$data['shipping_type']]);
-
-        /* @var $NewChild ShippingEntry */
+        /* @var $NewChild ShippingRule */
         $NewChild = parent::createChild($data);
 
         $this->createShippingLocale(
             'shipping.'.$NewChild->getId().'.title',
-            $NewChild->getShippingType()->getTitle()
-        );
-
-        $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.workingTitle',
-            $NewChild->getShippingType()->getTitle().' - '.$NewChild->getId()
-        );
-
-        $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.description',
-            '&nbsp;'
+            ''
         );
 
         try {
@@ -104,7 +86,7 @@ class Factory extends QUI\CRUD\Factory
      */
     public function getDataBaseTableName()
     {
-        return 'shipping';
+        return 'shipping_rules';
     }
 
     /**
@@ -112,7 +94,7 @@ class Factory extends QUI\CRUD\Factory
      */
     public function getChildClass()
     {
-        return ShippingEntry::class;
+        return ShippingRule::class;
     }
 
     /**
@@ -122,11 +104,20 @@ class Factory extends QUI\CRUD\Factory
     {
         return [
             'id',
-            'shipping_type',
             'active',
-            'icon',
-            'shipping_rules',
-            'priority'
+
+            'date_from',
+            'date_until',
+            'purchase_quantity_from',
+            'purchase_quantity_until',
+            'purchase_value_from',
+            'purchase_value_until',
+            'priority',
+
+            'areas',
+            'articles',
+            'categories',
+            'user_groups'
         ];
     }
 

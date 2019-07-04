@@ -19,7 +19,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     /**
      * @return Shipping
      */
-    public function getShippingType()
+    public function getShipping()
     {
         return new Shipping();
     }

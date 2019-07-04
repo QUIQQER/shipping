@@ -47,7 +47,7 @@ interface ShippingTypeInterface
     /**
      * @return \QUI\ERP\Shipping\Api\AbstractShippingEntry
      */
-    public function getShippingType();
+    public function getShipping();
 
     /**
      * @param QUI\Interfaces\Users\User $User

@@ -42,16 +42,16 @@
         </locale>
 
         <locale name="shipping.standard.title">
-            <de><![CDATA[Standard Versand Methode]]></de>
-            <en><![CDATA[Standard shipping type]]></en>
+            <de><![CDATA[Standard Versand]]></de>
+            <en><![CDATA[Standard shipping]]></en>
         </locale>
         <locale name="shipping.free.description">
-            <de><![CDATA[Standard Versand Methode]]></de>
-            <en><![CDATA[Standard shipping type]]></en>
+            <de><![CDATA[Standard Versand]]></de>
+            <en><![CDATA[Standard shipping]]></en>
         </locale>
         <locale name="shipping.free.workingTitle">
-            <de><![CDATA[Standard Versand Methode]]></de>
-            <en><![CDATA[Standard shipping type]]></en>
+            <de><![CDATA[Standard Versand]]></de>
+            <en><![CDATA[Standard shipping]]></en>
         </locale>
     </groups>
 
@@ -106,6 +106,10 @@
 
 
     <groups name="quiqqer/shipping" datatype="js">
+        <locale name="shipping.type">
+            <de><![CDATA[Versand Art]]></de>
+            <en><![CDATA[Shipping type]]></en>
+        </locale>
         <locale name="shipping.edit.template.title">
             <de><![CDATA[Titel]]></de>
             <en><![CDATA[Title]]></en>
