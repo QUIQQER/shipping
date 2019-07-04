@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Accounting\Payments\Provider
+ * This file contains QUI\ERP\Shipping\Provider
  */
 
 namespace QUI\ERP\Shipping;
@@ -22,7 +22,7 @@ class Provider extends AbstractShippingProvider
     public function getShippingTypes()
     {
         return [
-
+            Methods\Free\ShippingType::class
         ];
     }
 }
