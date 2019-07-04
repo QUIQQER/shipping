@@ -1,0 +1,11 @@
+<permissions>
+    <permission name="quiqqer.shipping.create" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="quiqqer.shipping.edit" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="quiqqer.shipping.delete" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+</permissions>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+    <item parent="/extras/"
+          name="erp"
+          icon="fa fa-sun-o"
+    >
+        <locale group="quiqqer/shipping" var="menu.erp.title"/>
+    </item>
+    <item parent="/extras/erp/"
+          name="shipping"
+          require="package/quiqqer/shipping/bin/backend/controls/Shipping"
+          icon="fa fa-truck"
+    >
+        <locale group="quiqqer/shipping" var="menu.erp.shipping.title"/>
+    </item>
+
+</menu>

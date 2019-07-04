@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+    <groups name="quiqqer/shipping" datatype="php,js">
+        <locale name="package.title">
+            <de><![CDATA[QUIQQER - Shop - Shipping]]></de>
+            <en><![CDATA[QUIQQER - Shop - Shipping]]></en>
+        </locale>
+
+        <locale name="package.description">
+            <de><![CDATA[
+            QUIQQER Shipping erweitert QUIQQER und das QUIQQER ERP System um eine einheitliche Versandmethoden API.
+            ]]></de>
+            <en><![CDATA[
+            QUIQQER Shipping extends QUIQQER and the QUIQQER ERP system with a uniform Shipping method API.
+            ]]></en>
+        </locale>
+
+        <locale name="menu.erp.title">
+            <de><![CDATA[Shop]]></de>
+            <en><![CDATA[Shop]]></en>
+        </locale>
+        <locale name="menu.erp.shipping.title">
+            <de><![CDATA[Versandarten]]></de>
+            <en><![CDATA[Shipping]]></en>
+        </locale>
+
+        <locale name="permission.quiqqer.shipping._header">
+            <de><![CDATA[Versandarten]]></de>
+            <en><![CDATA[Shipping types]]></en>
+        </locale>
+        <locale name="permission.quiqqer.shipping.delete">
+            <de><![CDATA[Darf Versandarten löschen]]></de>
+            <en><![CDATA[Can delete shipping type]]></en>
+        </locale>
+        <locale name="permission.quiqqer.shipping.edit">
+            <de><![CDATA[Darf Versandarten editieren]]></de>
+            <en><![CDATA[Can edit shipping type]]></en>
+        </locale>
+        <locale name="permission.quiqqer.shipping.create">
+            <de><![CDATA[Darf Versandarten anlegen]]></de>
+            <en><![CDATA[Can create shipping type]]></en>
+        </locale>
+    </groups>
+
+</locales>
