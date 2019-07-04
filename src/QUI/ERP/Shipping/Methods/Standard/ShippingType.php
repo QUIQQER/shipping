@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Shipping\Methods\Free\ShippingType
+ * This file contains QUI\ERP\Shipping\Methods\Standard\ShippingType
  */
 
-namespace QUI\ERP\Shipping\Methods\Free;
+namespace QUI\ERP\Shipping\Methods\Standard;
 
 use QUI;
 

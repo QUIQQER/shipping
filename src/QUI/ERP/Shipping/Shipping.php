@@ -218,4 +218,19 @@ class Shipping extends QUI\Utils\Singleton
 
         return $host;
     }
+
+    /**
+     * @param QUI\ERP\Order\Order|
+     *      QUI\ERP\Order\OrderInProcess|
+     *      QUI\ERP\Accounting\Invoice\Invoice|
+     *      QUI\ERP\Accounting\Invoice\InvoiceTemporary
+     * $Order
+     */
+    public function getShippingByObject($Object)
+    {
+    }
+
+    public function getShippingByOrderId($orderId)
+    {
+    }
 }

@@ -22,7 +22,7 @@ class Provider extends AbstractShippingProvider
     public function getShippingTypes()
     {
         return [
-            Methods\Free\ShippingType::class
+            Methods\Standard\ShippingType::class
         ];
     }
 }

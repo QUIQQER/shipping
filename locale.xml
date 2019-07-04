@@ -42,4 +42,176 @@
         </locale>
     </groups>
 
+    <groups name="quiqqer/shipping" datatype="php">
+        <locale name="new.shipping.paceholder">
+            <de><![CDATA[Neue Versandmethode]]></de>
+            <en><![CDATA[New shipping type]]></en>
+        </locale>
+        <locale name="exception.shipping.not.found">
+            <de><![CDATA[Die Versandmethode [shipping] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The shipping type [shipping] was not found.]]></en>
+        </locale>
+        <locale name="exception.shipping.type.not.found">
+            <de><![CDATA[Die Versandmethode [shippingType] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The shipping type [shippingType] was not found.]]></en>
+        </locale>
+        <locale name="exception.shipping.type.not.abstractShipping">
+            <de><![CDATA[Die Versandmethode [shippingType] ist nicht von AbstractShippingEntry.]]></de>
+            <en><![CDATA[The shipping type [shippingType] is not from AbstractShippingEntry.]]></en>
+        </locale>
+        <locale name="message.shipping.saved.successfully">
+            <de><![CDATA[Die Versandart [shipping] wurde erfolgreich gespeichert.]]></de>
+            <en><![CDATA[The shipping type [shipping] has been saved successfully.]]></en>
+        </locale>
+        <locale name="message.shipping.activate.successfully">
+            <de><![CDATA[Die Versandart [shipping] wurde erfolgreich aktiviert.]]></de>
+            <en><![CDATA[The shipping type [shipping] has been activated successfully.]]></en>
+        </locale>
+        <locale name="message.shipping.deactivate.successfully">
+            <de><![CDATA[Die Versandart [shipping] wurde erfolgreich deaktiviert.]]></de>
+            <en><![CDATA[The shipping type [shipping] has been deactivated successfully.]]></en>
+        </locale>
+
+        <locale name="comment.add.shipping">
+            <de><![CDATA[Bezahlung per [shipping] in Höhe von [amount] [currency] erhalten.]]></de>
+            <en><![CDATA[Shipping by [shipping] of [amount][currency] received.]]></en>
+        </locale>
+
+        <locale name="exception.create.shipping.class.not.found">
+            <de><![CDATA[
+            Die Versandart konnte nicht angelegt werden. Es ist ein Fehler bei der Zahlungsmethode aufgetreteten.
+            ]]></de>
+            <en><![CDATA[
+            The shipping method could not be created. There is an error in the shipping method occurred.
+            ]]></en>
+        </locale>
+        <locale name="exception.create.unique.shipping.already.exists">
+            <de><![CDATA[Dieses Versandmethode können Sie nur einmal anlegen.]]></de>
+            <en><![CDATA[You can only create this shipping method once.]]></en>
+        </locale>
+    </groups>
+
+
+    <groups name="quiqqer/shipping" datatype="js">
+        <locale name="shipping.edit.template.title">
+            <de><![CDATA[Titel]]></de>
+            <en><![CDATA[Title]]></en>
+        </locale>
+        <locale name="shipping.edit.template.id">
+            <de><![CDATA[ID]]></de>
+            <en><![CDATA[ID]]></en>
+        </locale>
+        <locale name="shipping.edit.template.type">
+            <de><![CDATA[Versandart]]></de>
+            <en><![CDATA[Shipping method]]></en>
+        </locale>
+        <locale name="shipping.edit.template.usage">
+            <de><![CDATA[Nutzung definieren]]></de>
+            <en><![CDATA[Defining Terms]]></en>
+        </locale>
+        <locale name="shipping.edit.template.usage.from">
+            <de><![CDATA[Nutzbar von]]></de>
+            <en><![CDATA[Usage from]]></en>
+        </locale>
+        <locale name="shipping.edit.template.usage.to">
+            <de><![CDATA[Nutzbar bis]]></de>
+            <en><![CDATA[Usage to]]></en>
+        </locale>
+        <locale name="shipping.edit.template.shopping.amount.of">
+            <de><![CDATA[Einkaufsmenge von]]></de>
+            <en><![CDATA[Shopping amount of]]></en>
+        </locale>
+        <locale name="shipping.edit.template.shopping.amount.to">
+            <de><![CDATA[Einkaufsmenge bis]]></de>
+            <en><![CDATA[Shopping amount to]]></en>
+        </locale>
+        <locale name="shipping.edit.template.purchase.value.of">
+            <de><![CDATA[Einkaufswert von]]></de>
+            <en><![CDATA[Purchase value of]]></en>
+        </locale>
+        <locale name="shipping.edit.template.purchase.value.to">
+            <de><![CDATA[Einkaufswert bis]]></de>
+            <en><![CDATA[Purchase value to]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment">
+            <de><![CDATA[Zuweisung]]></de>
+            <en><![CDATA[Assignment]]></en>
+        </locale>
+        <locale name="shipping.edit.template.areas">
+            <de><![CDATA[Zonen]]></de>
+            <en><![CDATA[Areas]]></en>
+        </locale>
+        <locale name="shipping.edit.template.calculationPriority">
+            <de><![CDATA[Priorität]]></de>
+            <en><![CDATA[Priority]]></en>
+        </locale>
+
+        <locale name="shipping.edit.template.assignment.product">
+            <de><![CDATA[Produkt]]></de>
+            <en><![CDATA[Product]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.category">
+            <de><![CDATA[Kategorie]]></de>
+            <en><![CDATA[Category]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.user">
+            <de><![CDATA[Benutzer]]></de>
+            <en><![CDATA[User]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.combine">
+            <de><![CDATA[Kombinierbar mit]]></de>
+            <en><![CDATA[Combined with]]></en>
+        </locale>
+        <locale name="shipping.edit.template.customIcon">
+            <de><![CDATA[Benutzerdefiniertes Bild]]></de>
+            <en><![CDATA[Custom Icon]]></en>
+        </locale>
+        <locale name="shipping.edit.template.customIcon.description" html="true">
+            <de><![CDATA[Legen Sie ein eigenes Bild für die Versandart fest.]]></de>
+            <en><![CDATA[Define your own image for the shipping method.]]></en>
+        </locale>
+
+        <locale name="window.delete.title">
+            <de><![CDATA[Versandart löschen]]></de>
+            <en><![CDATA[Delete shipping type]]></en>
+        </locale>
+        <locale name="window.delete.text">
+            <de><![CDATA[Versandart [shipping] wirklich löschen?]]></de>
+            <en><![CDATA[Shipping type [shipping] really delete?]]></en>
+        </locale>
+        <locale name="window.delete.information" html="true">
+            <de><![CDATA[
+            Möchten Sie die Versandart wirklich löschen?<br /><br />
+            Die Versandart kann nicht wieder hergestellt werden.
+            Beachten Sie das eventuelle Bestellungen nicht mehr richtig ausgeführt werden können.
+            ]]></de>
+            <en><![CDATA[
+            Are you sure you want to delete the shipping type? <br /><br />
+            The shipping type can not be restored.
+            Consider that possible orders can no longer be executed correctly.
+            ]]></en>
+        </locale>
+
+        <locale name="window.create.title">
+            <de><![CDATA[Versandart erstellen]]></de>
+            <en><![CDATA[Create shipping type]]></en>
+        </locale>
+        <locale name="window.create.text">
+            <de><![CDATA[Eine neue Versandart erstellen]]></de>
+            <en><![CDATA[Create new shipping type]]></en>
+        </locale>
+        <locale name="window.create.information" html="true">
+            <de><![CDATA[
+            Die neu erstellte Versandart ist inaktiv und wird nach dem erstellen sofort geöffnet.
+            ]]></de>
+            <en><![CDATA[
+            The newly created shipping type is inactive and will be opened immediately after the creation.
+            ]]></en>
+        </locale>
+
+        <locale name="window.create.shippingType">
+            <de><![CDATA[Welche Versandmethode soll Ihre Zahlungsart verwenden?]]></de>
+            <en><![CDATA[What shipping type should your Shipping type use?]]></en>
+        </locale>
+    </groups>
 </locales>

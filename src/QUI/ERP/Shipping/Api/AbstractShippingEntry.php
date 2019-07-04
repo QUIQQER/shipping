@@ -7,7 +7,6 @@
 namespace QUI\ERP\Shipping\Api;
 
 use QUI;
-use QUI\ERP\Order\AbstractOrder;
 
 /**
  * Shipping abstract class
@@ -17,16 +16,6 @@ use QUI\ERP\Order\AbstractOrder;
  */
 abstract class AbstractShippingEntry implements ShippingInterface
 {
-    /**
-     * @var int
-     */
-    const SUCCESS_TYPE_PAY = 1;
-
-    /**
-     * @var int
-     */
-    const SUCCESS_TYPE_BILL = 2;
-
     /**
      * shipping fields - extra fields for the shipping / accounting
      *
@@ -77,7 +66,7 @@ abstract class AbstractShippingEntry implements ShippingInterface
      */
     public function getName()
     {
-        return md5(get_class($this));
+        return \md5(\get_class($this));
     }
 
     /**
@@ -99,15 +88,6 @@ abstract class AbstractShippingEntry implements ShippingInterface
      * @return string
      */
     abstract public function getDescription();
-
-    /**
-     * Is the shipping successful?
-     * This method returns the shipping success type
-     *
-     * @param string $hash - Vorgangsnummer - hash number - procedure number
-     * @return bool
-     */
-    abstract public function isSuccessful($hash);
 
     /**
      * Return the shipping icon (the URL path)
@@ -135,16 +115,6 @@ abstract class AbstractShippingEntry implements ShippingInterface
     }
 
     /**
-     * Is the shipping a gateway shipping?
-     *
-     * @return bool
-     */
-    public function isGateway()
-    {
-        return false;
-    }
-
-    /**
      * Is the shipping be visible in the frontend?
      * Every shipping method can determine this by itself (API for developers)
      *
@@ -154,49 +124,6 @@ abstract class AbstractShippingEntry implements ShippingInterface
     {
         return true;
     }
-
-    /**
-     * This flag indicates whether the shipping module can be created more than once
-     *
-     * @return bool
-     */
-    public function isUnique()
-    {
-        return false;
-    }
-
-//    /**
-//     * @return bool
-//     */
-//    public function refundSupport()
-//    {
-//        return false;
-//    }
-
-//    /**
-//     * If the Shipping method is a shipping gateway, it can return a gateway display
-//     *
-//     * @param AbstractOrder $Order
-//     * @param QUI\ERP\Order\Controls\AbstractOrderingStep|null $Step
-//     * @return string
-//     *
-//     * @throws QUI\ERP\Order\ProcessingException
-//     */
-//    public function getGatewayDisplay(AbstractOrder $Order, $Step = null)
-//    {
-//        return '';
-//    }
-//
-//    /**
-//     * Execute the request from the shipping provider
-//     *
-//     * @param QUI\ERP\Shipping\Gateway\Gateway $Gateway
-//     *
-//     * @throws QUI\ERP\Accounting\Payments\Exception
-//     */
-//    public function executeGatewayPayment(QUI\ERP\Accounting\Payments\Gateway\Gateway $Gateway)
-//    {
-//    }
 
     //region text messages
 

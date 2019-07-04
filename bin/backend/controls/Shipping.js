@@ -86,7 +86,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
             })[0].disable();
 
 
-            Shipping.getShippings().then(function (result) {
+            Shipping.getShippingList().then(function (result) {
                 var toggle = function (Btn) {
                     var data       = Btn.getAttribute('data'),
                         shippingId = data.id,

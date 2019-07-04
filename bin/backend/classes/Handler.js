@@ -33,7 +33,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          *
          * @return {Promise}
          */
-        getShippings: function () {
+        getShippingList: function () {
             if (this.$shippings) {
                 return window.Promise.resolve(this.$shippings);
             }
@@ -41,7 +41,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippings', function (result) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingList', function (result) {
                     self.$shippings = result;
                     resolve(self.$shippings);
                 }, {
@@ -52,14 +52,14 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
         },
 
         /**
-         * Return the shipping data
+         * Return the shipping entry data
          *
          * @param {String|Number} shippingId
          * @return {Promise}
          */
-        getShipping: function (shippingId) {
+        getShippingEntry: function (shippingId) {
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShipping', resolve, {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingEntry', resolve, {
                     'package' : 'quiqqer/shipping',
                     onError   : reject,
                     shippingId: shippingId

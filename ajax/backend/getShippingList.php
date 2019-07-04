@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains package_quiqqer_shipping_ajax_backend_getShippingEntries
+ * This file contains package_quiqqer_shipping_ajax_backend_getShippingList
  */
 
 use QUI\ERP\Shipping\Shipping;
@@ -13,7 +13,7 @@ use QUI\ERP\Shipping\Types\ShippingEntry;
  * @return array
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_shipping_ajax_backend_getShippingEntries',
+    'package_quiqqer_shipping_ajax_backend_getShippingList',
     function () {
         $shippingEntries = Shipping::getInstance()->getShippingList();
         $result          = [];
