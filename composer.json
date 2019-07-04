@@ -1,0 +1,36 @@
+{
+  "name": "quiqqer/shipping",
+  "type": "quiqqer-plugin",
+  "description": "Provided the shipping management for QUIQQER. Can manage shipping methods",
+  "version": "dev-master",
+  "license": [
+    "GPL-3.0+",
+    "PCSG QEL-1.0"
+  ],
+  "authors": [
+    {
+      "name": "Henning Leutz",
+      "email": "leutz@pcsg.de",
+      "homepage": "http://www.pcsg.de",
+      "role": "Developer"
+    },
+    {
+      "name": "Moritz Scholz",
+      "email": "scholz@pcsg.de",
+      "homepage": "http://www.pcsg.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "support@pcsg.de"
+  },
+  "require": {
+    "quiqqer/quiqqer": "*",
+    "quiqqer/areas": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "QUI\\ERP\\Shipping\\": "src\/QUI\/ERP\/Shipping"
+    }
+  }
+}
