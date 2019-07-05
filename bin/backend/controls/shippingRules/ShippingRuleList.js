@@ -167,7 +167,21 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
          * event: open create dialog
          */
         $openCreateDialog: function () {
+            var self = this;
 
+            this.fireEvent('openCreateRuleWindow', [this]);
+
+            require([
+                'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWindow'
+            ], function (CreateRuleWindow) {
+                new CreateRuleWindow({
+                    events: {
+                        onCloseCreateRuleWindow: function () {
+                            self.fireEvent('closeCreateRuleWindow', [self]);
+                        }
+                    }
+                }).open();
+            });
         },
 
         /**

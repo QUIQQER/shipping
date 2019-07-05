@@ -54,6 +54,14 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                 events: {
                     onRefresh: function () {
                         self.Loader.hide();
+                    },
+
+                    onOpenCreateRuleWindow: function () {
+                        self.close();
+                    },
+
+                    onCloseCreateRuleWindow: function () {
+                        self.open();
                     }
                 }
             }).inject(this.getContent());

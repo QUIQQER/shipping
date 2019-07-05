@@ -116,6 +116,10 @@
             <de><![CDATA[Versand Art]]></de>
             <en><![CDATA[Shipping type]]></en>
         </locale>
+        <locale name="shipping.edit.template.general">
+            <de><![CDATA[Allgemein]]></de>
+            <en><![CDATA[General]]></en>
+        </locale>
         <locale name="shipping.edit.template.title">
             <de><![CDATA[Titel]]></de>
             <en><![CDATA[Title]]></en>
