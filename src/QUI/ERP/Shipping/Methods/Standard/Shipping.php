@@ -21,10 +21,7 @@ class Shipping extends QUI\ERP\Shipping\Api\AbstractShippingEntry
      */
     public function getTitle()
     {
-        return $this->getLocale()->get(
-            'quiqqer/shipping',
-            'shipping.standard.title'
-        );
+        return $this->getLocale()->get('quiqqer/shipping', 'shipping.standard.title');
     }
 
     /**
@@ -32,10 +29,7 @@ class Shipping extends QUI\ERP\Shipping\Api\AbstractShippingEntry
      */
     public function getWorkingTitle()
     {
-        return $this->getLocale()->get(
-            'quiqqer/shipping',
-            'shipping.standard.workingTitle'
-        );
+        return $this->getLocale()->get('quiqqer/shipping', 'shipping.standard.workingTitle');
     }
 
     /**
@@ -43,10 +37,7 @@ class Shipping extends QUI\ERP\Shipping\Api\AbstractShippingEntry
      */
     public function getDescription()
     {
-        return $this->getLocale()->get(
-            'quiqqer/shipping',
-            'shipping.standard.description'
-        );
+        return $this->getLocale()->get('quiqqer/shipping', 'shipping.standard.description');
     }
 
     /**

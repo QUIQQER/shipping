@@ -33,6 +33,11 @@ class ShippingRule extends QUI\CRUD\Child
 
         $this->Events->addEvent('onDeleteBegin', function () {
             Permission::checkPermission('quiqqer.shipping.delete');
+
+            // delete locale
+            $id = $this->getId();
+
+            QUI\Translator::delete('quiqqer/shipping', 'shipping.'.$id.'.rule.title');
         });
 
         $this->Events->addEvent('onSaveBegin', function () {

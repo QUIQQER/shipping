@@ -66,8 +66,8 @@ class Factory extends QUI\CRUD\Factory
         $NewChild = parent::createChild($data);
 
         $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.title',
-            ''
+            'shipping.'.$NewChild->getId().'.rule.title',
+            QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder')
         );
 
         try {

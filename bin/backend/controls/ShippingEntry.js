@@ -10,6 +10,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
     'qui/controls/desktop/Panel',
     'qui/controls/windows/Confirm',
     'package/quiqqer/shipping/bin/backend/Shipping',
+    'package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List',
     'package/quiqqer/translator/bin/Translator',
     'package/quiqqer/translator/bin/controls/Update',
     'qui/utils/Form',
@@ -18,8 +19,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
     'text!package/quiqqer/shipping/bin/backend/controls/ShippingEntry.html'
 
-], function (QUI, QUIPanel, QUIConfirm,
-             Shipping, Translator, TranslatUpdater, FormUtils, Mustache, QUILocale, template) {
+], function (QUI, QUIPanel, QUIConfirm, Shipping, ShippingRulesGrid,
+             Translator, TranslatUpdater, FormUtils, Mustache, QUILocale, template) {
     "use strict";
 
     var lg = 'quiqqer/shipping';
@@ -358,6 +359,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                         customIcon          : QUILocale.get(lg, 'shipping.edit.template.customIcon'),
                         customIconDesc      : QUILocale.get(lg, 'shipping.edit.template.customIcon.description'),
 
+                        shippingRulesHeader: QUILocale.get(lg, 'shipping.edit.template.shippingRules.description'),
+
                         usageAssignmentProduct : QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
                         usageAssignmentCategory: QUILocale.get(lg, 'shipping.edit.template.assignment.category'),
                         usageAssignmentUser    : QUILocale.get(lg, 'shipping.edit.template.assignment.user')
@@ -365,6 +368,12 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                 });
 
                 Container.getElement('.field-id').set('html', data.id);
+
+                new ShippingRulesGrid({
+                    shippingId: self.getAttribute('shippingId')
+                }).inject(
+                    Container.getElement('.shipping-rules tbody td')
+                );
 
                 if (typeof data.shippingType !== 'undefined' &&
                     typeof data.shippingType.title !== 'undefined') {

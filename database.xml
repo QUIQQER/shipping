@@ -10,6 +10,11 @@
             <field type="TEXT">shipping_rules</field>
             <field type="INT(4) NULL">priority</field>
 
+            <field type="text NULL">areas</field>
+            <field type="text NULL">articles</field>
+            <field type="text NULL">categories</field>
+            <field type="text NULL">user_groups</field>
+
             <primary>id</primary>
             <auto_increment>id</auto_increment>
         </table>

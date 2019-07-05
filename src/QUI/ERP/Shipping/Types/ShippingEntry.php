@@ -11,8 +11,8 @@ use QUI\CRUD\Factory;
 use QUI\Translator;
 use QUI\Permissions\Permission;
 
-use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Shipping\Api;
+use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
 
 /**
@@ -35,6 +35,19 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         $this->Events->addEvent('onDeleteBegin', function () {
             Permission::checkPermission('quiqqer.shipping.delete');
+
+            // delete locale
+            $id = $this->getId();
+
+            QUI\Translator::delete('quiqqer/shipping', 'shipping.'.$id.'.title');
+            QUI\Translator::delete('quiqqer/shipping', 'shipping.'.$id.'.description');
+            QUI\Translator::delete('quiqqer/shipping', 'shipping.'.$id.'.workingTitle');
+
+            try {
+                QUI\Translator::publish('quiqqer/shipping');
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
         });
 
         $this->Events->addEvent('onSaveBegin', function () {
@@ -143,6 +156,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     public function canUsedBy(QUI\Interfaces\Users\User $User)
     {
         // @todo check shipping rules
+
+        return true;
     }
 
     /**
@@ -153,15 +168,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
     {
-        try {
-            QUI::getEvents()->fireEvent('shippingCanUsedInOrder', [$this, $Order]);
-        } catch (ShippingCanNotBeUsed $Exception) {
-            return false;
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addDebug($Exception->getMessage());
-
-            return false;
-        }
+        // @todo check shipping rules
 
         return true;
     }

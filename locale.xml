@@ -53,13 +53,19 @@
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
         </locale>
-    </groups>
 
-    <groups name="quiqqer/shipping" datatype="php">
-        <locale name="new.shipping.paceholder">
+        <locale name="new.shipping.placeholder">
             <de><![CDATA[Neue Versandmethode]]></de>
             <en><![CDATA[New shipping type]]></en>
         </locale>
+        <locale name="new.shipping.rule.placeholder">
+            <de><![CDATA[Neue Versandregel]]></de>
+            <en><![CDATA[New shipping rule]]></en>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/shipping" datatype="php">
+
         <locale name="exception.shipping.not.found">
             <de><![CDATA[Die Versandmethode [shipping] wurde nicht gefunden.]]></de>
             <en><![CDATA[The shipping type [shipping] was not found.]]></en>
@@ -162,6 +168,10 @@
             <de><![CDATA[Priorität]]></de>
             <en><![CDATA[Priority]]></en>
         </locale>
+        <locale name="shipping.edit.template.shippingRules.description">
+            <de><![CDATA[Versandregeln]]></de>
+            <en><![CDATA[Shipping rules]]></en>
+        </locale>
 
         <locale name="shipping.edit.template.assignment.product">
             <de><![CDATA[Produkt]]></de>
@@ -229,6 +239,11 @@
         <locale name="window.create.shippingType">
             <de><![CDATA[Welche Versandmethode soll Ihre Zahlungsart verwenden?]]></de>
             <en><![CDATA[What shipping type should your Shipping type use?]]></en>
+        </locale>
+
+        <locale name="window.shipping.rules.title">
+            <de><![CDATA[Versandkostenregeln]]></de>
+            <en><![CDATA[Shipping rules]]></en>
         </locale>
     </groups>
 </locales>
