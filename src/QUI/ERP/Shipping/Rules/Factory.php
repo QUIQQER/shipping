@@ -44,6 +44,24 @@ class Factory extends QUI\CRUD\Factory
      */
     public function createChild($data = [])
     {
+        // filter
+        $allowed = \array_flip([
+            'title',
+            'workingTitle',
+            'date_from',
+            'date_until',
+            'priority',
+            'purchase_quantity_from',
+            'purchase_quantity_until',
+            'purchase_value_from',
+            'purchase_value_until'
+        ]);
+
+        $data = \array_filter($data, function ($k) use ($allowed) {
+            return isset($allowed[$k]);
+        }, \ARRAY_FILTER_USE_KEY);
+
+
         if (!isset($data['active']) || !\is_integer($data['active'])) {
             $data['active'] = 0;
         }
@@ -67,11 +85,11 @@ class Factory extends QUI\CRUD\Factory
 
         $this->createShippingLocale(
             'shipping.'.$NewChild->getId().'.rule.title',
-            QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder')
+            QUI::getLocale()->get('quiqqer / shipping', 'new.shipping.rule.placeholder')
         );
 
         try {
-            QUI\Translator::publish('quiqqer/shipping');
+            QUI\Translator::publish('quiqqer / shipping');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -152,10 +170,10 @@ class Factory extends QUI\CRUD\Factory
         }
 
         try {
-            QUI\Translator::addUserVar('quiqqer/shipping', $var, [
+            QUI\Translator::addUserVar('quiqqer / shipping', $var, [
                 $current   => $title,
                 'datatype' => 'php,js',
-                'package'  => 'quiqqer/shipping'
+                'package'  => 'quiqqer / shipping'
             ]);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());

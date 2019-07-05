@@ -1,17 +1,22 @@
 /**
- * @module
+ * @module package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule
  * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'package/quiqqer/translator/bin/Translator',
+    'package/quiqqer/translator/bin/controls/Update',
+    'controls/lang/InputMultiLang',
+    'package/quiqqer/shipping/bin/backend/ShippingRules',
+    'qui/utils/Form',
     'Locale',
     'Mustache',
 
     'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule.html'
 
-], function (QUI, QUIControl, QUILocale, Mustache, template) {
+], function (QUI, QUIControl, Translator, TranslateUpdater, InputMultiLang, ShippingRules, FormUtils, QUILocale, Mustache, template) {
     "use strict";
 
     var lg = 'quiqqer/shipping';
@@ -27,6 +32,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
 
         initialize: function (options) {
             this.parent(options);
+
+            this.$DataTitle        = null;
+            this.$DataWorkingTitle = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -62,7 +70,15 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
          * event: on inject
          */
         $onInject: function () {
-            this.fireEvent('load', [this]);
+            var self = this;
+
+            QUI.parse(this.getElm()).then(function () {
+                // locale for title and working title
+                self.$DataTitle        = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
+                self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-workingTitle'));
+
+                this.fireEvent('load', [this]);
+            }.bind(this));
         },
 
         /**
@@ -71,10 +87,16 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
          * @return {Promise}
          */
         submit: function () {
-            return new Promise(function (resolve) {
+            if (!this.$DataTitle || !this.$DataWorkingTitle) {
+                return Promise.reject('Missing DOMNode Elements');
+            }
 
-                resolve();
-            });
+            var formData = FormUtils.getFormData(this.getElm().getElement('form'));
+
+            formData.title        = this.$DataTitle.getData();
+            formData.workingTitle = this.$DataWorkingTitle.getData();
+
+            return ShippingRules.create(formData);
         }
     });
 });

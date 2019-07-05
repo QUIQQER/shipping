@@ -22,6 +22,10 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
             this.$list = null;
         },
 
+        /**
+         * Return
+         * @return {Promise|*}
+         */
         getList: function () {
             if (this.$list) {
                 return window.Promise.resolve(this.$list);
@@ -35,6 +39,22 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
                     resolve(self.$list);
                 }, {
                     'package': 'quiqqer/shipping',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Create a new rule
+         *
+         * @param rules
+         * @return {Promise}
+         */
+        create: function (rules) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_create', resolve, {
+                    'package': 'quiqqer/shipping',
+                    rules    : JSON.encode(rules),
                     onError  : reject
                 });
             });

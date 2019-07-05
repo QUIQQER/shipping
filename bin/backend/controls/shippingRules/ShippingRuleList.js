@@ -135,7 +135,18 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             ShippingRules.getList().then(function (rules) {
                 self.fireEvent('refresh', [self, rules]);
 
-                console.log(rules);
+                var current = QUILocale.getCurrent();
+
+                var data = rules.map(function (entry) {
+                    entry.title        = entry.title[current];
+                    entry.workingTitle = entry.workingTitle[current];
+
+                    return entry;
+                });
+
+                self.$Grid.setData({
+                    data: data
+                });
 
                 return rules;
             });

@@ -1,0 +1,120 @@
+<form action="" name="create-rule">
+    <table class="data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th>
+                {{generalHeader}}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{title}}
+                    </span>
+                    <span class="field-container-field shipping-title"></span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{workingTitle}}
+                    </span>
+                    <span class="field-container-field shipping-workingTitle"></span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{calculationBasis}}">
+                        {{calculationPriority}}
+                    </span>
+                    <input type="number" name="priority" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th colspan="2">
+                {{usageHeader}}
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        <span class="fa fa-calendar"></span>
+                        {{usageFrom}}
+                    </span>
+                    <input type="datetime-local" name="date_from" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        <span class="fa fa-calendar"></span>
+                        {{usageTo}}
+                    </span>
+                    <input type="datetime-local" name="date_until" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAmountOf}}
+                    </span>
+                    <input type="number" min="0" name="purchase_quantity_from" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAmountTo}}
+                    </span>
+                    <input type="number" min="0" name="purchase_quantity_until" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        <span class="fa fa-money"></span>
+                        {{usageValueOf}}
+                    </span>
+                    <input type="number" min="0" name="purchase_value_from" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        <span class="fa fa-money"></span>
+                        {{usageValueTo}}
+                    </span>
+                    <input type="number" min="0" name="purchase_value_until" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>

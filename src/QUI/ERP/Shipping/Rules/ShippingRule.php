@@ -46,6 +46,43 @@ class ShippingRule extends QUI\CRUD\Child
     }
 
     /**
+     * Return the payment as an array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $lg = 'quiqqer/shipping';
+        $id = $this->getId();
+
+        $attributes = $this->getAttributes();
+        $Locale     = QUI::getLocale();
+
+        try {
+            $availableLanguages = QUI\Translator::getAvailableLanguages();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            $availableLanguages = [];
+        }
+
+        foreach ($availableLanguages as $language) {
+            $attributes['title'][$language] = $Locale->getByLang(
+                $language,
+                $lg,
+                'shipping.'.$id.'.rule.title'
+            );
+
+            $attributes['workingTitle'][$language] = $Locale->getByLang(
+                $language,
+                $lg,
+                'shipping.'.$id.'.rule.workingTitle'
+            );
+        }
+
+        return $attributes;
+    }
+
+    /**
      * is the user allowed to use this shipping
      *
      * @param QUI\Interfaces\Users\User $User
