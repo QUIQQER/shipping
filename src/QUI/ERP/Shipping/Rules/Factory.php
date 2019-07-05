@@ -85,11 +85,16 @@ class Factory extends QUI\CRUD\Factory
 
         $this->createShippingLocale(
             'shipping.'.$NewChild->getId().'.rule.title',
-            QUI::getLocale()->get('quiqqer / shipping', 'new.shipping.rule.placeholder')
+            QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder')
+        );
+
+        $this->createShippingLocale(
+            'shipping.'.$NewChild->getId().'.rule.workingTitle',
+            QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder')
         );
 
         try {
-            QUI\Translator::publish('quiqqer / shipping');
+            QUI\Translator::publish('quiqqer/shipping');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
@@ -170,10 +175,10 @@ class Factory extends QUI\CRUD\Factory
         }
 
         try {
-            QUI\Translator::addUserVar('quiqqer / shipping', $var, [
+            QUI\Translator::addUserVar('quiqqer/shipping', $var, [
                 $current   => $title,
                 'datatype' => 'php,js',
-                'package'  => 'quiqqer / shipping'
+                'package'  => 'quiqqer/shipping'
             ]);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());

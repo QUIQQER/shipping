@@ -16,28 +16,13 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
         Extends: QUIDOM,
         Type   : 'package/quiqqer/shipping/bin/backend/classes/ShippingRules',
 
-        initialize: function (options) {
-            this.parent(options);
-
-            this.$list = null;
-        },
-
         /**
          * Return
          * @return {Promise|*}
          */
         getList: function () {
-            if (this.$list) {
-                return window.Promise.resolve(this.$list);
-            }
-
-            var self = this;
-
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getList', function (result) {
-                    self.$list = result;
-                    resolve(self.$list);
-                }, {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getList', resolve, {
                     'package': 'quiqqer/shipping',
                     onError  : reject
                 });

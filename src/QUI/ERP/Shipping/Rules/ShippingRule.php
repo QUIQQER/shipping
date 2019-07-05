@@ -38,6 +38,7 @@ class ShippingRule extends QUI\CRUD\Child
             $id = $this->getId();
 
             QUI\Translator::delete('quiqqer/shipping', 'shipping.'.$id.'.rule.title');
+            QUI\Translator::delete('quiqqer/shipping', 'shipping.'.$id.'.rule.workingTitle');
         });
 
         $this->Events->addEvent('onSaveBegin', function () {
