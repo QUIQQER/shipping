@@ -17,6 +17,10 @@ QUI::$Ajax->registerFunction(
 
         $result = [];
 
+        if (!\is_array($ruleIds)) {
+            $ruleIds = [];
+        }
+
         foreach ($ruleIds as $ruleId) {
             try {
                 $result[] = $Rules->getChild($ruleId)->toArray();

@@ -168,6 +168,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                     });
 
                     self.fireEvent('load', [self]);
+                }).catch(function (e) {
+                    console.log(e);
                 });
             });
         },

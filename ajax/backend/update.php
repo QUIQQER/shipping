@@ -42,7 +42,11 @@ QUI::$Ajax->registerFunction(
         }
 
         if (isset($data['shipping_rules'])) {
-            $shipping = json_decode($data['shipping_rules'], true);
+            $shipping = \json_decode($data['shipping_rules'], true);
+
+            if (!\is_array($shipping)) {
+                $shipping = [];
+            }
 
             foreach ($shipping as $shippingId) {
                 $ShippingEntry->addShippingRuleId($shippingId);
