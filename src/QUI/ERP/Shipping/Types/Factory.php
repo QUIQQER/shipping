@@ -60,6 +60,8 @@ class Factory extends QUI\CRUD\Factory
             ]);
         }
 
+
+
         QUI::getEvents()->fireEvent('shippingCreateBegin', [$data['shipping_type']]);
 
         /* @var $NewChild ShippingEntry */
@@ -114,11 +116,15 @@ class Factory extends QUI\CRUD\Factory
     {
         return [
             'id',
-            'shipping_type',
             'active',
             'icon',
-            'shipping_rules',
-            'priority'
+            'priority',
+            'areas',
+            'articles',
+            'categories',
+            'user_groups',
+            'shipping_type',
+            'shipping_rules'
         ];
     }
 

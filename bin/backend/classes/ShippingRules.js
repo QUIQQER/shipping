@@ -59,6 +59,18 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
                     onError  : reject
                 });
             });
+        },
+
+        /**
+         * Return the wanted rule
+         *
+         * @param {Integer} ruleId
+         * @return {Promise}
+         */
+        getRule: function (ruleId) {
+            return this.getRules([ruleId]).then(function (result) {
+                return result[0];
+            });
         }
     });
 });

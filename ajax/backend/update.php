@@ -20,6 +20,8 @@ QUI::$Ajax->registerFunction(
 
         $data = \json_decode($data, true);
 
+        $ShippingEntry->setAttributes($data);
+
         /* @var $ShippingEntry \QUI\ERP\Shipping\Types\ShippingEntry */
         if (isset($data['title'])) {
             $ShippingEntry->setTitle($data['title']);
@@ -35,9 +37,9 @@ QUI::$Ajax->registerFunction(
 
         if (isset($data['icon'])) {
             $ShippingEntry->setIcon($data['icon']);
+        } else {
+            $ShippingEntry->removeIcon();
         }
-
-        $ShippingEntry->setAttributes($data);
 
         if (isset($data['shipping_rules'])) {
             $shipping = json_decode($data['shipping_rules'], true);

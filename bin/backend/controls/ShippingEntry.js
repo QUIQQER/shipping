@@ -405,6 +405,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                 self.$IconField = QUI.Controls.getById(
                     self.$Container.getElement('[name="icon"]').get('data-quiid')
                 );
+                
+                self.$IconField.setValue(data.icon_path);
             }).catch(function (err) {
                 console.error(err);
             });

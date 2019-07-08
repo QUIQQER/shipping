@@ -14,6 +14,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 ], function (QUI, QUIControl, Grid, QUILocale) {
     "use strict";
 
+    var lg = 'quiqqer/shipping';
+
     return new Class({
 
         Extends: QUIControl,
@@ -22,7 +24,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
         Binds: [
             '$onInject',
             '$openAddDialog',
-            '$openDeleteDialog'
+            '$openRemoveDialog'
         ],
 
         options: {
@@ -86,7 +88,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
             this.$Grid = new Grid(Container, {
                 height     : 300,
                 width      : width,
-                pagination : true,
+                pagination : false,
                 buttons    : [{
                     name     : 'add',
                     text     : QUILocale.get('quiqqer/quiqqer', 'add'),
@@ -95,12 +97,12 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         onClick: this.$openAddDialog
                     }
                 }, {
-                    name     : 'delete',
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                    name     : 'remove',
+                    text     : QUILocale.get('quiqqer/system', 'remove'),
                     textimage: 'fa fa-trash',
                     disabled : true,
                     events   : {
-                        onClick: this.$openDeleteDialog
+                        onClick: this.$openRemoveDialog
                     }
                 }],
                 columnModel: [{
@@ -128,8 +130,18 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 
             this.$Grid.setWidth(width);
             this.$Grid.addEvents({
-                onDblClick: function () {
+                onClick: function () {
+                    self.$Grid.getButtons().filter(function (Btn) {
+                        return Btn.getAttribute('name') === 'remove';
+                    })[0].enable();
+                },
 
+                onDblClick: function () {
+                    require(['package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow'], function (RuleWindow) {
+                        new RuleWindow({
+                            ruleId: self.$Grid.getSelectedData()[0].id
+                        }).open();
+                    });
                 }
             });
 
@@ -199,6 +211,25 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
         },
 
         /**
+         * Remove a shipping rule from the shipping entry
+         *
+         * @param {Array} shippingRuleIds - ids of the shipping rules
+         */
+        removeShippingRules: function (shippingRuleIds) {
+            var data = this.$Grid.getData();
+
+            data = data.filter(function (entry) {
+                return shippingRuleIds.indexOf(entry.id) === -1;
+            });
+
+            this.$Grid.setData({
+                data: data
+            });
+
+            this.refreshInput();
+        },
+
+        /**
          * open rule window to add a rule to the shipping rules
          */
         $openAddDialog: function () {
@@ -218,10 +249,45 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
         },
 
         /**
-         *
+         * Open the remove dialog
+         * - The user has the possibility to remove a shipping rule from the shipping entry
          */
-        $openDeleteDialog: function () {
+        $openRemoveDialog: function () {
+            var self     = this,
+                selected = this.$Grid.getSelectedData();
 
+            if (!selected.length) {
+                return;
+            }
+
+            var shippingIds = selected.map(function (entry) {
+                return entry.id;
+            });
+
+            var idHtml = selected.map(function (entry) {
+                return '<li>#' + entry.id + ' ' + entry.title + '</li>';
+            });
+
+            idHtml = '<ul>' + idHtml + '</ul>';
+
+            require(['qui/controls/windows/Confirm'], function (QUIConfirm) {
+                new QUIConfirm({
+                    icon       : 'fa fa-trash',
+                    texticon   : 'fa fa-trash',
+                    title      : QUILocale.get(lg, 'window.shipping.entry.remove.rule.title'),
+                    text       : QUILocale.get(lg, 'window.shipping.entry.remove.rule.text'),
+                    information: QUILocale.get(lg, 'window.shipping.entry.remove.rule.information', {
+                        ids: idHtml
+                    }),
+                    maxHeight  : 300,
+                    maxWidth   : 600,
+                    events     : {
+                        onSubmit: function () {
+                            self.removeShippingRules(shippingIds);
+                        }
+                    }
+                }).open();
+            });
         }
     });
 });

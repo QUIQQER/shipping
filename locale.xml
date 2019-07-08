@@ -249,5 +249,25 @@
             <de><![CDATA[Versandkostenregeln]]></de>
             <en><![CDATA[Shipping rules]]></en>
         </locale>
+
+        <locale name="window.shipping.entry.remove.rule.title">
+            <de><![CDATA[Versandkostenregel aus Versandkosteneintrag entfernen]]></de>
+            <en><![CDATA[Remove shipping cost rule from shipping cost entry]]></en>
+        </locale>
+        <locale name="window.shipping.entry.remove.rule.text">
+            <de><![CDATA[Möchtest du die Versandkostenregeln aus dem Versandkosteneintrag entfernen?]]></de>
+            <en><![CDATA[Do you want to remove the shipping cost rules from the shipping cost entry?]]></en>
+        </locale>
+        <locale name="window.shipping.entry.remove.rule.information">
+            <de><![CDATA[
+                Die Versandkostenregeln werden nicht gelöscht es werden nur lediglich folgende Versandkostenregeln (IDs)
+                aus dem Versandkosteneintrag entfernt:<br />[ids]
+            ]]></de>
+            <en><![CDATA[
+                The shipping rules will not be deleted, only the following shipping rules (IDs) will be removed from the shipping entry:
+                <br />
+                [ids]
+            ]]></en>
+        </locale>
     </groups>
 </locales>

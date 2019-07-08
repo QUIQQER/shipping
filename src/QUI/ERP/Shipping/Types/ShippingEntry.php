@@ -52,6 +52,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         $this->Events->addEvent('onSaveBegin', function () {
             Permission::checkPermission('quiqqer.shipping.edit');
+
+
         });
     }
 
@@ -105,10 +107,12 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         // icon
-        $attributes['icon'] = '';
+        $attributes['icon']      = '';
+        $attributes['icon_path'] = '';
 
         try {
-            $attributes['icon'] = $this->getIcon();
+            $attributes['icon']      = $this->getIcon();
+            $attributes['icon_path'] = $this->getAttribute('icon');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
@@ -339,6 +343,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         if (QUI\Projects\Media\Utils::isMediaUrl($icon)) {
             $this->setAttribute('icon', $icon);
         }
+    }
+
+    /**
+     * Remove the shipping entry icon
+     */
+    public function removeIcon()
+    {
+        $this->setAttribute('icon', false);
     }
 
     /**
