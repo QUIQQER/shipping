@@ -127,6 +127,11 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
             });
 
             this.$Grid.setWidth(width);
+            this.$Grid.addEvents({
+                onDblClick: function () {
+
+                }
+            });
 
             require([
                 'package/quiqqer/shipping/bin/backend/Shipping',
