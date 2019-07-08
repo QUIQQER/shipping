@@ -43,6 +43,22 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
                     onError  : reject
                 });
             });
+        },
+
+        /**
+         * Return the wanted rules
+         *
+         * @param ruleIds
+         * @return {Promise}
+         */
+        getRules: function (ruleIds) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getRules', resolve, {
+                    'package': 'quiqqer/shipping',
+                    ruleIds  : JSON.encode(ruleIds),
+                    onError  : reject
+                });
+            });
         }
     });
 });

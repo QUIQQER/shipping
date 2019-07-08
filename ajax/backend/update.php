@@ -38,6 +38,15 @@ QUI::$Ajax->registerFunction(
         }
 
         $ShippingEntry->setAttributes($data);
+
+        if (isset($data['shipping_rules'])) {
+            $shipping = json_decode($data['shipping_rules'], true);
+
+            foreach ($shipping as $shippingId) {
+                $ShippingEntry->addShippingRuleId($shippingId);
+            }
+        }
+
         $ShippingEntry->update();
 
         QUI::getMessagesHandler()->addSuccess(

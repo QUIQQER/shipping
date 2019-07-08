@@ -49,14 +49,6 @@ class Factory extends QUI\CRUD\Factory
             $data['active'] = 0;
         }
 
-//        if (!isset($data['purchase_quantity_from']) || !\is_integer($data['purchase_quantity_from'])) {
-//            $data['purchase_quantity_from'] = 0;
-//        }
-//
-//        if (!isset($data['purchase_quantity_until']) || !\is_integer($data['purchase_quantity_until'])) {
-//            $data['purchase_quantity_until'] = 0;
-//        }
-
         if (!isset($data['priority']) || !\is_integer($data['priority'])) {
             $data['priority'] = 0;
         }

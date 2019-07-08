@@ -12,8 +12,8 @@ use QUI\Translator;
 use QUI\Permissions\Permission;
 
 use QUI\ERP\Shipping\Api;
-use QUI\ERP\Areas\Utils as AreaUtils;
-use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
+use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
+use QUI\ERP\Shipping\Rules\ShippingRule;
 
 /**
  * Class ShippingEntry
@@ -383,5 +383,64 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             QUI\System\Log::writeException($Exception);
         }
     }
+    //endregion
+
+    //region rules
+
+    /**
+     * @param ShippingRule $Rule
+     */
+    public function addShippingRule(ShippingRule $Rule)
+    {
+        $shippingRules = $this->getAttribute('shipping_rules');
+        $shippingRules = \json_decode($shippingRules, true);
+
+        if (!\in_array($Rule->getId(), $shippingRules)) {
+            $shippingRules[] = $Rule->getId();
+        }
+
+        $this->setAttribute('shipping_rules', \json_encode($shippingRules));
+    }
+
+    /**
+     * Add a shipping rule by its id
+     *
+     * @param integer $shippingRuleId
+     * @throws QUI\Exception
+     */
+    public function addShippingRuleId($shippingRuleId)
+    {
+        /* @var $Rule ShippingRule */
+        $Rule = RuleFactory::getInstance()->getChild($shippingRuleId);
+        $this->addShippingRule($Rule);
+    }
+
+    /**
+     * Return the shipping rules of the
+     * @return ShippingRule[]
+     */
+    public function getShippingRules()
+    {
+        $shippingRules = $this->getAttribute('shipping_rules');
+        $shippingRules = \json_decode($shippingRules, true);
+
+        if (!is_array($shippingRules)) {
+            return [];
+        }
+
+        $result = [];
+        $Rules  = RuleFactory::getInstance();
+
+        foreach ($shippingRules as $shippingRule) {
+            try {
+                $result[] = $Rules->getChild($shippingRule);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception);
+            }
+        }
+
+        return $result;
+    }
+
     //endregion
 }

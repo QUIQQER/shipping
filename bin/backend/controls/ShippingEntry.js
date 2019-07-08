@@ -370,7 +370,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                 Container.getElement('.field-id').set('html', data.id);
 
                 new ShippingRulesGrid({
-                    shippingId: self.getAttribute('shippingId')
+                    shippingId: self.getAttribute('shippingId'),
+                    name      : 'shipping_rules'
                 }).inject(
                     Container.getElement('.shipping-rules tbody td')
                 );

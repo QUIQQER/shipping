@@ -1,6 +1,8 @@
 /**
  * @module package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List
  * @author www.pcsg.de (Henning Leutz)
+ *
+ * @event onLoad [self]
  */
 define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 
@@ -18,17 +20,21 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
         Type   : 'package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List',
 
         Binds: [
-            '$onInject'
+            '$onInject',
+            '$openAddDialog',
+            '$openDeleteDialog'
         ],
 
         options: {
-            shippingId: false
+            shippingId: false,
+            name      : 'shipping-rules'
         },
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$Grid = null;
+            this.$Grid  = null;
+            this.$Input = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -44,14 +50,36 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 
             this.$Elm.addClass('quiqqer-shipping-rules');
 
+            this.$Input = new Element('input', {
+                type: 'hidden',
+                name: this.getAttribute('name')
+            }).inject(this.$Elm);
 
             return this.$Elm;
+        },
+
+        /**
+         * refresh the input value
+         */
+        refreshInput: function () {
+            if (!this.$Grid) {
+                return;
+            }
+
+            var value = this.$Grid.getData().map(function (entry) {
+                return parseInt(entry.id);
+            });
+
+            value = JSON.encode(value);
+
+            this.$Input.value = value;
         },
 
         /**
          * event: on inject
          */
         $onInject: function () {
+            var self      = this;
             var Container = new Element('div').inject(this.getElm());
             var width     = Container.getSize().x - 5;
 
@@ -99,19 +127,85 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
             });
 
             this.$Grid.setWidth(width);
+
+            require([
+                'package/quiqqer/shipping/bin/backend/Shipping',
+                'package/quiqqer/shipping/bin/backend/ShippingRules',
+                'package/quiqqer/shipping/bin/backend/utils/ShippingUtils'
+            ], function (Shipping, ShippingRules, Utils) {
+                Shipping.getShippingEntry(
+                    self.getAttribute('shippingId')
+                ).then(function (result) {
+                    var shippingRules = result.shipping_rules;
+
+                    try {
+                        shippingRules = JSON.decode(shippingRules);
+                    } catch (e) {
+                        shippingRules = [];
+                    }
+
+                    return ShippingRules.getRules(shippingRules);
+                }).then(function (rules) {
+                    self.$Grid.setData({
+                        data: Utils.parseRulesDataForGrid(rules)
+                    });
+
+                    self.fireEvent('load', [self]);
+                });
+            });
+        },
+
+        /**
+         * Add shipping rules to the shipping entry
+         *
+         * @param {Array} shippingRules - list of ids
+         */
+        addShippingRules: function (shippingRules) {
+            var self = this;
+
+            return new Promise(function (resolve) {
+                require([
+                    'package/quiqqer/shipping/bin/backend/ShippingRules'
+                ], function (ShippingRules) {
+                    ShippingRules.getRules(shippingRules).then(function (rules) {
+                        var current = QUILocale.getCurrent();
+
+                        rules.forEach(function (v, k) {
+                            var title = '';
+
+                            if (typeof v.title[current] !== 'undefined') {
+                                title = v.title[current];
+                            } else {
+                                title = Object.values(v.title)[0];
+                            }
+
+                            rules[k].title = title;
+                        });
+
+                        self.$Grid.setData({
+                            data: rules
+                        });
+
+                        self.refreshInput();
+                        resolve();
+                    });
+                });
+            });
         },
 
         /**
          * open rule window to add a rule to the shipping rules
          */
         $openAddDialog: function () {
+            var self = this;
+
             require([
                 'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleListWindow'
             ], function (ShippingRuleListWindow) {
                 new ShippingRuleListWindow({
                     events: {
-                        onSubmit: function () {
-                            console.log('submit');
+                        onSubmit: function (Win, selected) {
+                            self.addShippingRules(selected);
                         }
                     }
                 }).open();

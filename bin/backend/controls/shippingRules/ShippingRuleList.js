@@ -7,10 +7,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/shipping/bin/backend/ShippingRules',
+    'package/quiqqer/shipping/bin/backend/utils/ShippingUtils',
     'controls/grid/Grid',
     'Locale'
 
-], function (QUI, QUIControl, ShippingRules, Grid, QUILocale) {
+], function (QUI, QUIControl, ShippingRules, ShippingUtils, Grid, QUILocale) {
     "use strict";
 
     return new Class({
@@ -18,11 +19,16 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
         Extends: QUIControl,
         Type   : 'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleList',
 
+        options: {
+            multiple: true
+        },
+
         Binds: [
             '$onInject',
             '$openCreateDialog',
             '$openDeleteDialog',
-            'refresh'
+            'refresh',
+            'getSelected'
         ],
 
         initialize: function (options) {
@@ -73,10 +79,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             var height = size.y;
 
             this.$Grid = new Grid(Container, {
-                height     : height,
-                width      : width,
-                pagination : true,
-                buttons    : [{
+                height           : height,
+                width            : width,
+                pagination       : true,
+                multipleSelection: this.getAttribute('multiple'),
+                buttons          : [{
                     name     : 'create',
                     text     : QUILocale.get('quiqqer/quiqqer', 'create'),
                     textimage: 'fa fa-plus',
@@ -92,7 +99,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                         onClick: this.$openDeleteDialog
                     }
                 }],
-                columnModel: [{
+                columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
@@ -135,17 +142,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             ShippingRules.getList().then(function (rules) {
                 self.fireEvent('refresh', [self, rules]);
 
-                var current = QUILocale.getCurrent();
-
-                var data = rules.map(function (entry) {
-                    entry.title        = entry.title[current];
-                    entry.workingTitle = entry.workingTitle[current];
-
-                    return entry;
-                });
-
                 self.$Grid.setData({
-                    data: data
+                    data: ShippingUtils.parseRulesDataForGrid(rules)
                 });
 
                 return rules;
@@ -169,8 +167,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                 return [];
             }
 
-            return this.$Grid.getSelected().map(function (entry) {
-                return entry.id;
+            return this.$Grid.getSelectedData().map(function (entry) {
+                return parseInt(entry.id);
             });
         },
 
@@ -187,7 +185,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             ], function (CreateRuleWindow) {
                 new CreateRuleWindow({
                     events: {
-                        onCloseCreateRuleWindow: function () {
+                        onClose: function () {
                             self.fireEvent('closeCreateRuleWindow', [self]);
                         }
                     }

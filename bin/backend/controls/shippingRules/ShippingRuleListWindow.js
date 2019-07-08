@@ -24,8 +24,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
         options: {
             maxHeight: 600,
-            maxWidth : 600,
-            autoclose: false
+            maxWidth : 600
         },
 
         initialize: function (options) {
@@ -71,11 +70,16 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
         },
 
         /**
-         * event: on submit
+         * Submit the window
+         *
+         * @method qui/controls/windows/Confirm#submit
          */
-        $onSubmit: function () {
-            var selected = this.$List.getSelected();
+        submit: function () {
+            this.fireEvent('submit', [this, this.$List.getSelected()]);
 
+            if (this.getAttribute('autoclose')) {
+                this.close();
+            }
         }
     });
 });
