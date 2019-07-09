@@ -195,6 +195,10 @@ class Shipping extends QUI\Utils\Singleton
 
         $shipping = \array_filter($this->getShippingList(), function ($Shipping) use ($User) {
             /* @var $Shipping QUI\ERP\Shipping\Types\ShippingEntry */
+            if ($Shipping->isActive() === false) {
+                return false;
+            }
+
             return $Shipping->canUsedBy($User);
         });
 

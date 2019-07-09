@@ -229,6 +229,18 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         var current     = QUILocale.getCurrent(),
                             currentData = self.$Grid.getData();
 
+                        var isInCurrentData = function (id) {
+                            id = parseInt(id);
+
+                            for (var i = 0, len = currentData.length; i < len; i++) {
+                                if (parseInt(currentData[i].id) === id) {
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        };
+
                         rules.forEach(function (v, k) {
                             var title = '';
 
@@ -240,11 +252,13 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 
                             rules[k].title = title;
 
+                            // filter duplicated
+                            if (isInCurrentData(rules[k].id)) {
+                                return;
+                            }
+
                             currentData.push(rules[k]);
                         });
-
-                        // filter duplicated
-
 
                         self.$Grid.setData({
                             data: currentData

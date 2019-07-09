@@ -211,8 +211,8 @@
             <en><![CDATA[Discount (absolute)]]></en>
         </locale>
         <locale name="shipping.edit.template.discount.percentage">
-            <de><![CDATA[% (prozentual)]]></de>
-            <en><![CDATA[% (percentage)]]></en>
+            <de><![CDATA[Auf / Abschlag % (prozentual)]]></de>
+            <en><![CDATA[Discount % (percentage)]]></en>
         </locale>
 
         <locale name="window.delete.title">
@@ -261,6 +261,10 @@
         <locale name="window.shipping.rules.title">
             <de><![CDATA[Versandkostenregeln]]></de>
             <en><![CDATA[Shipping rules]]></en>
+        </locale>
+        <locale name="window.shipping.rules.button.update">
+            <de><![CDATA[Aktualisieren]]></de>
+            <en><![CDATA[Update]]></en>
         </locale>
 
         <locale name="window.shipping.entry.remove.rule.title">

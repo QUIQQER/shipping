@@ -29,6 +29,18 @@ QUI::$Ajax->registerFunction(
             }
         }
 
+        // sort by priority
+        \usort($result, function ($a, $b) {
+            $a = (int)$a['priority'];
+            $b = (int)$b['priority'];
+
+            if ($a === $b) {
+                return $a['id'] > $b['priority'];
+            }
+
+            return $a > $b;
+        });
+
         return $result;
     },
     ['ruleIds'],

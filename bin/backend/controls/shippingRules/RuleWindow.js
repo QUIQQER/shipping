@@ -36,8 +36,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
             this.parent(options);
 
             this.setAttributes({
-                title: QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
-                icon : 'fa fa-truck'
+                title    : QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
+                icon     : 'fa fa-edit',
+                ok_button: {
+                    text     : QUILocale.get('quiqqer/shipping', 'window.shipping.rules.button.update'),
+                    textimage: 'fa fa-edit'
+                }
             });
 
             this.$Rule = null;
