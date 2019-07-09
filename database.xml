@@ -22,7 +22,7 @@
         <table name="shipping_rules">
             <field type="INT(11) NOT NULL">id</field>
             <field type="INT(1) NOT NULL DEFAULT 0">active</field>
-            <field type="INT(11) NOT NULL">discount</field>
+            <field type="DOUBLE NOT NULL">discount</field>
             <field type="INT(1) NOT NULL">discount_type</field>
             <field type="text NULL">date_from</field>
             <field type="text NULL">date_until</field>
