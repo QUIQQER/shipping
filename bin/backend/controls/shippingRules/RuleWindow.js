@@ -26,7 +26,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
         ],
 
         options: {
-            maxHeight: 600,
+            maxHeight: 800,
             maxWidth : 600,
             autoclose: false,
             ruleId   : false

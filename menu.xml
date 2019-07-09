@@ -13,5 +13,12 @@
     >
         <locale group="quiqqer/shipping" var="menu.erp.shipping.title"/>
     </item>
+    <item parent="/extras/erp/"
+          name="shipping-rules"
+          require="package/quiqqer/shipping/bin/backend/controls/ShippingRules"
+          icon="fa fa-truck"
+    >
+        <locale group="quiqqer/shipping" var="menu.erp.shipping.rules.title"/>
+    </item>
 
 </menu>

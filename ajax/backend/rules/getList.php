@@ -13,7 +13,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_getList',
     function () {
         $rules = QUI\ERP\Shipping\Rules\Factory::getInstance()->getChildren([
-            'order' => 'id'
+            'order' => 'priority DESC'
         ]);
 
         $result = [];

@@ -23,6 +23,10 @@
             <de><![CDATA[Versandarten]]></de>
             <en><![CDATA[Shipping]]></en>
         </locale>
+        <locale name="menu.erp.shipping.rules.title">
+            <de><![CDATA[Versandkostenregeln]]></de>
+            <en><![CDATA[Shipping rules]]></en>
+        </locale>
 
         <locale name="permission.quiqqer.shipping._header">
             <de><![CDATA[Versandarten]]></de>
@@ -213,6 +217,10 @@
         <locale name="shipping.edit.template.discount.percentage">
             <de><![CDATA[Auf / Abschlag % (prozentual)]]></de>
             <en><![CDATA[Discount % (percentage)]]></en>
+        </locale>
+        <locale name="shipping.edit.template.discount.type">
+            <de><![CDATA[Typ]]></de>
+            <en><![CDATA[Type]]></en>
         </locale>
 
         <locale name="window.delete.title">

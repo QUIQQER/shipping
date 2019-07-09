@@ -7,11 +7,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/shipping/bin/backend/ShippingRules',
+    'package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
     'package/quiqqer/shipping/bin/backend/utils/ShippingUtils',
     'controls/grid/Grid',
     'Locale'
 
-], function (QUI, QUIControl, ShippingRules, ShippingUtils, Grid, QUILocale) {
+], function (QUI, QUIControl, ShippingRules, RuleWindow, ShippingUtils, Grid, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/shipping';
@@ -76,9 +77,10 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                 }
             }).inject(this.getElm());
 
-            var size   = Container.getSize();
-            var width  = size.x - 5;
-            var height = size.y;
+            var self   = this,
+                size   = Container.getSize(),
+                width  = size.x - 5,
+                height = size.y;
 
             this.$Grid = new Grid(Container, {
                 height           : height,
@@ -121,15 +123,30 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                     dataIndex: 'title',
                     dataType : 'string',
                     width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'shipping.edit.template.discount'),
+                    dataIndex: 'discount',
+                    dataType : 'number',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get(lg, 'shipping.edit.template.discount.type'),
+                    dataIndex: 'discount_type',
+                    dataType : 'string',
+                    width    : 100
                 }]
             });
 
             this.$Grid.addEvents({
-                onRefresh: this.refresh,
-                onClick  : function () {
+                onRefresh : this.refresh,
+                onClick   : function () {
                     this.getButtons().filter(function (Btn) {
                         return Btn.getAttribute('name') === 'delete';
                     })[0].enable();
+                },
+                onDblClick: function () {
+                    new RuleWindow({
+                        ruleId: self.$Grid.getSelectedData()[0].id
+                    }).open();
                 }
             });
 
@@ -217,7 +234,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
             var idHtml = selected.map(function (entry) {
                 return '<li>#' + entry.id + ' ' + entry.title + '</li>';
-            });
+            }).join('');
 
             idHtml = '<ul>' + idHtml + '</ul>';
 
