@@ -29,7 +29,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
         Type   : 'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
 
         Binds: [
-            '$onInject'
+            '$onInject',
+            'update'
         ],
 
         options: {
@@ -54,6 +55,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          */
         create: function () {
             this.$Elm = this.parent();
+
             this.$Elm.set('html', Mustache.render(template, {
                 generalHeader      : QUILocale.get(lg, 'shipping.edit.template.general'),
                 title              : QUILocale.get(lg, 'shipping.edit.template.title'),
@@ -104,7 +106,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          *
          * @return {Promise}
          */
-        submit: function () {
+        update: function () {
             if (!this.$DataTitle || !this.$DataWorkingTitle) {
                 return Promise.reject('Missing DOMNode Elements');
             }
@@ -114,7 +116,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             formData.title        = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
 
-            return ShippingRules.create(formData);
+            return ShippingRules.update(this.getAttribute('ruleId'), formData);
         }
     });
 });

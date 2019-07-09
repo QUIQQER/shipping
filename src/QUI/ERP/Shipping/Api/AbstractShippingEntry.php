@@ -14,7 +14,7 @@ use QUI;
  *
  * @author www.pcsg.de (Henning Leutz)
  */
-abstract class AbstractShippingEntry implements ShippingInterface
+abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingInterface
 {
     /**
      * shipping fields - extra fields for the shipping / accounting

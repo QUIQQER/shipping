@@ -14,6 +14,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 ], function (QUI, QUIControl, ShippingRules, ShippingUtils, Grid, QUILocale) {
     "use strict";
 
+    var lg = 'quiqqer/shipping';
+
     return new Class({
 
         Extends: QUIControl,
@@ -123,7 +125,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             });
 
             this.$Grid.addEvents({
-                onRefresh: this.refresh
+                onRefresh: this.refresh,
+                onClick  : function () {
+                    this.getButtons().filter(function (Btn) {
+                        return Btn.getAttribute('name') === 'delete';
+                    })[0].enable();
+                }
             });
 
             return this.$Elm;
@@ -197,7 +204,49 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
          * event: open delete dialog
          */
         $openDeleteDialog: function () {
+            var self     = this,
+                selected = this.$Grid.getSelectedData();
 
+            if (!selected.length) {
+                return;
+            }
+
+            var ruleIds = selected.map(function (entry) {
+                return entry.id;
+            });
+
+            var idHtml = selected.map(function (entry) {
+                return '<li>#' + entry.id + ' ' + entry.title + '</li>';
+            });
+
+            idHtml = '<ul>' + idHtml + '</ul>';
+
+            require(['qui/controls/windows/Confirm'], function (QUIConfirm) {
+                new QUIConfirm({
+                    icon       : 'fa fa-trash',
+                    texticon   : 'fa fa-trash',
+                    title      : QUILocale.get(lg, 'window.shipping.entry.delete.rule.title'),
+                    text       : QUILocale.get(lg, 'window.shipping.entry.delete.rule.text'),
+                    information: QUILocale.get(lg, 'window.shipping.entry.delete.rule.information', {
+                        ids: idHtml
+                    }),
+                    maxHeight  : 300,
+                    maxWidth   : 600,
+                    autoclose  : true,
+                    events     : {
+                        onSubmit: function (Win) {
+                            Win.Loader.show();
+
+                            ShippingRules.delete(ruleIds).then(function () {
+                                self.fireEvent('deleteRule', [self]);
+                                Win.close();
+
+                                self.refresh();
+                            });
+                        }
+                    }
+                }).open();
+            });
         }
     });
 });

@@ -43,6 +43,29 @@ class ShippingRule extends QUI\CRUD\Child
 
         $this->Events->addEvent('onSaveBegin', function () {
             Permission::checkPermission('quiqqer.shipping.edit');
+
+            $id         = $this->getId();
+            $attributes = $this->getAttributes();
+
+            if (\is_array($attributes['title'])) {
+                QUI\Translator::update(
+                    'quiqqer/shipping',
+                    'shipping.'.$id.'.title',
+                    'quiqqer/shipping',
+                    $attributes['title']
+                );
+            };
+
+            if (\is_array($attributes['workingTitle'])) {
+                QUI\Translator::update(
+                    'quiqqer/shipping',
+                    'shipping.'.$id.'.workingTitle',
+                    'quiqqer/shipping',
+                    $attributes['workingTitle']
+                );
+            };
+
+            QUI\Translator::publish('quiqqer/shipping');
         });
     }
 

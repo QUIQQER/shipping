@@ -52,8 +52,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         $this->Events->addEvent('onSaveBegin', function () {
             Permission::checkPermission('quiqqer.shipping.edit');
-
-
         });
     }
 

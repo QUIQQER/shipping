@@ -25,15 +25,6 @@ abstract class AbstractShippingType extends QUI\QDOM implements QUI\ERP\Shipping
     }
 
     /**
-     * @param QUI\Interfaces\Users\User $User
-     * @return bool
-     */
-    public function canUsedBy(QUI\Interfaces\Users\User $User)
-    {
-        return true;
-    }
-
-    /**
      * @param QUI\Locale|null $Locale
      * @return array
      */
@@ -44,11 +35,8 @@ abstract class AbstractShippingType extends QUI\QDOM implements QUI\ERP\Shipping
         }
 
         return [
-            'title'        => $this->getTitle($Locale),
-            'description'  => $this->getDescription($Locale),
-            'workingTitle' => $this->getWorkingTitle($Locale),
-            'shippingType' => $this->getType(),
-            'icon'         => $this->getIcon()
+            'title' => $this->getTitle($Locale),
+            'type'  => $this->getType()
         ];
     }
 
@@ -56,67 +44,10 @@ abstract class AbstractShippingType extends QUI\QDOM implements QUI\ERP\Shipping
      * @param $Locale
      * @return array|string
      */
-    public function getName($Locale = null)
-    {
-        $ShippingType = $this->getShipping();
-
-        if ($Locale !== null) {
-            $ShippingType->setLocale($Locale);
-        }
-
-        return $ShippingType->getTitle();
-    }
-
-    /**
-     * @param $Locale
-     * @return array|string
-     */
-    public function getTitle($Locale = null)
-    {
-        $ShippingType = $this->getShipping();
-
-        if ($Locale !== null) {
-            $ShippingType->setLocale($Locale);
-        }
-
-        return $ShippingType->getTitle();
-    }
-
-    /**
-     * @param $Locale
-     * @return array|string
-     */
-    public function getWorkingTitle($Locale = null)
-    {
-        $ShippingType = $this->getShipping();
-
-        if ($Locale !== null) {
-            $ShippingType->setLocale($Locale);
-        }
-
-        return $ShippingType->getWorkingTitle();
-    }
-
-    /**
-     * @param $Locale
-     * @return array|string
-     */
-    public function getDescription($Locale = null)
-    {
-        $ShippingType = $this->getShipping();
-
-        if ($Locale !== null) {
-            $ShippingType->setLocale($Locale);
-        }
-
-        return $ShippingType->getDescription();
-    }
+    abstract public function getTitle($Locale = null);
 
     /**
      * @return string
      */
-    public function getIcon()
-    {
-        return $this->getShipping()->getIcon();
-    }
+    abstract public function getIcon();
 }

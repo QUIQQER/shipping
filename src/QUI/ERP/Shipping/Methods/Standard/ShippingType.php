@@ -17,10 +17,31 @@ use QUI;
 class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 {
     /**
-     * @return Shipping
+     * @param null $Locale
+     * @return array|string
+     */
+    public function getTitle($Locale = null)
+    {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
+
+        return $Locale->get('quiqqer/shipping', 'shipping.standard.title');
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return URL_OPT_DIR.'quiqqer/shipping/bin/images/default.png';
+    }
+
+    /**
+     * @return string
      */
     public function getShipping()
     {
-        return new Shipping();
+        return Shipping::class;
     }
 }

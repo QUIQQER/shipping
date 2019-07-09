@@ -45,7 +45,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
             this.$Grid = null;
 
             this.setAttributes({
-                icon : 'fa fa-credit-card-alt',
+                icon : 'fa fa-truck',
                 title: QUILocale.get(lg, 'menu.erp.shipping.title')
             });
 
@@ -348,7 +348,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                                 }
 
                                 new Element('option', {
-                                    value: result[i].shippingType,
+                                    value: result[i].type,
                                     html : result[i].title
                                 }).inject(Select);
                             }

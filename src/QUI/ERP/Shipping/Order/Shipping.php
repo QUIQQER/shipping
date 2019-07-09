@@ -61,14 +61,8 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
         $shippingList = $Shipping->getUserShipping($User);
 
-        $shippingList = \array_filter($shippingList, function ($Shipping) use ($Order) {
-            /* @var $Shipping QUI\ERP\Shipping\Types\ShippingEntry */
-            if ($Shipping->canUsedInOrder($Order) === false) {
-                return false;
-            }
 
-            return $Shipping->getShippingType()->isVisible();
-        });
+        // @todo check is usable
 
 
         $Engine->assign([

@@ -24,18 +24,6 @@ interface ShippingTypeInterface
      */
     public function getTitle($Locale = null);
 
-    /**
-     * @param null|QUI\Locale $Locale
-     * @return string
-     */
-    public function getDescription($Locale = null);
-
-    /**
-     * @param null|QUI\Locale $Locale
-     * @return string
-     */
-    public function getWorkingTitle($Locale = null);
-
     //endregion
 
     /**
@@ -45,13 +33,7 @@ interface ShippingTypeInterface
     public function toArray($Locale = null);
 
     /**
-     * @return \QUI\ERP\Shipping\Api\AbstractShippingEntry
+     * @return string - Shipping method class
      */
     public function getShipping();
-
-    /**
-     * @param QUI\Interfaces\Users\User $User
-     * @return bool
-     */
-    public function canUsedBy(QUI\Interfaces\Users\User $User);
 }

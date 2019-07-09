@@ -45,10 +45,6 @@
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
         </locale>
-        <locale name="shipping.free.description">
-            <de><![CDATA[Standard Versand]]></de>
-            <en><![CDATA[Standard shipping]]></en>
-        </locale>
         <locale name="shipping.free.workingTitle">
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
@@ -107,6 +103,11 @@
         <locale name="exception.create.unique.shipping.already.exists">
             <de><![CDATA[Dieses Versandmethode können Sie nur einmal anlegen.]]></de>
             <en><![CDATA[You can only create this shipping method once.]]></en>
+        </locale>
+
+        <locale name="ordering.step.title.Shipping">
+            <de><![CDATA[Versand]]></de>
+            <en><![CDATA[Shipping]]></en>
         </locale>
     </groups>
 
@@ -268,6 +269,33 @@
                 <br />
                 [ids]
             ]]></en>
+        </locale>
+
+        <locale name="window.shipping.entry.delete.rule.title">
+            <de><![CDATA[Versandkostenregel löschen]]></de>
+            <en><![CDATA[Delete shipping cost rule]]></en>
+        </locale>
+        <locale name="window.shipping.entry.delete.rule.text">
+            <de><![CDATA[Möchtest du die Versandkostenregeln wirklich löschen?]]></de>
+            <en><![CDATA[Do you really want to delete the shipping rules?]]></en>
+        </locale>
+        <locale name="window.shipping.entry.delete.rule.information">
+            <de><![CDATA[
+                Die folgenden Versandkostenregelen werden komplett gelöscht und können nicht wieder hergestellt werden:
+                <br />[ids]
+            ]]></de>
+            <en><![CDATA[
+                The following shipping cost rules will be completely deleted and cannot be restored:
+                <br />
+                [ids]
+            ]]></en>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/order">
+        <locale name="ordering.step.title.Shipping">
+            <de><![CDATA[Versand]]></de>
+            <en><![CDATA[Shipping]]></en>
         </locale>
     </groups>
 </locales>

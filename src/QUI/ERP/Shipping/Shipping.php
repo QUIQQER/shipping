@@ -118,6 +118,14 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getShippingType($shippingType)
     {
+        if (empty($shippingType)) {
+            throw new Exception([
+                'quiqqer/shipping',
+                'exception.shipping.type.not.found',
+                ['shippingType' => '']
+            ]);
+        }
+
         $types = $this->getShippingTypes();
 
         /* @var $Shipping QUI\ERP\Shipping\Api\ShippingTypeInterface */

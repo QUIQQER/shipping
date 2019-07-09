@@ -46,6 +46,40 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
         },
 
         /**
+         * Create a new rule
+         *
+         * @param {Number} ruleId
+         * @param {Object} data
+         * @return {Promise}
+         */
+        update: function (ruleId, data) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_update', resolve, {
+                    'package': 'quiqqer/shipping',
+                    ruleId   : ruleId,
+                    data     : JSON.encode(data),
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Create a new rule
+         *
+         * @param {Number|Array} ruleIds
+         * @return {Promise}
+         */
+        delete: function (ruleIds) {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_delete', resolve, {
+                    'package': 'quiqqer/shipping',
+                    ruleIds  : JSON.encode(ruleIds),
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Return the wanted rules
          *
          * @param ruleIds
