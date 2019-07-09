@@ -38,6 +38,32 @@
                 </label>
             </td>
         </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{discountTitle}}">
+                        {{discountTitle}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding">
+                        <select name="discount_type" class="field-container-field"
+                                style="width: 30%"
+                        >
+                            <option value="ABS">
+                                {{discountAbsolute}}
+                            </option>
+                            <option value="PERCENTAGE">
+                                {{discountPercentage}}
+                            </option>
+                        </select>
+                        <input type="number"
+                               name="discount"
+                               class="field-container-field"
+                               style="width: 69%"
+                        />
+                    </span>
+                </label>
+            </td>
+        </tr>
         </tbody>
     </table>
 

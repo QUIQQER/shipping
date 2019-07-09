@@ -202,6 +202,18 @@
             <de><![CDATA[Legen Sie ein eigenes Bild für die Versandart fest.]]></de>
             <en><![CDATA[Define your own image for the shipping method.]]></en>
         </locale>
+        <locale name="shipping.edit.template.discount">
+            <de><![CDATA[Abschlag]]></de>
+            <en><![CDATA[Discount]]></en>
+        </locale>
+        <locale name="shipping.edit.template.discount.absolute">
+            <de><![CDATA[Auf / Abschlag (absolut)]]></de>
+            <en><![CDATA[Discount (absolute)]]></en>
+        </locale>
+        <locale name="shipping.edit.template.discount.percentage">
+            <de><![CDATA[% (prozentual)]]></de>
+            <en><![CDATA[% (percentage)]]></en>
+        </locale>
 
         <locale name="window.delete.title">
             <de><![CDATA[Versandart löschen]]></de>

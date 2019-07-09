@@ -71,6 +71,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
             this.Loader.hide();
             this.$Create.submit().then(function () {
                 self.Loader.hide();
+                self.close();
             });
         }
     });

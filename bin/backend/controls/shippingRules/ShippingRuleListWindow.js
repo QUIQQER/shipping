@@ -61,6 +61,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
                     onCloseCreateRuleWindow: function () {
                         self.open();
+                        self.$List.refresh();
                     }
                 }
             }).inject(this.getContent());

@@ -12,6 +12,7 @@ use QUI\Permissions\Permission;
 
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
+use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 
 /**
  * Class ShippingEntry
@@ -48,24 +49,44 @@ class ShippingRule extends QUI\CRUD\Child
             $attributes = $this->getAttributes();
 
             if (\is_array($attributes['title'])) {
-                QUI\Translator::update(
+                QUI\Translator::edit(
                     'quiqqer/shipping',
-                    'shipping.'.$id.'.title',
+                    'shipping.'.$id.'.rule.title',
                     'quiqqer/shipping',
                     $attributes['title']
                 );
             };
 
             if (\is_array($attributes['workingTitle'])) {
-                QUI\Translator::update(
+                QUI\Translator::edit(
                     'quiqqer/shipping',
-                    'shipping.'.$id.'.workingTitle',
+                    'shipping.'.$id.'.rule.workingTitle',
                     'quiqqer/shipping',
                     $attributes['workingTitle']
                 );
             };
 
             QUI\Translator::publish('quiqqer/shipping');
+
+
+            // discount
+            $attributes['discount'] = \floatval($attributes['discount']);
+
+            if (\is_numeric($attributes['discount_type']) || empty($attributes['discount_type'])) {
+                $attributes['discount_type'] = (int)$attributes['discount_type'];
+            }
+
+            if ($attributes['discount_type'] === RuleFactory::DISCOUNT_TYPE_PERCENTAGE ||
+                $attributes['discount_type'] === 'PERCENTAGE'
+            ) {
+                $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_PERCENTAGE;
+            } else {
+                $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
+            }
+
+
+            // update for saving
+            $this->setAttributes($attributes);
         });
     }
 

@@ -1,6 +1,9 @@
 /**
  * @module package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWindow
  * @author www.pcsg.de (Henning Leutz
+ *
+ * @event updateBegin [self]
+ * @event updateEnd [self]
  */
 define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow', [
 
@@ -70,9 +73,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
         $onSubmit: function () {
             var self = this;
 
-            this.Loader.hide();
+            this.fireEvent('updateBegin', [this]);
+
+            this.Loader.show();
             this.$Rule.update().then(function () {
                 self.Loader.hide();
+                self.fireEvent('updateEnd', [self]);
             });
         }
     });

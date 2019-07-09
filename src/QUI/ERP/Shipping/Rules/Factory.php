@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping\Rules;
 
 use QUI;
+use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 use QUI\Permissions\Permission;
 
 /**
@@ -16,6 +17,16 @@ use QUI\Permissions\Permission;
  */
 class Factory extends QUI\CRUD\Factory
 {
+    /**
+     * absolute discount
+     */
+    const DISCOUNT_TYPE_ABS = 0;
+
+    /**
+     * percentage discount
+     */
+    const DISCOUNT_TYPE_PERCENTAGE = 1;
+
     /**
      * Handler constructor.
      */
@@ -54,7 +65,9 @@ class Factory extends QUI\CRUD\Factory
             'purchase_quantity_from',
             'purchase_quantity_until',
             'purchase_value_from',
-            'purchase_value_until'
+            'purchase_value_until',
+            'discount',
+            'discount_type'
         ]);
 
         $data = \array_filter($data, function ($k) use ($allowed) {
@@ -78,6 +91,33 @@ class Factory extends QUI\CRUD\Factory
             $data['priority'] = 0;
         }
 
+
+        // discount
+        if (\is_numeric($data['discount_type'])) {
+            $data['discount_type'] = (int)$data['discount_type'];
+        }
+
+        switch ($data['discount_type']) {
+            case 'ABS':
+                $data['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
+                break;
+
+            case 'PERCENTAGE':
+                $data['discount_type'] = RuleFactory::DISCOUNT_TYPE_PERCENTAGE;
+                break;
+
+            case RuleFactory::DISCOUNT_TYPE_ABS:
+            case RuleFactory::DISCOUNT_TYPE_PERCENTAGE:
+                break;
+
+            default:
+                $data['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
+        }
+
+        $attributes['discount'] = \floatval($data['discount']);
+
+
+        // start creating
         QUI::getEvents()->fireEvent('shippingRuleCreateBegin', [$data]);
 
         /* @var $NewChild ShippingRule */
@@ -140,7 +180,10 @@ class Factory extends QUI\CRUD\Factory
             'areas',
             'articles',
             'categories',
-            'user_groups'
+            'user_groups',
+
+            'discount',
+            'discount_type'
         ];
     }
 
