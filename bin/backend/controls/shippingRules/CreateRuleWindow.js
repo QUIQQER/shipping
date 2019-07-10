@@ -32,8 +32,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
             this.parent(options);
 
             this.setAttributes({
-                title: QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
-                icon : 'fa fa-truck'
+                title    : QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
+                icon     : 'fa fa-truck',
+                ok_button: {
+                    text     : QUILocale.get('quiqqer/shipping', 'window.shipping.entry.delete.rule.create'),
+                    textimage: 'fa fa-trash'
+                }
             });
 
             this.$Create = null;

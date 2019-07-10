@@ -20,27 +20,49 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
         Extends: QUIControl,
         Type   : 'package/quiqqer/shipping/bin/frontend/controls/order/Shipping',
 
+        Binds: [
+            '$onImport',
+            '$onClick'
+        ],
+
         initialize: function (options) {
             this.parent(options);
 
+            this.$Input = null;
+
             this.addEvents({
-                onInject: this.$onInject,
                 onImport: this.$onImport
             });
-        },
-
-        /**
-         * event: on inject
-         */
-        $onInject: function () {
-            console.log('$onInject');
         },
 
         /**
          * event: on import
          */
         $onImport: function () {
-            console.log('$onImport');
+            this.getElm().addEvent('click', this.$onClick);
+
+            this.$Input = this.getElm().getElement('input');
+
+            if (this.$Input.checked) {
+                this.getElm().addClass('selected');
+            }
+        },
+
+        /**
+         * event: on click
+         */
+        $onClick: function (event) {
+            if (event.target.nodeName !== 'INPUT') {
+                event.stop();
+            }
+
+            this.getElm()
+                .getParent('.quiqqer-order-step-shipping-list')
+                .getElements('.quiqqer-order-step-shipping-list-entry')
+                .removeClass('selected');
+
+            this.$Input.checked = true;
+            this.getElm().addClass('selected');
         }
     });
 });

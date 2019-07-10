@@ -331,6 +331,10 @@
             <de><![CDATA[Löschen]]></de>
             <en><![CDATA[Delete]]></en>
         </locale>
+        <locale name="window.shipping.entry.delete.rule.create">
+            <de><![CDATA[Erstellen]]></de>
+            <en><![CDATA[Create]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/order">
