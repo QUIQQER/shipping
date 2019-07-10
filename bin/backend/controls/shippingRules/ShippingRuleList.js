@@ -263,8 +263,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             new RuleWindow({
                 ruleId: this.$Grid.getSelectedData()[0].id,
                 events: {
-                    onClose: function () {
+                    onClose  : function () {
                         self.refresh();
+                    },
+                    updateEnd: function (Win) {
+                        Win.close();
                     }
                 }
             }).open();
@@ -303,6 +306,10 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                     maxHeight  : 300,
                     maxWidth   : 600,
                     autoclose  : true,
+                    ok_button  : {
+                        text     : QUILocale.get(lg, 'window.shipping.entry.delete.rule.delete'),
+                        textimage: 'fa fa-trash'
+                    },
                     events     : {
                         onSubmit: function (Win) {
                             Win.Loader.show();

@@ -327,6 +327,10 @@
                 [ids]
             ]]></en>
         </locale>
+        <locale name="window.shipping.entry.delete.rule.delete">
+            <de><![CDATA[Löschen]]></de>
+            <en><![CDATA[Delete]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/order">
