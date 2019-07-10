@@ -64,6 +64,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 discountTitle      : QUILocale.get(lg, 'shipping.edit.template.discount'),
                 discountAbsolute   : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
                 discountPercentage : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
+                statusTitle        : QUILocale.get(lg, 'shipping.edit.template.status'),
 
                 usageHeader  : QUILocale.get(lg, 'shipping.edit.template.usage'),
                 usageFrom    : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
@@ -90,11 +91,17 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
                 require([
                     'package/quiqqer/shipping/bin/backend/ShippingRules',
+                    'qui/controls/buttons/Switch',
                     'qui/utils/Form'
-                ], function (ShippingRules, FormUtils) {
+                ], function (ShippingRules, QUISwitch, FormUtils) {
                     ShippingRules.getRule(self.getAttribute('ruleId')).then(function (rule) {
                         self.$DataTitle.setData(rule.title);
                         self.$DataWorkingTitle.setData(rule.workingTitle);
+
+                        new QUISwitch({
+                            status: parseInt(rule.active),
+                            name  : 'status'
+                        }).inject(self.getElm().getElement('.field-shipping-rules'));
 
                         FormUtils.setDataToForm(rule, self.getElm().getElement('form'));
 
@@ -118,6 +125,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
             formData.title        = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
+            formData.active       = parseInt(formData.status);
 
             return ShippingRules.update(this.getAttribute('ruleId'), formData);
         }

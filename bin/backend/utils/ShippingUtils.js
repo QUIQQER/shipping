@@ -4,9 +4,10 @@
  */
 define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
 
-    'Locale'
+    'Locale',
+    'qui/controls/buttons/Switch'
 
-], function (QUILocale) {
+], function (QUILocale, QUISwitch) {
 
     "use strict";
 
@@ -37,6 +38,25 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
 
             ruleData.title        = ruleData.title[current];
             ruleData.workingTitle = ruleData.workingTitle[current];
+
+            ruleData.statusNode = new Element('span', {
+                'class': parseInt(ruleData.active) ? 'fa fa-check' : 'fa fa-close',
+                styles : {
+                    lineHeight: 26
+                }
+            });
+
+            if (parseInt(ruleData.discount_type)) {
+                ruleData.discount_type_text = QUILocale.get(
+                    'quiqqer/shipping',
+                    'discount.type.abs'
+                );
+            } else {
+                ruleData.discount_type_text = QUILocale.get(
+                    'quiqqer/shipping',
+                    'discount.type.percentage'
+                );
+            }
 
             return ruleData;
         }

@@ -20,10 +20,11 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * Return
          * @return {Promise|*}
          */
-        getList: function () {
+        getList: function (options) {
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getList', resolve, {
                     'package': 'quiqqer/shipping',
+                    options  : JSON.encode(options),
                     onError  : reject
                 });
             });

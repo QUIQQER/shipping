@@ -30,6 +30,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             '$onInject',
             '$openCreateDialog',
             '$openDeleteDialog',
+            '$openEditDialog',
             'refresh',
             'getSelected'
         ],
@@ -87,12 +88,21 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                 width            : width,
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
+                serverSort       : true,
                 buttons          : [{
                     name     : 'create',
                     text     : QUILocale.get('quiqqer/quiqqer', 'create'),
                     textimage: 'fa fa-plus',
                     events   : {
                         onClick: this.$openCreateDialog
+                    }
+                }, {
+                    name     : 'edit',
+                    text     : QUILocale.get('quiqqer/system', 'edit'),
+                    textimage: 'fa fa-edit',
+                    disabled : true,
+                    events   : {
+                        onClick: this.$openEditDialog
                     }
                 }, {
                     name     : 'delete',
@@ -115,39 +125,55 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                     width    : 50
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
-                    dataType : 'button',
+                    dataIndex: 'statusNode',
+                    dataType : 'node',
                     width    : 60
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'string',
-                    width    : 200
+                    width    : 200,
+                    sortable : false
                 }, {
                     header   : QUILocale.get(lg, 'shipping.edit.template.discount'),
                     dataIndex: 'discount',
                     dataType : 'number',
-                    width    : 100
+                    width    : 100,
+                    className: 'grid-align-right'
+                }, {
+                    header   : QUILocale.get(lg, 'shipping.edit.template.discount.type'),
+                    dataIndex: 'discount_type_text',
+                    dataType : 'string',
+                    width    : 200
                 }, {
                     header   : QUILocale.get(lg, 'shipping.edit.template.discount.type'),
                     dataIndex: 'discount_type',
                     dataType : 'string',
-                    width    : 100
+                    hidden   : true
                 }]
             });
 
             this.$Grid.addEvents({
                 onRefresh : this.refresh,
                 onClick   : function () {
-                    this.getButtons().filter(function (Btn) {
+                    var buttons  = self.$Grid.getButtons();
+                    var selected = self.$Grid.getSelectedData();
+
+                    var Edit = buttons.filter(function (Btn) {
+                        return Btn.getAttribute('name') === 'edit';
+                    })[0];
+
+                    buttons.filter(function (Btn) {
                         return Btn.getAttribute('name') === 'delete';
                     })[0].enable();
+
+                    if (selected.length === 1) {
+                        Edit.enable();
+                    } else {
+                        Edit.disable();
+                    }
                 },
-                onDblClick: function () {
-                    new RuleWindow({
-                        ruleId: self.$Grid.getSelectedData()[0].id
-                    }).open();
-                }
+                onDblClick: this.$openEditDialog
             });
 
             return this.$Elm;
@@ -163,12 +189,22 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
             this.fireEvent('refreshBegin', self);
 
-            ShippingRules.getList().then(function (rules) {
+            ShippingRules.getList(this.$Grid.options).then(function (rules) {
                 self.fireEvent('refresh', [self, rules]);
 
                 self.$Grid.setData({
                     data: ShippingUtils.parseRulesDataForGrid(rules)
                 });
+
+                var buttons = self.$Grid.getButtons();
+
+                buttons.filter(function (Btn) {
+                    return Btn.getAttribute('name') === 'delete';
+                })[0].disable();
+
+                buttons.filter(function (Btn) {
+                    return Btn.getAttribute('name') === 'edit';
+                })[0].disable();
 
                 return rules;
             });
@@ -215,6 +251,22 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                     }
                 }).open();
             });
+        },
+
+        /**
+         * event: open edit dialog
+         */
+        $openEditDialog: function () {
+            var self = this;
+
+            new RuleWindow({
+                ruleId: this.$Grid.getSelectedData()[0].id,
+                events: {
+                    onClose: function () {
+                        self.refresh();
+                    }
+                }
+            }).open();
         },
 
         /**

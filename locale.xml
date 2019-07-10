@@ -62,6 +62,15 @@
             <de><![CDATA[Neue Versandregel]]></de>
             <en><![CDATA[New shipping rule]]></en>
         </locale>
+
+        <locale name="discount.type.abs">
+            <de><![CDATA[Auf / Abschlag (absolut)]]></de>
+            <en><![CDATA[Discount (absolute)]]></en>
+        </locale>
+        <locale name="discount.type.percentage">
+            <de><![CDATA[Auf / Abschlag % (prozentual)]]></de>
+            <en><![CDATA[Discount % (percentage)]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
@@ -221,6 +230,10 @@
         <locale name="shipping.edit.template.discount.type">
             <de><![CDATA[Typ]]></de>
             <en><![CDATA[Type]]></en>
+        </locale>
+        <locale name="shipping.edit.template.status">
+            <de><![CDATA[Status]]></de>
+            <en><![CDATA[State]]></en>
         </locale>
 
         <locale name="window.delete.title">
