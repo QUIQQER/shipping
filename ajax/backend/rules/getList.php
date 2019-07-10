@@ -20,6 +20,10 @@ QUI::$Ajax->registerFunction(
             $options = [];
         }
 
+        if (!isset($options['page'])) {
+            $options['page'] = 1;
+        }
+
         if (!isset($options['sortOn'])) {
             $options['sortOn'] = 'priority';
         }
@@ -57,7 +61,17 @@ QUI::$Ajax->registerFunction(
             $result[] = $Rule->toArray();
         }
 
-        return $result;
+        // count
+        unset($query['limit']);
+        unset($query['order']);
+
+        $count = $Factory->countChildren($query);
+
+        return [
+            'data'  => $result,
+            'page'  => (int)$options['page'],
+            'total' => $count
+        ];
     },
     ['options'],
     'Permission::checkAdminUser'

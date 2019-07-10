@@ -91,6 +91,10 @@ class Factory extends QUI\CRUD\Factory
             $data['priority'] = 0;
         }
 
+        if (!isset($data['discount']) || empty($data['discount'])) {
+            $data['discount'] = 0;
+        }
+
 
         // discount
         if (\is_numeric($data['discount_type'])) {

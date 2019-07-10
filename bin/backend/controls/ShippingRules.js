@@ -47,7 +47,19 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingRules', [
          * event: on create
          */
         $onCreate: function () {
-            this.$List = new ShippingRuleList().inject(this.getContent());
+            var self = this;
+
+            this.$List = new ShippingRuleList({
+                events: {
+                    onRefreshBegin: function () {
+                        self.Loader.show();
+                    },
+
+                    onRefreshEnd: function () {
+                        self.Loader.hide();
+                    }
+                }
+            }).inject(this.getContent());
         },
 
         /**

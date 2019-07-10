@@ -189,12 +189,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
             this.fireEvent('refreshBegin', self);
 
-            ShippingRules.getList(this.$Grid.options).then(function (rules) {
-                self.fireEvent('refresh', [self, rules]);
+            ShippingRules.getList(this.$Grid.options).then(function (result) {
+                self.fireEvent('refresh', [self, result, result.data]);
 
-                self.$Grid.setData({
-                    data: ShippingUtils.parseRulesDataForGrid(rules)
-                });
+                result.data = ShippingUtils.parseRulesDataForGrid(result.data);
+                self.$Grid.setData(result);
 
                 var buttons = self.$Grid.getButtons();
 
@@ -206,7 +205,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                     return Btn.getAttribute('name') === 'edit';
                 })[0].disable();
 
-                return rules;
+                self.fireEvent('refreshEnd', [self, result, result.data]);
+
+                return result;
             });
         },
 
