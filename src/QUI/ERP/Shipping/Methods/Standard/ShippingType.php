@@ -47,6 +47,44 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         QUI\ERP\Order\OrderInterface $Order,
         QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
     ) {
+        if ($ShippingEntry->isActive() === false) {
+            return false;
+        }
+
+        // assignment
+        $articles   = $ShippingEntry->getAttribute('articles');
+        $categories = $ShippingEntry->getAttribute('categories');
+
+        // if articles and categories are empty, its allowed
+        if (empty($articles) && empty($categories)) {
+            return true;
+        }
+
+        $ArticleList   = $Order->getArticles();
+        $orderArticles = $ArticleList->getArticles();
+
+        foreach ($orderArticles as $Article) {
+            try {
+                $productId = $Article->getId();
+
+                if (\in_array($productId, $articles)) {
+                    return true;
+                }
+
+                if (is_array($categories)) {
+                    $Product           = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                    $articleCategories = $Product->getCategories();
+
+                    foreach ($articleCategories as $categoryId) {
+                        if (\in_array($categoryId, $categories)) {
+                            return true;
+                        }
+                    }
+                }
+            } catch (QUI\Exception $Exception) {
+                return false;
+            }
+        }
 
         return true;
     }
