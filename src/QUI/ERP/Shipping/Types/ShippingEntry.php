@@ -187,11 +187,22 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * is the user allowed to use this shipping
      *
      * @param QUI\Interfaces\Users\User $User
+     *
      * @return boolean
+     *
+     * @todo check shipping rules
      */
     public function canUsedBy(QUI\Interfaces\Users\User $User)
     {
-        // @todo check shipping rules
+        try {
+            $ShippingType = $this->getShippingType();
+
+            if (\method_exists($ShippingType, 'canUsedBy')) {
+                return $ShippingType->canUsedBy($User, $this);
+            }
+        } catch (QUI\Exception $Exception) {
+            return false;
+        }
 
         return true;
     }
@@ -200,11 +211,22 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * is the shipping allowed in the order?
      *
      * @param QUI\ERP\Order\OrderInterface $Order
+     *
      * @return bool
+     *
+     * @todo check shipping rules
      */
     public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
     {
-        // @todo check shipping rules
+        try {
+            $ShippingType = $this->getShippingType();
+
+            if (\method_exists($ShippingType, 'canUsedInOrder')) {
+                return $ShippingType->canUsedInOrder($Order, $this);
+            }
+        } catch (QUI\Exception $Exception) {
+            return false;
+        }
 
         return true;
     }

@@ -44,8 +44,37 @@ interface ShippingInterface
      */
     public function getShippingRule();
 
+    //region attributes
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function getAttribute($name);
+
     /**
      * @return string
      */
     public function toArray();
+
+    //endregion
+
+    //region status
+
+    /**
+     * @return integer
+     */
+    public function isActive();
+
+    /**
+     * Activate ths shipping entry
+     */
+    public function activate();
+
+    /**
+     * Deactivate ths shipping entry
+     */
+    public function deactivate();
+
+    //endregion
 }

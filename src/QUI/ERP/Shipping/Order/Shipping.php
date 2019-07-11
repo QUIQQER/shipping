@@ -59,11 +59,15 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Customer     = $Order->getCustomer();
         $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
-        $shippingList = $Shipping->getUserShipping($User);
+        $userShipping = $Shipping->getUserShipping($User);
 
+        $shippingList = [];
 
-        // @todo check is usable
-
+        foreach ($userShipping as $ShippingEntry) {
+            if ($ShippingEntry->canUsedInOrder($Order) && $ShippingEntry->canUsedBy($User)) {
+                $shippingList[] = $ShippingEntry;
+            }
+        }
 
         $Engine->assign([
             'User'             => $User,

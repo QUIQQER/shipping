@@ -48,7 +48,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
             new Order\Shipping([
                 'orderId'  => $orderId,
                 'Order'    => $Order,
-                'priority' => 30
+                'priority' => 25
             ])
         );
     }
