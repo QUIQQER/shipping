@@ -36,12 +36,4 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     {
         return URL_OPT_DIR.'quiqqer/shipping/bin/images/default.png';
     }
-
-    /**
-     * @return string
-     */
-    public function getShipping()
-    {
-        return Shipping::class;
-    }
 }

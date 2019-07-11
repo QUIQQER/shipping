@@ -342,5 +342,10 @@
             <de><![CDATA[Versand]]></de>
             <en><![CDATA[Shipping]]></en>
         </locale>
+
+        <locale name="exception.missing.shipping">
+            <de><![CDATA[Bitte wähle eine Versandart aus um mit dem Bestellvorgang fortzufahren.]]></de>
+            <en><![CDATA[Please select a shipping method to proceed with the order process.]]></en>
+        </locale>
     </groups>
 </locales>

@@ -24,6 +24,11 @@ interface ShippingTypeInterface
      */
     public function getTitle($Locale = null);
 
+    /**
+     * @return string
+     */
+    public function getIcon();
+
     //endregion
 
     /**
@@ -31,9 +36,4 @@ interface ShippingTypeInterface
      * @return array
      */
     public function toArray($Locale = null);
-
-    /**
-     * @return string - Shipping method class
-     */
-    public function getShipping();
 }

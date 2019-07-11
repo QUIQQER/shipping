@@ -81,7 +81,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     public function validate()
     {
         $Order   = $this->getOrder();
-        $Payment = $Order->getPayment();
+        $Payment = $Order->getShipping();
 
         if ($Payment === null) {
             throw new QUI\ERP\Order\Exception([
@@ -96,7 +96,6 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * Save the shipping to the order
      *
-     * @throws QUI\ERP\Order\Exception
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
@@ -123,14 +122,14 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Shipping      = QUI\ERP\Shipping\Shipping::getInstance();
             $ShippingEntry = $Shipping->getShippingEntry($shipping);
-            $ShippingEntry->canUsedBy($User);
+            //$ShippingEntry->canUsedBy($User);
         } catch (QUI\ERP\Shipping\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
             return;
         }
 
-        $Order->setPayment($ShippingEntry->getId());
+        $Order->addShipping($ShippingEntry);
         $Order->save();
     }
 }

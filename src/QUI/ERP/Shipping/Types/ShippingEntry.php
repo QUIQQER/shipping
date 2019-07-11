@@ -115,6 +115,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             QUI\System\Log::writeDebugException($Exception);
         }
 
+        // shipping rule
+        $attributes['shippingRule'] = false;
+
+        if ($this->getShippingRule()) {
+            $attributes['shippingRule'] = $this->getShippingRule()->getId();
+        }
+
         return $attributes;
     }
 
@@ -147,6 +154,33 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         return $Type;
+    }
+
+    /**
+     * Return the price display
+     *
+     * @return string
+     */
+    public function getPriceDisplay()
+    {
+        $Rule = $this->getShippingRule();
+
+        if ($Rule->getDiscountType() === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_ABS) {
+            $discount = $Rule->getAttribute('discount');
+
+            $Price = new QUI\ERP\Money\Price(
+                $discount,
+                QUI\ERP\Defaults::getCurrency()
+            );
+
+            if ($discount > 0) {
+                return '+'.$Price->getDisplayPrice();
+            }
+
+            return $Price->getDisplayPrice();
+        }
+
+        return '';
     }
 
     /**
@@ -396,6 +430,22 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     //endregion
 
     //region rules
+
+    /**
+     * @return ShippingRule|void
+     *
+     * @todo return current set rule
+     */
+    public function getShippingRule()
+    {
+        $rules = $this->getShippingRules();
+
+        if (\count($rules)) {
+            return $rules[0];
+        }
+
+        return null;
+    }
 
     /**
      * @param ShippingRule $Rule

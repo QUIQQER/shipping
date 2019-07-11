@@ -233,6 +233,16 @@ class ShippingRule extends QUI\CRUD\Child
         return true;
     }
 
+    /**
+     * Return the discount type
+     *
+     * @return int
+     */
+    public function getDiscountType()
+    {
+        return (int)$this->getAttribute('discount_type');
+    }
+
     // region activation / deactivation
 
     /**

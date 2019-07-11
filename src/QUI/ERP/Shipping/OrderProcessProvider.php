@@ -60,25 +60,6 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
      */
     public function getDisplay(AbstractOrder $Order, $Step = null)
     {
-        if ($this->Shipping === null) {
-            return '';
-        }
-
-//        try {
-//            return $this->Payment->getGatewayDisplay($Order, $Step);
-//        } catch (QUI\ERP\Order\ProcessingException $Exception) {
-//            $this->hasErrors = true;
-//
-//            return '<div class="message-error">'.$Exception->getMessage().'</div>';
-//        } catch (\Exception $Exception) {
-//            QUI\System\Log::writeException($Exception);
-//
-//            $this->hasErrors = true;
-//
-//            return '<div class="message-error">'.
-//                   QUI::getLocale()->get('quiqqer/order', 'exception.processing.error').
-//                   '</div>';
-//        }
         return '';
     }
 }
