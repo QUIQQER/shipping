@@ -115,12 +115,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             QUI\System\Log::writeDebugException($Exception);
         }
 
-        // shipping rule
-        $attributes['shippingRule'] = false;
-
-        if ($this->getShippingRule()) {
-            $attributes['shippingRule'] = $this->getShippingRule()->getId();
-        }
 
         return $attributes;
     }
@@ -160,27 +154,37 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Return the price display
      *
      * @return string
+     *
+     * @todo check if rule is valid
      */
     public function getPriceDisplay()
     {
-        $Rule = $this->getShippingRule();
+        $rules = $this->getShippingRules();
+        $price = 0;
 
-        if ($Rule->getDiscountType() === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_ABS) {
+        foreach ($rules as $Rule) {
             $discount = $Rule->getAttribute('discount');
+            $type     = $Rule->getDiscountType();
 
-            $Price = new QUI\ERP\Money\Price(
-                $discount,
-                QUI\ERP\Defaults::getCurrency()
-            );
-
-            if ($discount > 0) {
-                return '+'.$Price->getDisplayPrice();
+            if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_ABS) {
+                $price = $price + $discount;
+                continue;
             }
 
-            return $Price->getDisplayPrice();
+            $pc    = \round($price * ($discount / 100));
+            $price = $price + $pc;
         }
 
-        return '';
+        if ($price <= 0) {
+            return '';
+        }
+
+        $Price = new QUI\ERP\Money\Price(
+            $price,
+            QUI\ERP\Defaults::getCurrency()
+        );
+
+        return '+'.$Price->getDisplayPrice();
     }
 
     /**
@@ -452,22 +456,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     //endregion
 
     //region rules
-
-    /**
-     * @return ShippingRule|void
-     *
-     * @todo return current set rule
-     */
-    public function getShippingRule()
-    {
-        $rules = $this->getShippingRules();
-
-        if (\count($rules)) {
-            return $rules[0];
-        }
-
-        return null;
-    }
 
     /**
      * @param ShippingRule $Rule

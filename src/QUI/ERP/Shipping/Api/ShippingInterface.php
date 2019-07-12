@@ -39,11 +39,6 @@ interface ShippingInterface
      */
     public function getShippingType();
 
-    /**
-     * @return ShippingRule|null
-     */
-    public function getShippingRule();
-
     //region attributes
 
     /**
