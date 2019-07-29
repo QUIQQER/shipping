@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer>
+    <settings name="ERP">
+
+        <config>
+            <section name="shipping">
+                <conf name="debug">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+            </section>
+
+            <section name="paymentsChangeable"/>
+        </config>
+
+        <window name="ERP">
+            <title>
+                <locale group="quiqqer/shipping" var="window.erp.title"/>
+            </title>
+            <params>
+                <icon>fa fa-sun-o</icon>
+            </params>
+
+            <categories>
+                <category name="shipping" index="4">
+                    <text>
+                        <locale group="quiqqer/shipping" var="window.erp.shipping.title"/>
+                    </text>
+                    <icon>fa fa-truck</icon>
+
+                    <settings title="shipping" name="shipping">
+                        <title>
+                            <locale group="quiqqer/shipping" var="shipping.settings.title"/>
+                        </title>
+
+                        <input type="checkbox" conf="shipping.debug">
+                            <text>
+                                <locale group="quiqqer/shipping" var="shipping.settings.debug"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.debug.description"
+                                />
+                            </description>
+                        </input>
+
+
+                    </settings>
+                </category>
+            </categories>
+        </window>
+
+    </settings>
+</quiqqer>

@@ -127,6 +127,32 @@
             <de><![CDATA[Versand]]></de>
             <en><![CDATA[Shipping]]></en>
         </locale>
+        <locale name="window.erp.title">
+            <de><![CDATA[Versand]]></de>
+            <en><![CDATA[Shipping]]></en>
+        </locale>
+        <locale name="window.erp.shipping.title">
+            <de><![CDATA[Versand]]></de>
+            <en><![CDATA[Shipping]]></en>
+        </locale>
+        <locale name="shipping.settings.title">
+            <de><![CDATA[Allgemein]]></de>
+            <en><![CDATA[General]]></en>
+        </locale>
+        <locale name="shipping.settings.debug">
+            <de><![CDATA[Versand Debugging]]></de>
+            <en><![CDATA[Shipping debugging]]></en>
+        </locale>
+        <locale name="shipping.settings.debug.description">
+            <de><![CDATA[
+            Schalte das Versand Debugging an, damit du Fehler in deinen Versandarten und -regeln besser feststellen kannst.
+            In der Browser Konsole werden dir bei dem Versandschritt einer Bestellung hiflreiche Informationen mitgegeben.
+            ]]></de>
+            <en><![CDATA[
+            Enable shipping debugging to help you identify errors in your shipping methods and rules.
+            In the browser console, you'll be given helpful information at the shipping step in an order process.
+            ]]></en>
+        </locale>
     </groups>
 
 

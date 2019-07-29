@@ -7,10 +7,8 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
-use QUI\ERP\Shipping\Types\ShippingTypeInterface;
 use QUI\ERP\Shipping\Types\Factory;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
-use QUI\ERP\Shipping\Api\AbstractShippingEntry;
 
 /**
  * Shipping
@@ -23,6 +21,11 @@ class Shipping extends QUI\Utils\Singleton
      * @var array
      */
     protected $shipping = [];
+
+    /**
+     * @var bool
+     */
+    protected $debugging = null;
 
     /**
      * Return all available shipping provider
@@ -78,6 +81,27 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         return $result;
+    }
+
+    /**
+     * Is shipping debugging enabled?
+     *
+     * @return bool
+     */
+    public function debuggingEnabled()
+    {
+        if ($this->debugging !== null) {
+            return $this->debugging;
+        }
+
+        try {
+            $Config          = QUI::getPackage('quiqqer/shipping')->getConfig();
+            $this->debugging = !!$Config->getValue('shipping', 'debug');
+        } catch (QUI\Exception $Exception) {
+            $this->debugging = false;
+        }
+
+        return $this->debugging;
     }
 
     /**

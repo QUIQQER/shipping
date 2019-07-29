@@ -495,6 +495,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @return ShippingRule[]
      *
      * @todo check if rule is valid
+     * @todo debug output why rule is valid and not
      */
     public function getShippingRules()
     {
@@ -531,9 +532,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         });
 
         // debug shipping entry / rules
-        $debug = true;
-
-        if ($debug) {
+        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
             $self = $this;
 
             $Logger = new \Monolog\Logger('quiqqer-shipping');
