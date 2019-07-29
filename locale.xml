@@ -87,6 +87,11 @@
             <de><![CDATA[Die Versandmethode [shippingType] ist nicht von AbstractShippingEntry.]]></de>
             <en><![CDATA[The shipping type [shippingType] is not from AbstractShippingEntry.]]></en>
         </locale>
+        <locale name="exception.shipping.is.not.allowed">
+            <de><![CDATA[Diese Versandmethode ist nicht erlaubt. Bitte wähle eine andere Versandmethode.]]></de>
+            <en><![CDATA[This shipping method is not permitted. Please choose another shipping method.]]></en>
+        </locale>
+
         <locale name="message.shipping.saved.successfully">
             <de><![CDATA[Die Versandart [shipping] wurde erfolgreich gespeichert.]]></de>
             <en><![CDATA[The shipping type [shipping] has been saved successfully.]]></en>

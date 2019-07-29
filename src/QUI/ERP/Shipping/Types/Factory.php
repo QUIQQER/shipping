@@ -61,7 +61,6 @@ class Factory extends QUI\CRUD\Factory
         }
 
 
-
         QUI::getEvents()->fireEvent('shippingCreateBegin', [$data['shipping_type']]);
 
         /* @var $NewChild ShippingEntry */
@@ -126,13 +125,13 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @param int $id
      *
-     * @return QUI\ERP\Shipping\Api\AbstractShippingEntry
+     * @return QUI\ERP\Shipping\Types\ShippingEntry
      *
      * @throws QUI\Exception
      */
     public function getChild($id)
     {
-        /* @var QUI\ERP\Shipping\Api\AbstractShippingEntry $Shipping */
+        /* @var QUI\ERP\Shipping\Types\ShippingEntry $Shipping */
         $Shipping = parent::getChild($id);
 
         return $Shipping;

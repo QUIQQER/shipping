@@ -146,7 +146,7 @@ class Shipping extends QUI\Utils\Singleton
      * Return a shipping
      *
      * @param int|string $shippingId - ID of the shipping type
-     * @return QUI\ERP\Shipping\Api\AbstractShippingEntry
+     * @return QUI\ERP\Shipping\Types\ShippingEntry
      *
      * @throws Exception
      */

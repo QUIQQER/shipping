@@ -154,10 +154,23 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Return the price display
      *
      * @return string
-     *
-     * @todo check if rule is valid
      */
     public function getPriceDisplay()
+    {
+        $Price = new QUI\ERP\Money\Price(
+            $this->getPrice(),
+            QUI\ERP\Defaults::getCurrency()
+        );
+
+        return '+'.$Price->getDisplayPrice();
+    }
+
+    /**
+     * Return the price of the shipping entry
+     *
+     * @return float|int
+     */
+    public function getPrice()
     {
         $rules = $this->getShippingRules();
         $price = 0;
@@ -176,15 +189,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         if ($price <= 0) {
-            return '';
+            return 0;
         }
 
-        $Price = new QUI\ERP\Money\Price(
-            $price,
-            QUI\ERP\Defaults::getCurrency()
-        );
-
-        return '+'.$Price->getDisplayPrice();
+        return $price;
     }
 
     /**
@@ -193,8 +201,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param QUI\Interfaces\Users\User $User
      *
      * @return boolean
-     *
-     * @todo check shipping rules
      */
     public function canUsedBy(QUI\Interfaces\Users\User $User)
     {
@@ -217,8 +223,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param QUI\ERP\Order\OrderInterface $Order
      *
      * @return bool
-     *
-     * @todo check shipping rules
      */
     public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
     {
@@ -486,15 +490,18 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     }
 
     /**
-     * Return the shipping rules of the
+     * Return the shipping rules of the shipping entry
+     *
      * @return ShippingRule[]
+     *
+     * @todo check if rule is valid
      */
     public function getShippingRules()
     {
         $shippingRules = $this->getAttribute('shipping_rules');
         $shippingRules = \json_decode($shippingRules, true);
 
-        if (!is_array($shippingRules)) {
+        if (!\is_array($shippingRules)) {
             return [];
         }
 

@@ -84,17 +84,31 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     public function validate()
     {
-        $Order   = $this->getOrder();
-        $Payment = $Order->getShipping();
+        $Order = $this->getOrder();
 
-        if ($Payment === null) {
+        $Shipping = $Order->getShipping();
+        $User     = $Order->getCustomer();
+
+        if ($Shipping === null) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/order',
                 'exception.missing.shipping'
             ]);
         }
 
-        // @todo validate customer shipping data
+        if (!$Shipping->canUsedBy($User)) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/order',
+                'exception.shipping.is.not.allowed'
+            ]);
+        }
+
+        if (!$Shipping->canUsedInOrder($Order)) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/order',
+                'exception.shipping.is.not.allowed'
+            ]);
+        }
     }
 
     /**
@@ -126,7 +140,14 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Shipping      = QUI\ERP\Shipping\Shipping::getInstance();
             $ShippingEntry = $Shipping->getShippingEntry($shipping);
-            //$ShippingEntry->canUsedBy($User);
+
+            if (!$ShippingEntry->canUsedBy($User)) {
+                return;
+            }
+
+            if (!$ShippingEntry->canUsedInOrder($Order)) {
+                return;
+            }
         } catch (QUI\ERP\Shipping\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
