@@ -128,6 +128,48 @@ class ShippingRule extends QUI\CRUD\Child
     }
 
     /**
+     * Return the shipping rule title
+     *
+     * @param null $Locale
+     * @return string
+     */
+    public function getTitle($Locale = null)
+    {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
+
+        $language = $Locale->getCurrent();
+        $id       = $this->getId();
+
+        return $Locale->getByLang(
+            $language,
+            'quiqqer/shipping',
+            'shipping.'.$id.'.rule.title'
+        );
+    }
+
+    /**
+     * Return the shipping rule priority
+     *
+     * @return int
+     */
+    public function getPriority()
+    {
+        return (int)$this->getAttribute('priority');
+    }
+
+    /**
+     * Return the shipping rule discount value
+     *
+     * @return float
+     */
+    public function getDiscount()
+    {
+        return \floatval($this->getAttribute('discount'));
+    }
+
+    /**
      * is the user allowed to use this shipping
      *
      * @param QUI\Interfaces\Users\User $User

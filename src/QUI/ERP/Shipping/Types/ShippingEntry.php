@@ -516,6 +516,51 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
         }
 
+        // sort by priority
+        \usort($result, function ($ShippingRuleA, $ShippingRuleB) {
+            /* @var $ShippingRuleA ShippingRule */
+            /* @var $ShippingRuleB ShippingRule */
+            $priorityA = (int)$ShippingRuleA->getPriority();
+            $priorityB = (int)$ShippingRuleB->getPriority();
+
+            if ($priorityA === $priorityB) {
+                return 0;
+            }
+
+            return $priorityA < $priorityB ? -1 : 1;
+        });
+
+        // debug shipping entry / rules
+        $debug = true;
+
+        if ($debug) {
+            $self = $this;
+
+            $Logger = new \Monolog\Logger('quiqqer-shipping');
+            $Logger->pushHandler(new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG));
+            $Logger->pushHandler(new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG));
+
+            try {
+                QUI::getEvents()->addEvent('onResponseSent', function () use ($self, $Logger, $result) {
+                    $log = [];
+
+                    /* @var $ShippingRule ShippingRule */
+                    foreach ($result as $ShippingRule) {
+                        $log[] = [
+                            'id'       => $ShippingRule->getId(),
+                            'title'    => $ShippingRule->getTitle(),
+                            'priority' => $ShippingRule->getPriority(),
+                            'discount' => $ShippingRule->getDiscount()
+                        ];
+                    }
+
+                    $Logger->info($self->getTitle(), $log);
+                });
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
         return $result;
     }
 
