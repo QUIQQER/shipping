@@ -258,11 +258,18 @@ class Shipping extends QUI\Utils\Singleton
      *      QUI\ERP\Accounting\Invoice\Invoice|
      *      QUI\ERP\Accounting\Invoice\InvoiceTemporary
      * $Order
+     *
+     * @todo
      */
     public function getShippingByObject($Object)
     {
     }
 
+    /**
+     * @param $orderId
+     *
+     * @todo
+     */
     public function getShippingByOrderId($orderId)
     {
     }
