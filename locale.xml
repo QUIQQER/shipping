@@ -153,6 +153,11 @@
             In the browser console, you'll be given helpful information at the shipping step in an order process.
             ]]></en>
         </locale>
+
+        <locale name="shipping.order.title">
+            <de><![CDATA[Versand: [shipping]]]></de>
+            <en><![CDATA[Shipping: [shipping]]]></en>
+        </locale>
     </groups>
 
 

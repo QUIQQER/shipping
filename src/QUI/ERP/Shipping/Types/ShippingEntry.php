@@ -564,4 +564,25 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     }
 
     //endregion
+
+    /**
+     * @param null $Locale
+     * @return QUI\ERP\Products\Utils\PriceFactor
+     */
+    public function toPriceFactor($Locale = null)
+    {
+        $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
+            'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
+                'shipping' => $this->getTitle($Locale)
+            ]),
+            'description' => '',
+            'priority'    => 1,
+            'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
+            'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value'       => $this->getPrice(),
+            'visible'     => true
+        ]);
+
+        return $PriceFactor;
+    }
 }
