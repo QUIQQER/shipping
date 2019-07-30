@@ -1,6 +1,10 @@
 /**
- * @module
+ * @module package/quiqqer/shipping/bin/backend/classes/ShippingRules
  * @author www.pcsg.de (Henning Leutz)
+ *
+ * @event onCreate [self, ruleId]
+ * @event onUpdate [self, ruleId]
+ * @event onDelete [self, ruleIds]
  */
 define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
 
@@ -37,8 +41,13 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise}
          */
         create: function (rules) {
+            var self = this;
+
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_create', resolve, {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_create', function (ruleId) {
+                    resolve(ruleId);
+                    self.fireEvent('create', [self, ruleId]);
+                }, {
                     'package': 'quiqqer/shipping',
                     rules    : JSON.encode(rules),
                     onError  : reject
@@ -54,8 +63,13 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise}
          */
         update: function (ruleId, data) {
+            var self = this;
+
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_update', resolve, {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_update', function () {
+                    resolve();
+                    self.fireEvent('update', [self, ruleId]);
+                }, {
                     'package': 'quiqqer/shipping',
                     ruleId   : ruleId,
                     data     : JSON.encode(data),
@@ -71,8 +85,13 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise}
          */
         delete: function (ruleIds) {
+            var self = this;
+
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_delete', resolve, {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_delete', function () {
+                    resolve();
+                    self.fireEvent('delete', [self, ruleIds]);
+                }, {
                     'package': 'quiqqer/shipping',
                     ruleIds  : JSON.encode(ruleIds),
                     onError  : reject

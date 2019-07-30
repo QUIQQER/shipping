@@ -198,6 +198,10 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         shippingRules = [];
                     }
 
+                    if (typeOf(shippingRules) !== 'array') {
+                        shippingRules = [];
+                    }
+
                     var data = shippingRules.map(function (entry) {
                         return {
                             id: entry

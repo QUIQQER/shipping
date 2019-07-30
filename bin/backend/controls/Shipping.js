@@ -3,6 +3,7 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Shipping Panel
+ * List all shipping entries
  */
 define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
 

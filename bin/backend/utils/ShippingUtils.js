@@ -46,7 +46,7 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
                 }
             });
 
-            if (parseInt(ruleData.discount_type)) {
+            if (parseInt(ruleData.discount_type) === 0) {
                 ruleData.discount_type_text = QUILocale.get(
                     'quiqqer/shipping',
                     'discount.type.abs'

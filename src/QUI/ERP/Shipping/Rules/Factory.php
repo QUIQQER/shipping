@@ -127,15 +127,54 @@ class Factory extends QUI\CRUD\Factory
         /* @var $NewChild ShippingRule */
         $NewChild = parent::createChild($data);
 
+        $localeTitle  = 'shipping.'.$NewChild->getId().'.rule.title';
+        $localeWTitle = 'shipping.'.$NewChild->getId().'.rule.workingTitle';
+
         $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.rule.title',
+            $localeTitle,
             QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder')
         );
 
         $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.rule.workingTitle',
+            $localeWTitle,
             QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder')
         );
+
+        // set translations
+        if (isset($data['title']) && !empty($data['title']) && \is_array($data['title'])) {
+            $title = [];
+
+            foreach ($data['title'] as $lang => $v) {
+                if (\mb_strlen($lang) === 2) {
+                    $title[$lang] = $v;
+                }
+            }
+
+            QUI\Translator::edit(
+                'quiqqer/shipping',
+                $localeTitle,
+                'quiqqer/shipping',
+                $title
+            );
+        }
+
+        if (isset($data['workingTitle']) && !empty($data['workingTitle']) && \is_array($data['workingTitle'])) {
+            $title = [];
+
+            foreach ($data['workingTitle'] as $lang => $v) {
+                if (\mb_strlen($lang) === 2) {
+                    $title[$lang] = $v;
+                }
+            }
+
+            QUI\Translator::edit(
+                'quiqqer/shipping',
+                $localeWTitle,
+                'quiqqer/shipping',
+                $title
+            );
+        }
+
 
         try {
             QUI\Translator::publish('quiqqer/shipping');

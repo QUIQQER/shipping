@@ -28,6 +28,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
         Binds: [
             '$onInject',
+            '$onDestroy',
             '$openCreateDialog',
             '$openDeleteDialog',
             '$openEditDialog',
@@ -41,7 +42,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             this.$Grid = null;
 
             this.addEvents({
-                onInject: this.$onInject
+                onInject : this.$onInject,
+                onDestroy: this.$onDestroy
             });
         },
 
@@ -216,6 +218,23 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
          */
         $onInject: function () {
             this.refresh();
+
+            ShippingRules.addEvents({
+                onCreate: this.refresh,
+                onUpdate: this.refresh,
+                onDelete: this.refresh
+            });
+        },
+
+        /**
+         * @event on Destroy
+         */
+        $onDestroy: function () {
+            ShippingRules.removeEvents({
+                onCreate: this.refresh,
+                onUpdate: this.refresh,
+                onDelete: this.refresh
+            });
         },
 
         /**
