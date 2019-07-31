@@ -2,6 +2,8 @@
 
 namespace QUI\ERP\Shipping\Types;
 
+use QUI;
+use QUI\ERP\Shipping\Api;
 use QUI\ERP\Shipping\Api\ShippingInterface;
 
 /**
@@ -30,32 +32,50 @@ class ShippingUnique implements ShippingInterface
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
+        if (isset($this->attributes['id'])) {
+            return $this->attributes['id'];
+        }
 
+        return 0;
     }
 
     /**
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle()
+    public function getTitle($Locale = null)
     {
-        if (isset($this->attributes['title'])) {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
 
+        $current = $Locale->getCurrent();
+
+        if (isset($this->attributes['title']) && $this->attributes['title'][$current]) {
+            return $this->attributes['title'][$current];
         }
 
         return '';
     }
 
     /**
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription()
+    public function getDescription($Locale = null)
     {
-        if (isset($this->attributes['description'])) {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
 
+        $current = $Locale->getCurrent();
+
+        if (isset($this->attributes['description']) && $this->attributes['description'][$current]) {
+            return $this->attributes['description'][$current];
         }
 
         return '';
@@ -74,11 +94,61 @@ class ShippingUnique implements ShippingInterface
     }
 
     /**
+     * Return the price display
+     *
      * @return string
+     */
+    public function getPriceDisplay()
+    {
+        $Price = new QUI\ERP\Money\Price(
+            $this->getPrice(),
+            QUI\ERP\Defaults::getCurrency()
+        );
+
+        return '+'.$Price->getDisplayPrice();
+    }
+
+    /**
+     * Return the price of the shipping entry
+     *
+     * @return float|int
+     */
+    public function getPrice()
+    {
+        if (isset($this->attributes['price'])) {
+            return \floatval($this->attributes['price']);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @return string
+     * @throws QUI\ERP\Shipping\Exception
      */
     public function getShippingType()
     {
+        $type = $this->getAttribute('shipping_type');
 
+        if (!\class_exists($type)) {
+            throw new QUI\ERP\Shipping\Exception([
+                'quiqqer/shipping',
+                'exception.shipping.type.not.found',
+                ['shippingType' => $type]
+            ]);
+        }
+
+        $Type = new $type();
+
+        if (!($Type instanceof Api\ShippingTypeInterface)) {
+            throw new QUI\ERP\Shipping\Exception([
+                'quiqqer/shipping',
+                'exception.shipping.type.not.abstractShipping',
+                ['shippingType' => $type]
+            ]);
+        }
+
+        return $Type;
     }
 
     //region attributes
@@ -102,6 +172,16 @@ class ShippingUnique implements ShippingInterface
     public function toArray()
     {
         return $this->attributes;
+    }
+
+    /**
+     * Return the shipping as an json array
+     *
+     * @return string
+     */
+    public function toJSON()
+    {
+        return \json_encode($this->toArray());
     }
 
     //endregion

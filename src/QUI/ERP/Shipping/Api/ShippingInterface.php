@@ -6,7 +6,7 @@
 
 namespace QUI\ERP\Shipping\Api;
 
-use QUI\ERP\Shipping\Rules\ShippingRule;
+use QUI;
 
 /**
  * Interface for a Shipping Entry
@@ -15,19 +15,21 @@ use QUI\ERP\Shipping\Rules\ShippingRule;
 interface ShippingInterface
 {
     /**
-     * @return string
+     * @return integer
      */
     public function getId();
 
     /**
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle();
+    public function getTitle($Locale = null);
 
     /**
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription();
+    public function getDescription($Locale = null);
 
     /**
      * @return string
@@ -36,8 +38,23 @@ interface ShippingInterface
 
     /**
      * @return string
+     * @throws QUI\ERP\Shipping\Exception
      */
     public function getShippingType();
+
+    /**
+     * Return the price of the shipping entry
+     *
+     * @return float|int
+     */
+    public function getPrice();
+
+    /**
+     * Return the price display
+     *
+     * @return string
+     */
+    public function getPriceDisplay();
 
     //region attributes
 
@@ -51,6 +68,13 @@ interface ShippingInterface
      * @return array
      */
     public function toArray();
+
+    /**
+     * Return the shipping as an json array
+     *
+     * @return string
+     */
+    public function toJSON();
 
     //endregion
 

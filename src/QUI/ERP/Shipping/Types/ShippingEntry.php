@@ -115,6 +115,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             QUI\System\Log::writeDebugException($Exception);
         }
 
+        $attributes['price'] = $this->getPrice();
 
         return $attributes;
     }
