@@ -28,6 +28,11 @@ class Shipping extends QUI\Utils\Singleton
     protected $debugging = null;
 
     /**
+     * @var null
+     */
+    protected $shippingDisabled = null;
+
+    /**
      * Return all available shipping provider
      *
      * @return array
@@ -81,6 +86,27 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         return $result;
+    }
+
+    /**
+     * Is the shipping module disabled?
+     *
+     * @return bool
+     */
+    public function shippingDisabled()
+    {
+        if ($this->shippingDisabled !== null) {
+            return $this->shippingDisabled;
+        }
+
+        try {
+            $Config                 = QUI::getPackage('quiqqer/shipping')->getConfig();
+            $this->shippingDisabled = !!$Config->getValue('shipping', 'disabled');
+        } catch (QUI\Exception $Exception) {
+            $this->shippingDisabled = false;
+        }
+
+        return $this->shippingDisabled;
     }
 
     /**
@@ -259,10 +285,13 @@ class Shipping extends QUI\Utils\Singleton
      *      QUI\ERP\Accounting\Invoice\InvoiceTemporary
      * $Order
      *
+     * @return Shipping
+     *
      * @todo
      */
     public function getShippingByObject($Object)
     {
+        return $Object->getShipping();
     }
 
     /**

@@ -36,6 +36,10 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
      */
     public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Process)
     {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
         $orderId = null;
         $Order   = null;
 

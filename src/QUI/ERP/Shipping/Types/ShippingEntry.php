@@ -120,6 +120,16 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     }
 
     /**
+     * Return the shipping as an json array
+     *
+     * @return string
+     */
+    public function toJSON()
+    {
+        return \json_encode($this->toArray());
+    }
+
+    /**
      * Return the shipping type of the type
      *
      * @return Api\ShippingTypeInterface

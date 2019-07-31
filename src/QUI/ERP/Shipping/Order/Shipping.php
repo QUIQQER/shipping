@@ -154,7 +154,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             return;
         }
 
-        $Order->addShipping($ShippingEntry);
+        $Order->setShipping($ShippingEntry);
         $Order->save();
     }
 }

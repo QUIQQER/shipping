@@ -139,6 +139,22 @@
             <de><![CDATA[Allgemein]]></de>
             <en><![CDATA[General]]></en>
         </locale>
+
+        <locale name="shipping.settings.deactivated">
+            <de><![CDATA[Versand deaktivieren]]></de>
+            <en><![CDATA[Deactivated shipping]]></en>
+        </locale>
+        <locale name="shipping.settings.deactivated.description">
+            <de><![CDATA[
+            Wenn deine Produkte kein Versand benötigen kannst Du den Versand deaktivieren.
+            Somit wird der Versandschritt im Bestellprozess nicht angezeigt.
+            ]]></de>
+            <en><![CDATA[
+            If your products do not require shipping, you can disable shipping.
+            So the shipping step is not shown in the order process.
+            ]]></en>
+        </locale>
+
         <locale name="shipping.settings.debug">
             <de><![CDATA[Versand Debugging]]></de>
             <en><![CDATA[Shipping debugging]]></en>
