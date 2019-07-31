@@ -48,7 +48,7 @@ interface ShippingInterface
     public function getAttribute($name);
 
     /**
-     * @return string
+     * @return array
      */
     public function toArray();
 
@@ -57,7 +57,7 @@ interface ShippingInterface
     //region status
 
     /**
-     * @return integer
+     * @return bool
      */
     public function isActive();
 

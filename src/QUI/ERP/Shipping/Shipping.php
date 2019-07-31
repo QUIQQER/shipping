@@ -285,21 +285,38 @@ class Shipping extends QUI\Utils\Singleton
      *      QUI\ERP\Accounting\Invoice\InvoiceTemporary
      * $Order
      *
-     * @return Shipping
-     *
-     * @todo
+     * @return QUI\ERP\Shipping\Types\ShippingEntry|QUI\ERP\Shipping\Types\ShippingUnique
      */
     public function getShippingByObject($Object)
     {
+        if (!($Object instanceof QUI\ERP\Order\Order) &&
+            !($Object instanceof QUI\ERP\Order\OrderInProcess) &&
+            !($Object instanceof QUI\ERP\Accounting\Invoice\Invoice) &&
+            !($Object instanceof QUI\ERP\Accounting\Invoice\InvoiceTemporary)
+        ) {
+            return null;
+        }
+
+        /* @var $Object QUI\ERP\Order\Order|
+         *              QUI\ERP\Order\OrderInProcess|
+         *              QUI\ERP\Accounting\Invoice\Invoice|
+         *              QUI\ERP\Accounting\Invoice\InvoiceTemporary
+         */
         return $Object->getShipping();
     }
 
     /**
      * @param $orderId
-     *
-     * @todo
+     * @return QUI\ERP\Shipping\Types\ShippingEntry|QUI\ERP\Shipping\Types\ShippingUnique
      */
     public function getShippingByOrderId($orderId)
     {
+        try {
+            $Order = QUI\ERP\Order\Handler::getInstance()->getOrderById($orderId);
+        } catch (QUI\Exception $Exception) {
+            return null;
+        }
+
+        return $this->getShippingByObject($Order);
     }
 }
