@@ -287,6 +287,10 @@
             <de><![CDATA[Status]]></de>
             <en><![CDATA[State]]></en>
         </locale>
+        <locale name="shipping.edit.template.unit">
+            <de><![CDATA[Einheit]]></de>
+            <en><![CDATA[Unit]]></en>
+        </locale>
 
         <locale name="window.delete.title">
             <de><![CDATA[Versandart löschen]]></de>

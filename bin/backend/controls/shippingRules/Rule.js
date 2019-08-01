@@ -9,6 +9,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
     'package/quiqqer/translator/bin/Translator',
     'package/quiqqer/translator/bin/controls/Update',
     'controls/lang/InputMultiLang',
+    'package/quiqqer/products/bin/Fields',
     'package/quiqqer/shipping/bin/backend/ShippingRules',
     'qui/utils/Form',
     'Locale',
@@ -16,7 +17,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
     'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.html'
 
-], function (QUI, QUIControl, Translator, TranslateUpdater, InputMultiLang,
+], function (QUI, QUIControl, Translator, TranslateUpdater, InputMultiLang, Fields,
              ShippingRules, FormUtils, QUILocale, Mustache, template
 ) {
     "use strict";
@@ -65,6 +66,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 discountAbsolute   : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
                 discountPercentage : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
                 statusTitle        : QUILocale.get(lg, 'shipping.edit.template.status'),
+                unitTitle          : QUILocale.get(lg, 'shipping.edit.template.unit'),
 
                 usageHeader  : QUILocale.get(lg, 'shipping.edit.template.usage'),
                 usageFrom    : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
@@ -84,7 +86,41 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
         $onInject: function () {
             var self = this;
 
-            QUI.parse(this.getElm()).then(function () {
+            Fields.getChild(Fields.FIELD_UNIT).then(function (Unit) {
+                var title;
+
+                var entries = Unit.options.entries,
+                    Select  = self.getElm().getElement('.field-shipping-unit select'),
+                    Input   = self.getElm().getElement('.field-shipping-unit input'),
+                    current = QUILocale.getCurrent();
+
+                new Element('option', {
+                    value: '',
+                    html : '---'
+                }).inject(Select);
+
+                for (var unit in entries) {
+                    if (!entries.hasOwnProperty(unit)) {
+                        continue;
+                    }
+
+                    title = unit;
+
+                    if (typeof entries[unit].title[current] !== 'undefined') {
+                        title = entries[unit].title[current];
+                    }
+
+                    new Element('option', {
+                        value: unit,
+                        html : title
+                    }).inject(Select);
+                }
+
+                Select.set('disabled', false);
+                Input.set('disabled', false);
+            }).then(function () {
+                return QUI.parse(self.getElm());
+            }).then(function () {
                 // locale for title and working title
                 self.$DataTitle        = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
                 self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-workingTitle'));

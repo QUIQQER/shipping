@@ -80,6 +80,25 @@
         <tr>
             <td>
                 <label class="field-container">
+                    <span class="field-container-item" title="{{unitTitle}}">
+                        {{unitTitle}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding field-shipping-unit">
+                        <select disabled
+                                name="unit"
+                                style="width: 40%" class="field-container-field"
+                        ></select>
+                        <input disabled
+                               name="unit_value"
+                               type="number"
+                               style="width: 59%" class="field-container-field"/>
+                    </span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
                     <span class="field-container-item">
                         <span class="fa fa-calendar"></span>
                         {{usageFrom}}

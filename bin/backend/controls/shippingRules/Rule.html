@@ -46,7 +46,7 @@
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
                         <select name="discount_type" class="field-container-field"
-                                style="width: 30%"
+                                style="width: 40%"
                         >
                             <option value="0">
                                 {{discountAbsolute}}
@@ -58,7 +58,7 @@
                         <input type="number"
                                name="discount"
                                class="field-container-field"
-                               style="width: 69%"
+                               style="width: 59%"
                         />
                     </span>
                 </label>
@@ -87,6 +87,25 @@
         </thead>
 
         <tbody>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{unitTitle}}">
+                        {{unitTitle}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding field-shipping-unit">
+                        <select disabled
+                                name="unit"
+                                style="width: 40%" class="field-container-field"
+                        ></select>
+                        <input disabled
+                               name="unit_value"
+                               type="number"
+                               style="width: 59%" class="field-container-field"/>
+                    </span>
+                </label>
+            </td>
+        </tr>
         <tr>
             <td>
                 <label class="field-container">

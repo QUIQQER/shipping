@@ -84,6 +84,8 @@ class ShippingRule extends QUI\CRUD\Child
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
             }
 
+            // date
+
 
             // update for saving
             $this->setAttributes($attributes);

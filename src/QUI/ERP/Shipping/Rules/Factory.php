@@ -67,7 +67,9 @@ class Factory extends QUI\CRUD\Factory
             'purchase_value_from',
             'purchase_value_until',
             'discount',
-            'discount_type'
+            'discount_type',
+            'unit',
+            'unit_value'
         ]);
 
         $data = \array_filter($data, function ($k) use ($allowed) {
@@ -95,6 +97,13 @@ class Factory extends QUI\CRUD\Factory
             $data['discount'] = 0;
         }
 
+        if (!isset($data['unit'])) {
+            $data['unit'] = '';
+        }
+
+        if (!isset($data['unit_value'])) {
+            $data['unit_value'] = '';
+        }
 
         // discount
         if (\is_numeric($data['discount_type'])) {
@@ -226,7 +235,9 @@ class Factory extends QUI\CRUD\Factory
             'user_groups',
 
             'discount',
-            'discount_type'
+            'discount_type',
+            'unit',
+            'unit_value'
         ];
     }
 
