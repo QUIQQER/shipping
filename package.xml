@@ -9,7 +9,7 @@
             <locale group="quiqqer/shipping" var="package.title"/>
         </description>
 
-        <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/Logo.jpg"/>
+        <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/Logo.png"/>
 
         <provider>
             <shipping src="\QUI\ERP\Shipping\Provider"/>
