@@ -69,7 +69,9 @@ class Factory extends QUI\CRUD\Factory
             'discount',
             'discount_type',
             'unit',
-            'unit_value'
+            'unit_value',
+            'articles',
+            'user_groups'
         ]);
 
         $data = \array_filter($data, function ($k) use ($allowed) {
@@ -237,7 +239,9 @@ class Factory extends QUI\CRUD\Factory
             'discount',
             'discount_type',
             'unit',
-            'unit_value'
+            'unit_value',
+            'articles',
+            'user_groups'
         ];
     }
 

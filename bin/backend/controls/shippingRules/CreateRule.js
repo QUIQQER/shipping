@@ -60,13 +60,15 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
                 discountPercentage : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
                 unitTitle          : QUILocale.get(lg, 'shipping.edit.template.unit'),
 
-                usageHeader  : QUILocale.get(lg, 'shipping.edit.template.usage'),
-                usageFrom    : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
-                usageTo      : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
-                usageAmountOf: QUILocale.get(lg, 'shipping.edit.template.shopping.amount.of'),
-                usageAmountTo: QUILocale.get(lg, 'shipping.edit.template.shopping.amount.to'),
-                usageValueOf : QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
-                usageValueTo : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to')
+                usageHeader           : QUILocale.get(lg, 'shipping.edit.template.usage'),
+                usageFrom             : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
+                usageTo               : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
+                usageAmountOf         : QUILocale.get(lg, 'shipping.edit.template.shopping.amount.of'),
+                usageAmountTo         : QUILocale.get(lg, 'shipping.edit.template.shopping.amount.to'),
+                usageValueOf          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
+                usageValueTo          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to'),
+                usageAssignmentUser   : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
+                usageAssignmentProduct: QUILocale.get(lg, 'shipping.edit.template.assignment.product')
             }));
 
             return this.$Elm;

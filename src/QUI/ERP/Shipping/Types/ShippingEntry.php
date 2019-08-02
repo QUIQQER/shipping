@@ -24,6 +24,11 @@ use QUI\ERP\Shipping\Rules\ShippingRule;
 class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 {
     /**
+     * @var null
+     */
+    protected $Order = null;
+
+    /**
      * Shipping constructor.
      *
      * @param int $id
@@ -215,6 +220,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function canUsedBy(QUI\Interfaces\Users\User $User)
     {
+        if ($this->isActive() === false) {
+            return false;
+        }
+
         try {
             $ShippingType = $this->getShippingType();
 
@@ -237,6 +246,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
     {
+        if ($this->isActive() === false) {
+            return false;
+        }
+
         try {
             $ShippingType = $this->getShippingType();
 
@@ -504,9 +517,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Return the shipping rules of the shipping entry
      *
      * @return ShippingRule[]
-     *
-     * @todo check if rule is valid
-     * @todo debug output why rule is valid and not
      */
     public function getShippingRules()
     {
@@ -517,12 +527,46 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             return [];
         }
 
+        $debugging    = QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled();
+        $debuggingLog = [];
+
         $result = [];
         $Rules  = RuleFactory::getInstance();
 
         foreach ($shippingRules as $shippingRule) {
             try {
-                $result[] = $Rules->getChild($shippingRule);
+                $Rule = $Rules->getChild($shippingRule);
+
+                /* @var $Rule ShippingRule */
+                if (!$Rule->isValid()) {
+                    $debuggingLog[] = [
+                        'id'     => $Rule->getId(),
+                        'title'  => $Rule->getTitle(),
+                        'reason' => 'is not valid',
+                        'valid'  => false
+                    ];
+                    continue;
+                }
+
+                if (!$Rule->canUsedInOrder($this->Order)) {
+                    $debuggingLog[] = [
+                        'id'     => $Rule->getId(),
+                        'title'  => $Rule->getTitle(),
+                        'reason' => 'is not valid for order',
+                        'valid'  => false
+                    ];
+
+                    continue;
+                }
+
+                $result[] = $Rule;
+
+                $debuggingLog[] = [
+                    'id'     => $Rule->getId(),
+                    'title'  => $Rule->getTitle(),
+                    'reason' => 'is valid',
+                    'valid'  => true
+                ];
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception);
             }
@@ -543,32 +587,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         });
 
         // debug shipping entry / rules
-        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
-            $self = $this;
-
-            $Logger = new \Monolog\Logger('quiqqer-shipping');
-            $Logger->pushHandler(new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG));
-            $Logger->pushHandler(new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG));
-
-            try {
-                QUI::getEvents()->addEvent('onResponseSent', function () use ($self, $Logger, $result) {
-                    $log = [];
-
-                    /* @var $ShippingRule ShippingRule */
-                    foreach ($result as $ShippingRule) {
-                        $log[] = [
-                            'id'       => $ShippingRule->getId(),
-                            'title'    => $ShippingRule->getTitle(),
-                            'priority' => $ShippingRule->getPriority(),
-                            'discount' => $ShippingRule->getDiscount()
-                        ];
-                    }
-
-                    $Logger->info($self->getTitle(), $log);
-                });
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
-            }
+        if ($debugging) {
+            QUI\ERP\Shipping\Debug::generateShippingEntryDebuggingLog($this, $result, $debuggingLog);
         }
 
         return $result;
@@ -577,7 +597,19 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     //endregion
 
     /**
+     * Set an order to the shipping entry
+     * this order is then assigned to the shipping and the validation considers this order
+     *
+     * @param QUI\ERP\Order\OrderInterface $Order
+     */
+    public function setOrder(QUI\ERP\Order\OrderInterface $Order)
+    {
+        $this->Order = $Order;
+    }
+
+    /**
      * @param null $Locale
+     *
      * @return QUI\ERP\Products\Utils\PriceFactor
      */
     public function toPriceFactor($Locale = null)

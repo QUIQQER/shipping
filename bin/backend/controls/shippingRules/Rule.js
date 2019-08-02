@@ -43,6 +43,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
             this.$DataTitle        = null;
             this.$DataWorkingTitle = null;
+            this.$UserGroups       = null;
+            this.$Articles         = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -68,13 +70,15 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 statusTitle        : QUILocale.get(lg, 'shipping.edit.template.status'),
                 unitTitle          : QUILocale.get(lg, 'shipping.edit.template.unit'),
 
-                usageHeader  : QUILocale.get(lg, 'shipping.edit.template.usage'),
-                usageFrom    : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
-                usageTo      : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
-                usageAmountOf: QUILocale.get(lg, 'shipping.edit.template.shopping.amount.of'),
-                usageAmountTo: QUILocale.get(lg, 'shipping.edit.template.shopping.amount.to'),
-                usageValueOf : QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
-                usageValueTo : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to')
+                usageHeader           : QUILocale.get(lg, 'shipping.edit.template.usage'),
+                usageFrom             : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
+                usageTo               : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
+                usageAmountOf         : QUILocale.get(lg, 'shipping.edit.template.shopping.amount.of'),
+                usageAmountTo         : QUILocale.get(lg, 'shipping.edit.template.shopping.amount.to'),
+                usageValueOf          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
+                usageValueTo          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to'),
+                usageAssignmentUser   : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
+                usageAssignmentProduct: QUILocale.get(lg, 'shipping.edit.template.assignment.product')
             }));
 
             return this.$Elm;
@@ -86,7 +90,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
         $onInject: function () {
             var self = this;
 
-            Fields.getChild(Fields.FIELD_UNIT).then(function (Unit) {
+            Fields.getChild(Fields.FIELD_WEIGHT).then(function (Unit) {
                 var title;
 
                 var entries = Unit.options.entries,
@@ -125,6 +129,20 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 self.$DataTitle        = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
                 self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-workingTitle'));
 
+                self.$UserGroups = QUI.Controls.getById(
+                    self.$Elm
+                        .getElement('[name="user_groups"]')
+                        .getParent('.qui-elements-select')
+                        .get('data-quiid')
+                );
+
+                self.$Articles = QUI.Controls.getById(
+                    self.$Elm
+                        .getElement('[name="articles"]')
+                        .getParent('.qui-elements-select')
+                        .get('data-quiid')
+                );
+
                 require([
                     'package/quiqqer/shipping/bin/backend/ShippingRules',
                     'qui/controls/buttons/Switch',
@@ -133,6 +151,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                     ShippingRules.getRule(self.getAttribute('ruleId')).then(function (rule) {
                         self.$DataTitle.setData(rule.title);
                         self.$DataWorkingTitle.setData(rule.workingTitle);
+
+                        self.$UserGroups.importValue(rule.user_groups);
+                        self.$Articles.importValue(rule.articles);
 
                         new QUISwitch({
                             status: parseInt(rule.active),

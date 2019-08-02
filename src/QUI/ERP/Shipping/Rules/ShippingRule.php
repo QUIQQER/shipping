@@ -11,8 +11,12 @@ use QUI\CRUD\Factory;
 use QUI\Permissions\Permission;
 
 use QUI\ERP\Areas\Utils as AreaUtils;
-use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
+use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
+use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
+
+use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class ShippingEntry
@@ -84,8 +88,22 @@ class ShippingRule extends QUI\CRUD\Child
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
             }
 
-            // date
+            // purchase
+            if (empty($attributes['purchase_quantity_from'])) {
+                $attributes['purchase_quantity_from'] = null;
+            }
 
+            if (empty($attributes['purchase_quantity_to'])) {
+                $attributes['purchase_quantity_until'] = null;
+            }
+
+            if (empty($attributes['purchase_value_to'])) {
+                $attributes['purchase_value_until'] = null;
+            }
+
+            if (empty($attributes['purchase_value_to'])) {
+                $attributes['purchase_value_until'] = null;
+            }
 
             // update for saving
             $this->setAttributes($attributes);
@@ -217,7 +235,9 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         // not in area
-        $areasValue = \explode(',', $areasValue);
+        if ($areasValue) {
+            $areasValue = \explode(',', $areasValue);
+        }
 
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
             return false;
@@ -261,9 +281,130 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @param QUI\ERP\Order\OrderInterface $Order
      * @return bool
+     *
+     * @todo check unit
      */
-    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
+    public function canUsedInOrder($Order)
     {
+        if (!$this->isValid()) {
+            return false;
+        }
+
+        if (!($Order instanceof QUI\ERP\Order\OrderInterface)) {
+            return true;
+        }
+
+        if (!$this->canUsedBy($Order->getCustomer())) {
+            return false;
+        }
+
+        /* @var $Order QUI\ERP\Order\Order */
+        $Articles    = $Order->getArticles();
+        $articleList = $Articles->getArticles();
+
+        $articles  = $this->getAttribute('articles');
+        $unitValue = $this->getAttribute('unit_value'); // weight amount
+        $unit      = $this->getAttribute('unit');       // weight type
+
+        $quantityFrom  = $this->getAttribute('purchase_quantity_from');     // Einkaufsmenge ab
+        $quantityUntil = $this->getAttribute('purchase_quantity_until');    // Einkaufsmenge bis
+        $purchaseFrom  = $this->getAttribute('purchase_value_from');        // Einkaufswert ab
+        $purchaseUntil = $this->getAttribute('purchase_value_until');       // Einkaufswert bis
+
+        // article checks
+        $articleFound  = true;
+        $articleWeight = 0;
+
+        if (!empty($articles)) {
+            $articleFound = false;
+
+            if (\is_string($articles)) {
+                $articles = \explode(',', $articles);
+            }
+
+            if (!\is_array($articles)) {
+                $articles = [$articles];
+            }
+
+            $articles = \array_flip($articles);
+        }
+
+        foreach ($articleList as $Article) {
+            $aid = $Article->getId();
+
+            // get product because of weight
+            try {
+                $Product = Products::getProduct($aid);
+                $Weight  = $Product->getField(Fields::FIELD_WEIGHT);
+                $weight  = FieldUtils::weightFieldToKilogram($Weight);
+
+                $articleWeight = $articleWeight + $weight;
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
+
+            if (empty($articles)) {
+                continue;
+            }
+
+            if (isset($articles[$aid])) {
+                $articleFound = true;
+                break;
+            }
+        }
+
+        if ($articleFound === false) {
+            return false;
+        }
+
+        // weight check
+        if (!empty($unitValue) && !empty($unit)) {
+            $unitValue = FieldUtils::weightToKilogram($unitValue, $unit);
+
+            if ($articleWeight < $unitValue) {
+                return false;
+            }
+        }
+
+
+        // quantity check
+        $count = $Order->count();
+
+        if (!empty($quantityFrom) && $quantityFrom < $count) {
+            return false;
+        }
+
+        if (!empty($quantityUntil) && $quantityFrom > $count) {
+            return false;
+        }
+
+        // purchase
+        try {
+            $Calculation = $Order->getPriceCalculation();
+            $sum         = $Calculation->getSum();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return false;
+        }
+
+        if (!empty($purchaseFrom)) {
+            $purchaseFrom = \floatval($purchaseFrom);
+
+            if ($purchaseFrom < $sum) {
+                return false;
+            }
+        }
+
+        if (!empty($purchaseUntil)) {
+            $purchaseUntil = \floatval($purchaseUntil);
+
+            if ($purchaseUntil > $sum) {
+                return false;
+            }
+        }
+
+
         try {
             QUI::getEvents()->fireEvent('shippingCanUsedInOrder', [$this, $Order]);
         } catch (ShippingCanNotBeUsed $Exception) {
@@ -272,6 +413,40 @@ class ShippingRule extends QUI\CRUD\Child
             QUI\System\Log::addDebug($Exception->getMessage());
 
             return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Return the validation status of this rule
+     * can the rule be used?
+     */
+    public function isValid()
+    {
+        if (!$this->isActive()) {
+            return false;
+        }
+
+        // check date
+        $usageFrom  = $this->getAttribute('date_from');
+        $usageUntil = $this->getAttribute('date_until');
+        $time       = \time();
+
+        if (!empty($usageFrom)) {
+            $usageFrom = \strtotime($usageFrom);
+
+            if ($usageFrom > $time) {
+                return false;
+            }
+        }
+
+        if (!empty($usageUntil)) {
+            $usageUntil = \strtotime($usageUntil);
+
+            if ($usageUntil < $time) {
+                return false;
+            }
         }
 
         return true;

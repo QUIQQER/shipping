@@ -22,7 +22,7 @@ class EventHandler
      * @param QUI\ERP\Order\AbstractOrder $Order
      * @param QUI\ERP\Products\Product\ProductList $Products
      */
-    public static function onQuiqqerOrderBasketToOrder(
+    public static function onQuiqqerOrderBasketToOrderEnd(
         $Basket,
         QUI\ERP\Order\AbstractOrder $Order,
         QUI\ERP\Products\Product\ProductList $Products
@@ -33,6 +33,8 @@ class EventHandler
             return;
         }
 
+        $Shipping->setOrder($Order);
+
         $PriceFactors = $Products->getPriceFactors();
         $PriceFactors->addToEnd($Shipping->toPriceFactor());
 
@@ -40,6 +42,12 @@ class EventHandler
             $Products->recalculation();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
+        }
+
+        $Order->getArticles()->calc();
+
+        if (\method_exists($Order, 'save')) {
+            $Order->save();
         }
     }
 }

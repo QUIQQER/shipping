@@ -64,6 +64,8 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $shippingList = [];
 
         foreach ($userShipping as $ShippingEntry) {
+            $ShippingEntry->setOrder($Order);
+
             if ($ShippingEntry->canUsedInOrder($Order) && $ShippingEntry->canUsedBy($User)) {
                 $shippingList[] = $ShippingEntry;
             }
@@ -140,6 +142,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Shipping      = QUI\ERP\Shipping\Shipping::getInstance();
             $ShippingEntry = $Shipping->getShippingEntry($shipping);
+            $ShippingEntry->setOrder($Order);
 
             if (!$ShippingEntry->canUsedBy($User)) {
                 return;

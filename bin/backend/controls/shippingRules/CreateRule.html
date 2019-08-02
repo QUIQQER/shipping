@@ -46,7 +46,7 @@
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
                         <select name="discount_type" class="field-container-field"
-                                style="width: 30%"
+                                style="width: 40%"
                         >
                             <option value="ABS">
                                 {{discountAbsolute}}
@@ -58,7 +58,7 @@
                         <input type="number"
                                name="discount"
                                class="field-container-field"
-                               style="width: 69%"
+                               style="width: 59%"
                         />
                     </span>
                 </label>
@@ -157,6 +157,34 @@
                         {{usageValueTo}}
                     </span>
                     <input type="number" min="0" name="purchase_value_until" class="field-container-field"/>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAssignmentUser}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding">
+                        <input type="text" name="user_groups"
+                               data-qui="controls/usersAndGroups/Select"
+                        />
+                    </span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAssignmentProduct}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding">
+                        <input type="text" name="articles"
+                               data-qui="package/quiqqer/products/bin/controls/products/Select"
+                        />
+                    </span>
                 </label>
             </td>
         </tr>

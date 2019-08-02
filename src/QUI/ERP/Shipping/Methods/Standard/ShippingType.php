@@ -71,7 +71,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                     return true;
                 }
 
-                if (is_array($categories)) {
+                if (\is_array($categories)) {
                     $Product           = QUI\ERP\Products\Handler\Products::getProduct($productId);
                     $articleCategories = $Product->getCategories();
 

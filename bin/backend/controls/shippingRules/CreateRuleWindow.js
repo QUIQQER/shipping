@@ -23,7 +23,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
         ],
 
         options: {
-            maxHeight: 600,
+            maxHeight: 800,
             maxWidth : 600,
             autoclose: false
         },
