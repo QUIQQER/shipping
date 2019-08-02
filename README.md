@@ -1,4 +1,4 @@
-![QUIQQER Shipping](bin/images/Readme.jpg)
+![QUIQQER Shipping](bin/images/Readme.png)
 
 Shipping Method API for QUIQQER
 ======
