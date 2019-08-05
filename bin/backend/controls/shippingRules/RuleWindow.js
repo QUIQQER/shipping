@@ -83,6 +83,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
             this.$Rule.update().then(function () {
                 self.Loader.hide();
                 self.fireEvent('updateEnd', [self]);
+                self.close();
             });
         }
     });

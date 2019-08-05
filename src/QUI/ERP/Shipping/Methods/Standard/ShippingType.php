@@ -40,16 +40,21 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
     /**
      * @param QUI\ERP\Order\OrderInterface $Order
-     * @param QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
+     * @param QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
      * @return bool
      */
     public function canUsedInOrder(
         QUI\ERP\Order\OrderInterface $Order,
-        QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
+        QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
     ) {
         if ($ShippingEntry->isActive() === false) {
             return false;
         }
+
+        if (!$ShippingEntry->isValid()) {
+            return false;
+        }
+
 
         // assignment
         $articles   = $ShippingEntry->getAttribute('articles');

@@ -89,20 +89,19 @@ class ShippingRule extends QUI\CRUD\Child
             }
 
             // purchase
-            if (empty($attributes['purchase_quantity_from'])) {
-                $attributes['purchase_quantity_from'] = null;
-            }
+            $nullEmpty = [
+                'purchase_quantity_from',
+                'purchase_quantity_until',
+                'purchase_value_from',
+                'purchase_value_until',
+                'unit_value',
+                'unit'
+            ];
 
-            if (empty($attributes['purchase_quantity_to'])) {
-                $attributes['purchase_quantity_until'] = null;
-            }
-
-            if (empty($attributes['purchase_value_to'])) {
-                $attributes['purchase_value_until'] = null;
-            }
-
-            if (empty($attributes['purchase_value_to'])) {
-                $attributes['purchase_value_until'] = null;
+            foreach ($nullEmpty as $k) {
+                if (empty($attributes[$k])) {
+                    $attributes[$k] = null;
+                }
             }
 
             // update for saving

@@ -66,7 +66,9 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         foreach ($userShipping as $ShippingEntry) {
             $ShippingEntry->setOrder($Order);
 
-            if ($ShippingEntry->canUsedInOrder($Order) && $ShippingEntry->canUsedBy($User)) {
+            if ($ShippingEntry->isValid()
+                && $ShippingEntry->canUsedInOrder($Order)
+                && $ShippingEntry->canUsedBy($User)) {
                 $shippingList[] = $ShippingEntry;
             }
         }

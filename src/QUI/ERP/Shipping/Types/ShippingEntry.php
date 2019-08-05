@@ -594,6 +594,33 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         return $result;
     }
 
+    /**
+     * Can the shipping be used basically?
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        if (!$this->isActive()) {
+            return false;
+        }
+
+        $shippingRules = $this->getAttribute('shipping_rules');
+        $shippingRules = \json_decode($shippingRules, true);
+
+        if (!\is_array($shippingRules)) {
+            return true;
+        }
+
+        $rules = $this->getShippingRules();
+
+        if (empty($rules)) {
+            return false;
+        }
+
+        return true;
+    }
+
     //endregion
 
     /**
