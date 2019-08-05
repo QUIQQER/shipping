@@ -85,6 +85,52 @@
             <de><![CDATA[Auf / Abschlag % (prozentual)]]></de>
             <en><![CDATA[Discount % (percentage)]]></en>
         </locale>
+
+        <locale name="message.no.rule.found.order.continue">
+            <de><![CDATA[
+            Leider können wir aktuell keine Versandart für Ihre Bestellung bestimmen.
+            Wir melden uns nach Eingang Ihrer Bestellung schnellstmöglich bei Ihnen.
+            ]]></de>
+            <en><![CDATA[
+            Unfortunately, we cannot currently determine a shipping method for your order.
+            We will contact you as soon as possible after receipt of your order.
+            ]]></en>
+        </locale>
+        <locale name="message.no.rule.found.order.deny">
+            <de><![CDATA[
+            Leider können wir aktuell keine Versandart für Ihre Bestellung bestimmen.
+            Wenden Sie sich bitte an den Shopbetreiber unter [adminmail]
+            ]]></de>
+            <en><![CDATA[
+            Unfortunately, we cannot currently determine a shipping method for your order.
+            Please contact the shop administrator under [adminmail].
+            ]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.title">
+            <de><![CDATA[Mail Verhalten]]></de>
+            <en><![CDATA[Mail behavior]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.order.title">
+            <de><![CDATA[Verhalten bei keiner Regel]]></de>
+            <en><![CDATA[Behavior with no rule]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.order.description">
+            <de><![CDATA[
+            Diese Einstellung legt fest wie QUIQQER sich Verhalten soll wenn während einer Bestellung
+            keine Versandregeln und Versandarten gefunden werden konnten.
+            ]]></de>
+            <en><![CDATA[
+            This setting determines how QUIQQER should behave if no shipping rules and shipping methods could be found during an order process.
+            ]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.order.continue">
+            <de><![CDATA[Bestellung fortsetzen]]></de>
+            <en><![CDATA[Continue order]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.order.cancel">
+            <de><![CDATA[Bestellung nicht fortsetzen]]></de>
+            <en><![CDATA[Cancel order]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">

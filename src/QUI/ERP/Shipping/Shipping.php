@@ -18,6 +18,16 @@ use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 class Shipping extends QUI\Utils\Singleton
 {
     /**
+     * Continue order if no rule was found
+     */
+    const NO_RULE_FOUND_ORDER_CONTINUE = 1;
+
+    /**
+     * Cancel order if no rule was found
+     */
+    const NO_RULE_FOUND_ORDER_CANCEL = 0;
+
+    /**
      * @var array
      */
     protected $shipping = [];

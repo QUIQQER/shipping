@@ -14,7 +14,13 @@
                 </conf>
             </section>
 
-            <section name="paymentsChangeable"/>
+            <section name="no_rules">
+                <conf name="behavior">
+                    <type><![CDATA[integer]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
+            </section>
+
         </config>
 
         <window name="ERP">
@@ -54,8 +60,28 @@
                                 <locale group="quiqqer/shipping" var="shipping.settings.debug.description"/>
                             </description>
                         </input>
+                    </settings>
 
+                    <settings title="mail" name="mail">
+                        <title>
+                            <locale group="quiqqer/shipping" var="shipping.mail.settings.title"/>
+                        </title>
 
+                        <select conf="no_rules.behavior">
+                            <text>
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.order.title"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.order.description"/>
+                            </description>
+
+                            <option value="1">
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.order.continue"/>
+                            </option>
+                            <option value="0">
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.order.cancel"/>
+                            </option>
+                        </select>
                     </settings>
                 </category>
             </categories>
