@@ -2,7 +2,7 @@
   "name": "quiqqer/shipping",
   "type": "quiqqer-plugin",
   "description": "Provided the shipping management for QUIQQER. Can manage shipping methods",
-  "version": "dev-master",
+  "version": "dev-dev",
   "license": [
     "GPL-3.0+",
     "PCSG QEL-1.0"
