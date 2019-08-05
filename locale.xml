@@ -8,10 +8,24 @@
 
         <locale name="package.description">
             <de><![CDATA[
-            QUIQQER Shipping erweitert QUIQQER und das QUIQQER ERP System um eine einheitliche Versandmethoden API.
+            <p>QUIQQQER Shipping erweitert QUIQQER und das QUIQQER ERP-System um eine Versand-API.
+            Erstelle unterschiedliche Versand Arten für Ihre Produkte.</p>
+            <p>Das Shipping Modul unterstützt dich dabei mit einer Menge an Möglichkeiten.</p>
+            <ul>
+            <li>- Lege verschiedene Versandkosten für Zeiträume fest</li>
+            <li>- Lege verschiedene Versandkosten für bestimmte Produkte fest</li>
+            <li>- Lege verschiedene Versandkosten für bestimmte Benutzer fest</li>
+            </ul>
             ]]></de>
             <en><![CDATA[
-            QUIQQER Shipping extends QUIQQER and the QUIQQER ERP system with a uniform Shipping method API.
+            <p>QUIQQQER Shipping extends QUIQQER and the QUIQQER ERP system with a shipping API.
+            Create different shipping types for your products.</p>
+            <p>The Shipping module supports you with a lot of possibilities.</p>
+            <ul>
+            <li>- Define different shipping costs for time periods</li>
+            <li>- Set different shipping costs for specific products</li>
+            <li>- Set different shipping costs for specific users</li>
+            </ul>
             ]]></en>
         </locale>
 
