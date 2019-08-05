@@ -281,6 +281,14 @@
             This rule only applies if one of the products is alone in an order.
             ]]></en>
         </locale>
+        <locale name="shipping.edit.template.assignment.payment.header">
+            <de><![CDATA[Bezahlmethoden Einstellungen]]></de>
+            <en><![CDATA[Payment setting]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.payment.usage">
+            <de><![CDATA[Bezahlmethode]]></de>
+            <en><![CDATA[Payment]]></en>
+        </locale>
 
         <locale name="shipping.edit.template.assignment.category">
             <de><![CDATA[Kategorie]]></de>

@@ -6,19 +6,21 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'utils/Controls',
     'package/quiqqer/translator/bin/Translator',
     'package/quiqqer/translator/bin/controls/Update',
     'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/Fields',
     'package/quiqqer/shipping/bin/backend/ShippingRules',
     'qui/utils/Form',
+    'qui/utils/Elements',
     'Locale',
     'Mustache',
 
     'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.html'
 
-], function (QUI, QUIControl, Translator, TranslateUpdater, InputMultiLang, Fields,
-             ShippingRules, FormUtils, QUILocale, Mustache, template
+], function (QUI, QUIControl, ControlUtils, Translator, TranslateUpdater, InputMultiLang, Fields,
+             ShippingRules, FormUtils, ElementsUtils, QUILocale, Mustache, template
 ) {
     "use strict";
 
@@ -59,6 +61,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
         create: function () {
             this.$Elm = this.parent();
 
+            this.$Elm.setStyles({
+                overflow: 'hidden',
+                opacity : 0
+            });
+
             this.$Elm.set('html', Mustache.render(template, {
                 generalHeader      : QUILocale.get(lg, 'shipping.edit.template.general'),
                 title              : QUILocale.get(lg, 'shipping.edit.template.title'),
@@ -83,7 +90,10 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 productHeader                 : QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
                 usageAssignmentProductOnly    : QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
                 usageAssignmentProductOnlyText: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.text'),
-                usageAssignmentProductOnlyDesc: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.desc')
+                usageAssignmentProductOnlyDesc: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.desc'),
+
+                paymentHeader: QUILocale.get(lg, 'shipping.edit.template.assignment.payment.header'),
+                paymentUsage : QUILocale.get(lg, 'shipping.edit.template.assignment.payment.usage')
             }));
 
             return this.$Elm;
@@ -128,6 +138,27 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 Select.set('disabled', false);
                 Input.set('disabled', false);
             }).then(function () {
+                return ControlUtils.parse(self.getElm());
+            }).then(function () {
+                ElementsUtils.simulateEvent(
+                    self.getElm().getElement('.usage-table thead .data-table-toggle'),
+                    'click'
+                );
+
+                ElementsUtils.simulateEvent(
+                    self.getElm().getElement('.product-table thead .data-table-toggle'),
+                    'click'
+                );
+
+                ElementsUtils.simulateEvent(
+                    self.getElm().getElement('.payment-table thead .data-table-toggle'),
+                    'click'
+                );
+
+                return new Promise(function (resolve) {
+                    resolve.delay(500);
+                });
+            }).then(function () {
                 return QUI.parse(self.getElm());
             }).then(function () {
                 // locale for title and working title
@@ -148,27 +179,41 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                         .get('data-quiid')
                 );
 
-                require([
-                    'package/quiqqer/shipping/bin/backend/ShippingRules',
-                    'qui/controls/buttons/Switch',
-                    'qui/utils/Form'
-                ], function (ShippingRules, QUISwitch, FormUtils) {
-                    ShippingRules.getRule(self.getAttribute('ruleId')).then(function (rule) {
-                        self.$DataTitle.setData(rule.title);
-                        self.$DataWorkingTitle.setData(rule.workingTitle);
+                return new Promise(function (resolve) {
+                    require([
+                        'package/quiqqer/shipping/bin/backend/ShippingRules',
+                        'qui/controls/buttons/Switch',
+                        'qui/utils/Form'
+                    ], function (ShippingRules, QUISwitch, FormUtils) {
+                        ShippingRules.getRule(self.getAttribute('ruleId')).then(function (rule) {
+                            self.$DataTitle.setData(rule.title);
+                            self.$DataWorkingTitle.setData(rule.workingTitle);
 
-                        self.$UserGroups.importValue(rule.user_groups);
-                        self.$Articles.importValue(rule.articles);
+                            self.$UserGroups.importValue(rule.user_groups);
+                            self.$Articles.importValue(rule.articles);
 
-                        new QUISwitch({
-                            status: parseInt(rule.active),
-                            name  : 'status'
-                        }).inject(self.getElm().getElement('.field-shipping-rules'));
+                            new QUISwitch({
+                                status: parseInt(rule.active),
+                                name  : 'status'
+                            }).inject(self.getElm().getElement('.field-shipping-rules'));
 
-                        FormUtils.setDataToForm(rule, self.getElm().getElement('form'));
+                            FormUtils.setDataToForm(rule, self.getElm().getElement('form'));
 
-                        self.fireEvent('load', [self]);
+                            resolve();
+                        });
                     });
+                });
+            }).then(function () {
+                self.getElm().setStyle('overflow', null);
+
+                moofx(self.getElm()).animate({
+                    opacity: 1
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        self.getElm().setStyle('opacity', null);
+                        self.fireEvent('load', [self]);
+                    }
                 });
             });
         },
