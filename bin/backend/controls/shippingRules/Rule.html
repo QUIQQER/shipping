@@ -184,6 +184,19 @@
                 </label>
             </td>
         </tr>
+        </tbody>
+    </table>
+
+    <table class="data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th colspan="2">
+                {{productHeader}}
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
         <tr>
             <td>
                 <label class="field-container">
@@ -196,6 +209,23 @@
                         />
                     </span>
                 </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAssignmentProductOnly}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="articles_only"/>
+                        {{usageAssignmentProductOnlyText}}
+                    </span>
+                </label>
+
+                <div class="field-container-item-desc">
+                    {{usageAssignmentProductOnlyDesc}}
+                </div>
             </td>
         </tr>
         </tbody>

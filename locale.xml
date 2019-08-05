@@ -261,6 +261,27 @@
             <de><![CDATA[Produkt]]></de>
             <en><![CDATA[Product]]></en>
         </locale>
+        <locale name="shipping.edit.template.assignment.product.header">
+            <de><![CDATA[Produkt Einstellung]]></de>
+            <en><![CDATA[Product setting]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.only">
+            <de><![CDATA[Einzel Produkte]]></de>
+            <en><![CDATA[Single Products]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.only.text">
+            <de><![CDATA[Diese Produkte als einzel Produkte verwenden]]></de>
+            <en><![CDATA[Use these products as single products]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.only.desc">
+            <de><![CDATA[
+            Diese Regel gilt nur, wenn eines der Produkte alleine in einer Bestellung vorhanden ist.
+            ]]></de>
+            <en><![CDATA[
+            This rule only applies if one of the products is alone in an order.
+            ]]></en>
+        </locale>
+
         <locale name="shipping.edit.template.assignment.category">
             <de><![CDATA[Kategorie]]></de>
             <en><![CDATA[Category]]></en>

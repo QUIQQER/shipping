@@ -37,9 +37,11 @@
             <field type="text NULL">purchase_value_until</field>
 
             <field type="text NULL">areas</field>
-            <field type="text NULL">articles</field>
             <field type="text NULL">categories</field>
             <field type="text NULL">user_groups</field>
+
+            <field type="text NULL">articles</field>
+            <field type="INT(1) NOT NULL DEFAULT 0">articles_only</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>

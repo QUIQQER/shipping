@@ -88,6 +88,12 @@ class ShippingRule extends QUI\CRUD\Child
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
             }
 
+            if (!isset($attributes['articles_only']) || empty($attributes['articles_only'])) {
+                $attributes['articles_only'] = 0;
+            } else {
+                $attributes['articles_only'] = (int)$attributes['articles_only'];
+            }
+
             // purchase
             $nullEmpty = [
                 'purchase_quantity_from',
@@ -280,8 +286,6 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @param QUI\ERP\Order\OrderInterface $Order
      * @return bool
-     *
-     * @todo check unit
      */
     public function canUsedInOrder($Order)
     {
@@ -301,7 +305,9 @@ class ShippingRule extends QUI\CRUD\Child
         $Articles    = $Order->getArticles();
         $articleList = $Articles->getArticles();
 
-        $articles  = $this->getAttribute('articles');
+        $articles    = $this->getAttribute('articles');
+        $articleOnly = $this->getAttribute('articles_only');
+
         $unitValue = $this->getAttribute('unit_value'); // weight amount
         $unit      = $this->getAttribute('unit');       // weight type
 
@@ -350,6 +356,10 @@ class ShippingRule extends QUI\CRUD\Child
                 $articleFound = true;
                 break;
             }
+        }
+
+        if ($articleFound && $articleOnly && \count($articleList) !== 1) {
+            return false;
         }
 
         if ($articleFound === false) {

@@ -71,6 +71,7 @@ class Factory extends QUI\CRUD\Factory
             'unit',
             'unit_value',
             'articles',
+            'articles_only',
             'user_groups'
         ]);
 
@@ -232,9 +233,11 @@ class Factory extends QUI\CRUD\Factory
             'priority',
 
             'areas',
-            'articles',
             'categories',
             'user_groups',
+
+            'articles',
+            'articles_only',
 
             'discount',
             'discount_type',
