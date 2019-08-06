@@ -82,6 +82,32 @@
                                 <locale group="quiqqer/shipping" var="shipping.mail.settings.order.cancel"/>
                             </option>
                         </select>
+
+                        <input type="hidden"
+                               data-qui="package/quiqqer/translator/bin/controls/Update"
+                               data-qui-options-group="quiqqer/shipping"
+                               data-qui-options-var="message.no.rule.found.order.continue"
+                        >
+                            <text>
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.text.continue"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.text.continue.description"/>
+                            </description>
+                        </input>
+
+                        <input type="hidden"
+                               data-qui="package/quiqqer/translator/bin/controls/Update"
+                               data-qui-options-group="quiqqer/shipping"
+                               data-qui-options-var="message.no.rule.found.order.deny"
+                        >
+                            <text>
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.text.cancel"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping" var="shipping.mail.settings.text.cancel.description"/>
+                            </description>
+                        </input>
                     </settings>
                 </category>
             </categories>

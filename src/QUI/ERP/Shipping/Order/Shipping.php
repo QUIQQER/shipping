@@ -73,6 +73,11 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             }
         }
 
+        // send email if empty
+        if (empty($shippingList)) {
+            QUI\ERP\Shipping\Debug::sendAdminInfoMailAboutEmptyShipping($Order);
+        }
+
         $Engine->assign([
             'User'             => $User,
             'Customer'         => $Customer,

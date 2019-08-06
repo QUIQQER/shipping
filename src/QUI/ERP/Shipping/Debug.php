@@ -140,4 +140,45 @@ class Debug
 
         return self::$FormatLogger;
     }
+
+    /**
+     * @param QUI\ERP\Order\OrderInterface $Order
+     */
+    public static function sendAdminInfoMailAboutEmptyShipping(
+        QUI\ERP\Order\OrderInterface $Order
+    ) {
+        try {
+            $Article     = $Order->getArticles();
+            $articleHtml = $Article->toHTML();
+        } catch (QUI\Exception $Exception) {
+            //@todo send mail because of exception
+            return;
+        }
+
+        $adminMail = QUI::conf('mail', 'admin_mail');
+        $subject   = QUI::getLocale()->get('quiqqer/shipping', 'mail.admin.info.empty.shipping.subject');
+
+        $body = QUI::getLocale()->get('quiqqer/shipping', 'mail.admin.info.empty.shipping.body');
+        $body .= '<br /><br />------<br />><br />';
+        $body .= $articleHtml;
+
+        if (empty($adminMail)) {
+            QUI\System\Log::addAlert($body);
+
+            return;
+        }
+
+        // send mail
+        $Mailer = QUI::getMailManager()->getMailer();
+        $Mailer->addRecipient($adminMail);
+        $Mailer->setSubject($subject);
+        $Mailer->setBody($body);
+
+        try {
+            $Mailer->send();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addAlert($body);
+            QUI\System\Log::writeException($Exception);
+        }
+    }
 }

@@ -3,4 +3,7 @@
     <event on="onQuiqqerOrderBasketToOrderEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderBasketToOrderEnd"
     />
+    <event on="onPackageSetup"
+           fire="\QUI\ERP\Shipping\EventHandler::onPackageSetup"
+    />
 </events>

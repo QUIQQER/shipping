@@ -131,10 +131,31 @@
             <de><![CDATA[Bestellung nicht fortsetzen]]></de>
             <en><![CDATA[Cancel order]]></en>
         </locale>
+
+        <locale name="shipping.mail.settings.text.continue">
+            <de><![CDATA[Nachricht für: Bestellung fortsetzen]]></de>
+            <en><![CDATA[Message for: Continue order]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.text.continue.description">
+            <de>
+                <![CDATA[Diese Nachricht wird dem Benutzer angezeigt wenn die Bestellung fortgesetzt werden darf.]]></de>
+            <en><![CDATA[This message is displayed to the user if the order can be continued.]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.text.cancel">
+            <de><![CDATA[Nachricht für: Bestellung nicht fortsetzen]]></de>
+            <en><![CDATA[Message for: Cancel order]]></en>
+        </locale>
+        <locale name="shipping.mail.settings.text.cancel.description">
+            <de><![CDATA[
+                Diese Nachricht wird dem Benutzer angezeigt wenn die Bestellung nicht fortgesetzt werden darf.
+            ]]></de>
+            <en><![CDATA[
+                This message is displayed to the user if the order can't be continued and will be canceled.
+            ]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
-
         <locale name="exception.shipping.not.found">
             <de><![CDATA[Die Versandmethode [shipping] wurde nicht gefunden.]]></de>
             <en><![CDATA[The shipping type [shipping] was not found.]]></en>
@@ -233,6 +254,19 @@
         <locale name="shipping.order.title">
             <de><![CDATA[Versand: [shipping]]]></de>
             <en><![CDATA[Shipping: [shipping]]]></en>
+        </locale>
+
+        <locale name="mail.admin.info.empty.shipping.subject" html="true">
+            <de><![CDATA[
+
+            ]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="mail.admin.info.empty.shipping.body" html="true">
+            <de><![CDATA[
+
+            ]]></de>
+            <en><![CDATA[]]></en>
         </locale>
     </groups>
 

@@ -16,6 +16,58 @@ use QUI;
 class EventHandler
 {
     /**
+     * event for on package setup
+     *
+     * @throws QUI\Exception
+     */
+    public static function onPackageSetup()
+    {
+        $languages = QUI\Translator::getAvailableLanguages();
+
+        // create locale
+        $var    = 'message.no.rule.found.order.continue';
+        $params = [
+            'datatype' => 'php,js',
+            'package'  => 'quiqqer/shipping'
+        ];
+
+        foreach ($languages as $language) {
+            $params[$language] = QUI::getLocale()->getByLang(
+                $language,
+                'quiqqer/shipping',
+                $var
+            );
+        }
+
+        try {
+            QUI\Translator::addUserVar('quiqqer/shipping', $var, $params);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addNotice($Exception->getMessage());
+        }
+
+        // create locale
+        $var    = 'message.no.rule.found.order.deny';
+        $params = [
+            'datatype' => 'php,js',
+            'package'  => 'quiqqer/shipping'
+        ];
+
+        foreach ($languages as $language) {
+            $params[$language] = QUI::getLocale()->getByLang(
+                $language,
+                'quiqqer/shipping',
+                $var
+            );
+        }
+
+        try {
+            QUI\Translator::addUserVar('quiqqer/shipping', $var, $params);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addNotice($Exception->getMessage());
+        }
+    }
+
+    /**
      * event - on price factor init
      *
      * @param $Basket
