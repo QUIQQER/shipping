@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping\Order;
 
 use QUI;
+use QUI\ERP\Shipping\Shipping as ShippingHandler;
 
 /**
  * Class Shipping
@@ -76,6 +77,26 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         // send email if empty
         if (empty($shippingList)) {
             QUI\ERP\Shipping\Debug::sendAdminInfoMailAboutEmptyShipping($Order);
+
+            $Package = QUI::getPackage('quiqqer/shipping');
+            $Conf    = $Package->getConfig();
+
+            if ((int)$Conf->getValue('no_rules', 'behavior') === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
+                $message = QUI::getLocale()->get(
+                    'quiqqer/shipping',
+                    'message.no.rule.found.order.cancel',
+                    ['adminmail' => QUI::conf('mail', 'admin_mail')]
+                );
+            } else {
+                $message = QUI::getLocale()->get(
+                    'quiqqer/shipping',
+                    'message.no.rule.found.order.continue'
+                );
+            }
+
+            $Engine->assign([
+                'shippingEmptyMessage' => $message
+            ]);
         }
 
         $Engine->assign([
@@ -98,23 +119,44 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Shipping = $Order->getShipping();
         $User     = $Order->getCustomer();
 
-        if ($Shipping === null) {
+        // setting rule behavior
+        $behavior = ShippingHandler::NO_RULE_FOUND_ORDER_CONTINUE;
+
+        try {
+            $Package = QUI::getPackage('quiqqer/shipping');
+            $Conf    = $Package->getConfig();
+
+            $behavior = (int)$Conf->getValue('no_rules', 'behavior');
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+
+        // if no shipping exists, BUT order can be continued
+        if ($Shipping === null
+            && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
             throw new QUI\ERP\Order\Exception([
-                'quiqqer/order',
-                'exception.missing.shipping'
+                'quiqqer/shipping',
+                'exception.missing.shipping.order.canceled'
             ]);
+        }
+
+        // if no shipping exists, BUT order can be continued
+        if ($Shipping === null
+            && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CONTINUE) {
+            return;
         }
 
         if (!$Shipping->canUsedBy($User)) {
             throw new QUI\ERP\Order\Exception([
-                'quiqqer/order',
+                'quiqqer/shipping',
                 'exception.shipping.is.not.allowed'
             ]);
         }
 
         if (!$Shipping->canUsedInOrder($Order)) {
             throw new QUI\ERP\Order\Exception([
-                'quiqqer/order',
+                'quiqqer/shipping',
                 'exception.shipping.is.not.allowed'
             ]);
         }
@@ -139,6 +181,9 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
         if (empty($shipping)) {
+            $this->getOrder()->removeShipping();
+            $this->getOrder()->save();
+
             return;
         }
 

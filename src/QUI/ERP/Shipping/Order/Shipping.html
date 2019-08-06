@@ -3,6 +3,10 @@
         <h1>{locale group="quiqqer/shipping" var="ordering.step.title.Shipping"}</h1>
     </header>
 
+    {if isset($shippingEmptyMessage)}
+    <div class="message-error">{$shippingEmptyMessage}</div>
+    {/if}
+
     <div class="quiqqer-order-step-shipping-list">
         {foreach $shippingList as $Shipping}
         <div class="quiqqer-order-step-shipping-list-entry"

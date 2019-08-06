@@ -96,7 +96,7 @@
             We will contact you as soon as possible after receipt of your order.
             ]]></en>
         </locale>
-        <locale name="message.no.rule.found.order.deny">
+        <locale name="message.no.rule.found.order.cancel">
             <de><![CDATA[
             Leider können wir aktuell keine Versandart für Ihre Bestellung bestimmen.
             Wenden Sie sich bitte an den Shopbetreiber unter [adminmail]
@@ -105,6 +105,10 @@
             Unfortunately, we cannot currently determine a shipping method for your order.
             Please contact the shop administrator under [adminmail].
             ]]></en>
+        </locale>
+        <locale name="exception.missing.shipping.order.canceled">
+            <de><![CDATA[Sie können mit der Bestellung leider nicht fortfahren.]]></de>
+            <en><![CDATA[Unfortunately you cannot continue with your order.]]></en>
         </locale>
         <locale name="shipping.mail.settings.title">
             <de><![CDATA[Mail Verhalten]]></de>
@@ -257,16 +261,16 @@
         </locale>
 
         <locale name="mail.admin.info.empty.shipping.subject" html="true">
-            <de><![CDATA[
-
-            ]]></de>
-            <en><![CDATA[]]></en>
+            <de><![CDATA[Bei einer Bestellung wurden keine Versandmethoden gefunden]]></de>
+            <en><![CDATA[No shipping methods found for an order]]></en>
         </locale>
         <locale name="mail.admin.info.empty.shipping.body" html="true">
             <de><![CDATA[
-
+                Für die folgende Bestellung wurden keine Versandmethoden gefunden:
             ]]></de>
-            <en><![CDATA[]]></en>
+            <en><![CDATA[
+                No shipping methods were found for the following order:
+            ]]></en>
         </locale>
     </groups>
 

@@ -46,7 +46,7 @@ class EventHandler
         }
 
         // create locale
-        $var    = 'message.no.rule.found.order.deny';
+        $var    = 'message.no.rule.found.order.cancel';
         $params = [
             'datatype' => 'php,js',
             'package'  => 'quiqqer/shipping'

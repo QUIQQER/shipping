@@ -99,7 +99,7 @@
                         <input type="hidden"
                                data-qui="package/quiqqer/translator/bin/controls/Update"
                                data-qui-options-group="quiqqer/shipping"
-                               data-qui-options-var="message.no.rule.found.order.deny"
+                               data-qui-options-var="message.no.rule.found.order.cancel"
                         >
                             <text>
                                 <locale group="quiqqer/shipping" var="shipping.mail.settings.text.cancel"/>

@@ -159,7 +159,7 @@ class Debug
         $subject   = QUI::getLocale()->get('quiqqer/shipping', 'mail.admin.info.empty.shipping.subject');
 
         $body = QUI::getLocale()->get('quiqqer/shipping', 'mail.admin.info.empty.shipping.body');
-        $body .= '<br /><br />------<br />><br />';
+        $body .= '<br /><br />------<br /><br />';
         $body .= $articleHtml;
 
         if (empty($adminMail)) {
