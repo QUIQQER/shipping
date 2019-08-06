@@ -147,11 +147,6 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                     'click'
                 );
 
-                ElementsUtils.simulateEvent(
-                    self.getElm().getElement('.payment-table thead .data-table-toggle'),
-                    'click'
-                );
-
                 return new Promise(function (resolve) {
                     resolve.delay(500);
                 });

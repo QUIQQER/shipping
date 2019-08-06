@@ -154,9 +154,10 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                     width    : 50
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
-                    dataType : 'button',
-                    width    : 60
+                    dataIndex: 'statusNode',
+                    dataType : 'node',
+                    width    : 60,
+                    className: 'grid-align-center'
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
