@@ -102,4 +102,50 @@ class EventHandler
             $Order->save();
         }
     }
+
+    /**
+     * @param QUI\ERP\Accounting\Payments\Types\Payment $Payment
+     * @param QUI\ERP\Order\OrderInterface $Order
+     *
+     * @throws QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed
+     */
+    public static function onQuiqqerPaymentCanUsedInOrder(
+        QUI\ERP\Accounting\Payments\Types\Payment $Payment,
+        QUI\ERP\Order\OrderInterface $Order
+    ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
+        $Shipping = $Order->getShipping();
+
+        if (!$Shipping) {
+            return;
+        }
+
+        $payments = $Shipping->getAttribute('payments');
+
+        if (empty($payments)) {
+            return;
+        }
+
+        $payments = \explode(',', $payments);
+        $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
+
+        foreach ($payments as $paymentId) {
+            try {
+                $ShippingPayment = $Payments->getPayment($paymentId);
+
+                if ($ShippingPayment->getId() === $Payment->getId()) {
+                    return;
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
+        }
+
+        throw new QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed(
+            QUI::getLocale()->get('This Payment can not be used, because of the shipping rules')
+        );
+    }
 }

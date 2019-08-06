@@ -6,4 +6,7 @@
     <event on="onPackageSetup"
            fire="\QUI\ERP\Shipping\EventHandler::onPackageSetup"
     />
+    <event on="onQuiqqerPaymentCanUsedInOrder"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerPaymentCanUsedInOrder"
+    />
 </events>

@@ -93,85 +93,6 @@
         </tbody>
     </table>
 
-    <!--
-        <table class="data-table data-table-flexbox">
-            <thead style="display: table-header-group;">
-            <tr>
-                <th colspan="2">
-                    {{usageHeader}}
-                </th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr>
-                <td>
-                    <label class="field-container">
-                        <span class="field-container-item">
-                            <span class="fa fa-calendar"></span>
-                            {{usageFrom}}
-                        </span>
-                        <input type="datetime" name="date_from"
-                               class="field-container-field"/>
-                    </label>
-                </td>
-                <td>
-                    <label class="field-container">
-                        <span class="field-container-item">
-                            <span class="fa fa-calendar"></span>
-                            {{usageTo}}
-                        </span>
-                        <input type="datetime" name="date_until"
-                               class="field-container-field"/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="field-container">
-                        <span class="field-container-item">
-                            {{usageAmountOf}}
-                        </span>
-                        <input type="number" min="0" name="purchase_quantity_from"
-                               class="field-container-field"/>
-                    </label>
-                </td>
-                <td>
-                    <label class="field-container">
-                        <span class="field-container-item">
-                            {{usageAmountTo}}
-                        </span>
-                        <input type="number" min="0" name="purchase_quantity_until"
-                               class="field-container-field"/>
-                    </label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="field-container">
-                        <span class="field-container-item">
-                            <span class="fa fa-money"></span>
-                            {{usageValueOf}}
-                        </span>
-                        <input type="number" min="0" name="purchase_value_from"
-                               class="field-container-field"/>
-                    </label>
-                </td>
-                <td>
-                    <label class="field-container">
-                        <span class="field-container-item">
-                            <span class="fa fa-money"></span>
-                            {{usageValueTo}}
-                        </span>
-                        <input type="number" min="0" name="purchase_value_until"
-                               class="field-container-field"/>
-                    </label>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    -->
-
     <table class="data-table data-table-flexbox">
         <thead>
         <tr>
@@ -233,6 +154,20 @@
                     <span class="field-container-field field-container-field-no-padding">
                         <input type="text" name="areas"
                                data-qui="package/quiqqer/areas/bin/controls/Select"
+                        />
+                    </span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{paymentUsage}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding">
+                        <input type="text" name="payments"
+                               data-qui="package/quiqqer/payments/bin/backend/controls/Select"
                         />
                     </span>
                 </label>

@@ -147,6 +147,10 @@ class Debug
     public static function sendAdminInfoMailAboutEmptyShipping(
         QUI\ERP\Order\OrderInterface $Order
     ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
         try {
             $Article     = $Order->getArticles();
             $articleHtml = $Article->toHTML();

@@ -180,14 +180,6 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $shipping = $this->getAttribute('shipping');
         }
 
-        if (empty($shipping)) {
-            $this->getOrder()->removeShipping();
-            $this->getOrder()->save();
-
-            return;
-        }
-
-
         $User  = QUI::getUserBySession();
         $Order = $this->getOrder();
 

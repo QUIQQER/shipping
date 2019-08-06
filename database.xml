@@ -14,6 +14,7 @@
             <field type="text NULL">articles</field>
             <field type="text NULL">categories</field>
             <field type="text NULL">user_groups</field>
+            <field type="text NULL">payments</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>

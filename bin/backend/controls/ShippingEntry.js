@@ -363,7 +363,10 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
                         usageAssignmentProduct : QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
                         usageAssignmentCategory: QUILocale.get(lg, 'shipping.edit.template.assignment.category'),
-                        usageAssignmentUser    : QUILocale.get(lg, 'shipping.edit.template.assignment.user')
+                        usageAssignmentUser    : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
+
+                        paymentHeader: QUILocale.get(lg, 'shipping.edit.template.assignment.payment.header'),
+                        paymentUsage : QUILocale.get(lg, 'shipping.edit.template.assignment.payment.usage')
                     })
                 });
 

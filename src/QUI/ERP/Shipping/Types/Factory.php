@@ -117,6 +117,7 @@ class Factory extends QUI\CRUD\Factory
             'articles',
             'categories',
             'user_groups',
+            'payments',
             'shipping_type',
             'shipping_rules'
         ];

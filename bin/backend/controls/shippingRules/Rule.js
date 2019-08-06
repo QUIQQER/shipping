@@ -90,10 +90,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 productHeader                 : QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
                 usageAssignmentProductOnly    : QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
                 usageAssignmentProductOnlyText: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.text'),
-                usageAssignmentProductOnlyDesc: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.desc'),
-
-                paymentHeader: QUILocale.get(lg, 'shipping.edit.template.assignment.payment.header'),
-                paymentUsage : QUILocale.get(lg, 'shipping.edit.template.assignment.payment.usage')
+                usageAssignmentProductOnlyDesc: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.desc')
             }));
 
             return this.$Elm;
