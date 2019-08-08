@@ -26,7 +26,9 @@
   },
   "require": {
     "quiqqer/quiqqer": "*",
-    "quiqqer/areas": "*"
+    "quiqqer/erp": "*",
+    "quiqqer/areas": "*",
+    "quiqqer/order": "*"
   },
   "autoload": {
     "psr-4": {
