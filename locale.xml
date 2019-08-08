@@ -227,7 +227,7 @@
 
         <locale name="shipping.settings.deactivated">
             <de><![CDATA[Versand deaktivieren]]></de>
-            <en><![CDATA[Deactivated shipping]]></en>
+            <en><![CDATA[Deactivate shipping]]></en>
         </locale>
         <locale name="shipping.settings.deactivated.description">
             <de><![CDATA[

@@ -148,4 +148,23 @@ class EventHandler
             QUI::getLocale()->get('This Payment can not be used, because of the shipping rules')
         );
     }
+
+    /**
+     * @param \Quiqqer\Engine\Collector $Collector
+     * @param $User
+     * @param $Order
+     */
+    public static function onOrderProcessCustomerDataEnd(
+        \Quiqqer\Engine\Collector $Collector,
+        $User,
+        $Address,
+        $Order
+    ) {
+        $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
+            'User'  => $User,
+            'Order' => $Order
+        ]);
+
+        $Collector->append($Control->create());
+    }
 }

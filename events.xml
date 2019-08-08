@@ -9,4 +9,8 @@
     <event on="onQuiqqerPaymentCanUsedInOrder"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerPaymentCanUsedInOrder"
     />
+
+    <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
+           fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
+    />
 </events>

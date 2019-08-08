@@ -1,0 +1,16 @@
+<h2>Versandadresse</h2>
+
+<label>
+    <select name="shipping-address-type">
+        <option value="1">Gleiche Adresse wie Rechnungsadresse</option>
+        {foreach $addressList as $Address}
+        <option value="{$Address->getId()}">
+            {$Address->getText()}
+        </option>
+        {/foreach}
+    </select>
+</label>
+
+<a href="{$profileLink}" class="button btn shipping-address-edit">
+    Lieferadressen verwalten
+</a>
