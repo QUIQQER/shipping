@@ -285,6 +285,14 @@
             <de><![CDATA[Lieferadressen verwalten]]></de>
             <en><![CDATA[Manage shipping addresses]]></en>
         </locale>
+        <locale name="user.profile.invoice.address.title">
+            <de><![CDATA[Versandadresse]]></de>
+            <en><![CDATA[Shipping address]]></en>
+        </locale>
+        <locale name="user.profile.invoice.address.description">
+            <de><![CDATA[Wählen Sie bitte hier Ihre standard Versandaddresse aus.]]></de>
+            <en><![CDATA[Please select your standard shipping address here.]]></en>
+        </locale>
     </groups>
 
 

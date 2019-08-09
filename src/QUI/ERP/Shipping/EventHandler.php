@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
+use \Quiqqer\Engine\Collector;
 
 /**
  * Class EventHandler
@@ -150,12 +151,12 @@ class EventHandler
     }
 
     /**
-     * @param \Quiqqer\Engine\Collector $Collector
+     * @param Collector $Collector
      * @param $User
      * @param $Order
      */
     public static function onOrderProcessCustomerDataEnd(
-        \Quiqqer\Engine\Collector $Collector,
+        Collector $Collector,
         $User,
         $Address,
         $Order
@@ -200,5 +201,43 @@ class EventHandler
         $Order->setData('shipping-address', $Address->getAttributes());
         $Order->setData('shipping-address-id', $Address->getId());
         $Order->save();
+    }
+
+    /**
+     * @param Collector $Collector
+     * @param QUI\Users\User $User
+     */
+    public static function onFrontendUsersAddressTop(
+        Collector $Collector,
+        QUI\Users\User $User
+    ) {
+        $ShippingAddress = new QUI\ERP\Shipping\FrontendUsers\ShippingAddressSelect([
+            'User' => $User
+        ]);
+
+        $Collector->append($ShippingAddress->create());
+    }
+
+    /**
+     * @param QUI\Users\User $User
+     */
+    public static function onUserSaveBegin(QUI\Users\User $User)
+    {
+        $Request = QUI::getRequest()->request;
+
+        $submit  = $Request->get('submit-shipping');
+        $address = (int)$Request->get('shipping-address');
+
+        if ($submit === false || !$address) {
+            return;
+        }
+
+        try {
+            $Address = $User->getAddress($address);
+
+            $User->setAttribute('quiqqer.shipping.address', $Address->getId());
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
     }
 }

@@ -77,8 +77,9 @@ class ShippingAddress extends QUI\Control
 
         if (!empty($shippingAddress)) {
             $currentAddress = $shippingAddress;
+        } elseif ($User->getAttribute('quiqqer.shipping.address')) {
+            $currentAddress = $User->getAttribute('quiqqer.shipping.address');
         }
-
 
         $Engine->assign([
             'addressList'    => $addressList,

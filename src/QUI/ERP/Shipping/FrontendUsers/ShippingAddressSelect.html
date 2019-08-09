@@ -1,0 +1,19 @@
+<header>
+    <h2>{locale group="quiqqer/shipping" var="user.profile.invoice.address.title"}</h2>
+</header>
+<div class="quiqqer-shipping-user-address-description">
+    {locale group="quiqqer/shipping" var="user.profile.invoice.address.description"}
+</div>
+<label>
+    <select name="shipping-address">
+        <option value=""></option>
+        {foreach $addresses as $Address}
+        <option value="{$Address->getId()}" {if $current== $Address->getId()}selected{/if}>
+            {$Address->getText()}
+        </option>
+        {/foreach}
+    </select>
+    <button type="submit" name="submit-shipping">
+        {locale group='quiqqer/system' var='save'}
+    </button>
+</label>
