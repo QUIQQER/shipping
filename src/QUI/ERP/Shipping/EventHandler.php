@@ -80,6 +80,10 @@ class EventHandler
         QUI\ERP\Order\AbstractOrder $Order,
         QUI\ERP\Products\Product\ProductList $Products
     ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+        
         $Shipping = $Order->getShipping();
 
         if (!$Shipping) {
@@ -161,6 +165,10 @@ class EventHandler
         $Address,
         $Order
     ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
         $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
             'User'  => $User,
             'Order' => $Order
@@ -178,6 +186,10 @@ class EventHandler
     public static function onQuiqqerOrderCustomerDataSave(
         QUI\ERP\Order\Controls\OrderProcess\CustomerData $CustomerData
     ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
         if (!isset($_REQUEST['shipping-address'])) {
             return;
         }
@@ -211,6 +223,10 @@ class EventHandler
         Collector $Collector,
         QUI\Users\User $User
     ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
         $ShippingAddress = new QUI\ERP\Shipping\FrontendUsers\ShippingAddressSelect([
             'User' => $User
         ]);
@@ -223,6 +239,10 @@ class EventHandler
      */
     public static function onUserSaveBegin(QUI\Users\User $User)
     {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
         $Request = QUI::getRequest()->request;
 
         $submit  = $Request->get('submit-shipping');
