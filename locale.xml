@@ -286,12 +286,17 @@
             <en><![CDATA[Manage shipping addresses]]></en>
         </locale>
         <locale name="user.profile.invoice.address.title">
-            <de><![CDATA[Versandadresse]]></de>
-            <en><![CDATA[Shipping address]]></en>
+            <de><![CDATA[Lieferaddresse]]></de>
+            <en><![CDATA[Delivery address]]></en>
         </locale>
         <locale name="user.profile.invoice.address.description">
             <de><![CDATA[Wählen Sie bitte hier Ihre standard Versandaddresse aus.]]></de>
             <en><![CDATA[Please select your standard shipping address here.]]></en>
+        </locale>
+
+        <locale name="mail.order.confirmation.title">
+            <de><![CDATA[Lieferaddresse]]></de>
+            <en><![CDATA[Delivery address]]></en>
         </locale>
     </groups>
 

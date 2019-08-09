@@ -47,7 +47,7 @@ class ShippingAddressSelect extends QUI\Control
         if ($User) {
             /* @var $User QUI\Users\User */
             $addresses = $User->getAddressList();
-            $current   = (int)$User->getAttribute('quiqqer.shipping.address');
+            $current   = (int)$User->getAttribute('quiqqer.delivery.address');
         }
 
         $Engine->assign([
