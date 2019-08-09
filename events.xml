@@ -13,4 +13,7 @@
     <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
     />
+    <event on="onQuiqqerOrderCustomerDataSave"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderCustomerDataSave"
+    />
 </events>

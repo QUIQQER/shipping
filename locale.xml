@@ -272,6 +272,19 @@
                 No shipping methods were found for the following order:
             ]]></en>
         </locale>
+
+        <locale name="checkout.shipping.address.title">
+            <de><![CDATA[Versandadresse]]></de>
+            <en><![CDATA[Shipping address]]></en>
+        </locale>
+        <locale name="checkout.shipping.address.option.same">
+            <de><![CDATA[Gleiche Adresse wie Rechnungsadresse]]></de>
+            <en><![CDATA[Same address as billing address]]></en>
+        </locale>
+        <locale name="checkout.shipping.address.manage.link">
+            <de><![CDATA[Lieferadressen verwalten]]></de>
+            <en><![CDATA[Manage shipping addresses]]></en>
+        </locale>
     </groups>
 
 

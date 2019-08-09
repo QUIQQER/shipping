@@ -167,4 +167,38 @@ class EventHandler
 
         $Collector->append($Control->create());
     }
+
+    /**
+     * @param QUI\ERP\Order\Controls\OrderProcess\CustomerData $CustomerData
+     *
+     * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
+     */
+    public static function onQuiqqerOrderCustomerDataSave(
+        QUI\ERP\Order\Controls\OrderProcess\CustomerData $CustomerData
+    ) {
+        if (!isset($_REQUEST['shipping-address'])) {
+            return;
+        }
+
+        // save shipping address
+        $Order    = $CustomerData->getOrder();
+        $Customer = $Order->getCustomer();
+
+        try {
+            $User = QUI::getUsers()->get($Customer->getId());
+        } catch (QUI\Exception $Exception) {
+            $User = QUI::getUserBySession();
+        }
+
+        try {
+            $Address = $User->getAddress($_REQUEST['shipping-address']);
+        } catch (QUI\Exception $Exception) {
+            return;
+        }
+
+        $Order->setData('shipping-address', $Address->getAttributes());
+        $Order->setData('shipping-address-id', $Address->getId());
+        $Order->save();
+    }
 }

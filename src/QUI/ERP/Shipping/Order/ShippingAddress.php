@@ -42,16 +42,48 @@ class ShippingAddress extends QUI\Control
         /* @var $User QUI\Users\User */
         $User = $this->getAttribute('User');
 
+        /* @var $Order QUI\ERP\Order\OrderInterface */
+        $Order = $this->getAttribute('Order');
+
         if (!$User) {
             $User = QUI::getUserBySession();
         }
 
         $addressList = $User->getAddressList();
-        $profileLink = '';
+        $profileLink = false;
+
+        try {
+            $Project = QUI::getRewrite()->getProject();
+            $sites   = $Project->getSites([
+                'where' => [
+                    'type' => 'quiqqer/frontend-users:types/profile'
+                ],
+                'limit' => 1
+            ]);
+
+            if (isset($sites[0])) {
+                /* @var $Profile QUI\Projects\Site */
+                $Profile     = $sites[0];
+                $profileLink = $Profile->getUrlRewritten();
+                $profileLink .= '/user/address';
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        // current address
+        $currentAddress  = '';
+        $shippingAddress = $Order->getDataEntry('shipping-address-id');
+
+        if (!empty($shippingAddress)) {
+            $currentAddress = $shippingAddress;
+        }
+
 
         $Engine->assign([
-            'addressList' => $addressList,
-            'profileLink' => $profileLink
+            'addressList'    => $addressList,
+            'profileLink'    => $profileLink,
+            'currentAddress' => $currentAddress
         ]);
 
         return $Engine->fetch(\dirname(__FILE__).'/ShippingAddress.html');

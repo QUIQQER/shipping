@@ -1,16 +1,24 @@
-<h2>Versandadresse</h2>
+<h2>
+    {locale group="quiqqer/shipping" var="checkout.shipping.address.title"}
+</h2>
 
 <label>
-    <select name="shipping-address-type">
-        <option value="1">Gleiche Adresse wie Rechnungsadresse</option>
+    <select name="shipping-address">
+        <option value="">
+            {locale group="quiqqer/shipping" var="checkout.shipping.address.option.same"}
+        </option>
         {foreach $addressList as $Address}
-        <option value="{$Address->getId()}">
+        <option value="{$Address->getId()}"
+                {if $currentAddress=== $Address->getId()}selected="selected"{/if}
+            >
             {$Address->getText()}
         </option>
         {/foreach}
     </select>
 </label>
 
+{if $profileLink}
 <a href="{$profileLink}" class="button btn shipping-address-edit">
-    Lieferadressen verwalten
+    {locale group="quiqqer/shipping" var="checkout.shipping.address.manage.link"}
 </a>
+{/if}
