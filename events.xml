@@ -9,16 +9,22 @@
     <event on="onQuiqqerPaymentCanUsedInOrder"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerPaymentCanUsedInOrder"
     />
-    <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
-           fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
-    />
     <event on="onQuiqqerOrderCustomerDataSave"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderCustomerDataSave"
     />
+    <event on="onUserSaveBegin"
+           fire="\QUI\ERP\Shipping\EventHandler::onUserSaveBegin"
+    />
+
     <event on="onQuiqqer::frontend-users::user-address-top"
            fire="\QUI\ERP\Shipping\EventHandler::onFrontendUsersAddressTop"
     />
-    <event on="onUserSaveBegin"
-           fire="\QUI\ERP\Shipping\EventHandler::onUserSaveBegin"
+    <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
+           fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
+    />
+
+    <!-- Mails -->
+    <event on="onQuiqqer::order::mail::orderConfirmation::end"
+           fire="\QUI\ERP\Shipping\EventHandler::onOrderConfirmationEnd"
     />
 </events>

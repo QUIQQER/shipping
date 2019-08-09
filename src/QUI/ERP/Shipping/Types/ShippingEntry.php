@@ -29,6 +29,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     protected $Order = null;
 
     /**
+     * @var null|QUI\ERP\Address|QUI\Users\Address
+     */
+    protected $Address = null;
+
+    /**
      * Shipping constructor.
      *
      * @param int $id
@@ -655,4 +660,24 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         return $PriceFactor;
     }
+
+    //region address
+
+    /**
+     * @param $Address
+     */
+    public function setAddress($Address)
+    {
+        $this->Address = $Address;
+    }
+
+    /**
+     * Return the address
+     */
+    public function getAddress()
+    {
+        return $this->Address;
+    }
+
+    //endregion
 }

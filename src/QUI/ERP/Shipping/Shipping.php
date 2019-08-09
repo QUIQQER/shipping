@@ -307,12 +307,17 @@ class Shipping extends QUI\Utils\Singleton
             return null;
         }
 
-        /* @var $Object QUI\ERP\Order\Order|
-         *              QUI\ERP\Order\OrderInProcess|
-         *              QUI\ERP\Accounting\Invoice\Invoice|
-         *              QUI\ERP\Accounting\Invoice\InvoiceTemporary
-         */
-        return $Object->getShipping();
+        $Shipping    = $Object->getShipping();
+        $addressData = $Object->getDataEntry('shipping-address');
+
+        if ($addressData) {
+            $Shipping->setAddress(
+                new QUI\ERP\Address($addressData)
+            );
+        }
+
+
+        return $Shipping;
     }
 
     /**

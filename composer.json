@@ -1,5 +1,5 @@
 {
-  "name": "quiqqer/shipping",
+  "name": "quiqqer\/shipping",
   "type": "quiqqer-plugin",
   "description": "Provided the shipping management for QUIQQER. Can manage shipping methods",
   "version": "dev-dev",
@@ -11,13 +11,13 @@
     {
       "name": "Henning Leutz",
       "email": "leutz@pcsg.de",
-      "homepage": "http://www.pcsg.de",
+      "homepage": "http:\/\/www.pcsg.de",
       "role": "Developer"
     },
     {
       "name": "Moritz Scholz",
       "email": "scholz@pcsg.de",
-      "homepage": "http://www.pcsg.de",
+      "homepage": "http:\/\/www.pcsg.de",
       "role": "Developer"
     }
   ],
@@ -25,10 +25,10 @@
     "email": "support@pcsg.de"
   },
   "require": {
-    "quiqqer/quiqqer": "*",
-    "quiqqer/erp": "*",
-    "quiqqer/areas": "*",
-    "quiqqer/order": "*"
+    "quiqqer\/quiqqer": "*",
+    "quiqqer\/erp": "*",
+    "quiqqer\/areas": "*",
+    "quiqqer\/order": "*"
   },
   "autoload": {
     "psr-4": {
