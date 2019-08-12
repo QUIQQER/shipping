@@ -307,15 +307,12 @@ class Shipping extends QUI\Utils\Singleton
             return null;
         }
 
-        $Shipping    = $Object->getShipping();
-        $addressData = $Object->getDataEntry('shipping-address');
+        $Shipping = $Object->getShipping();
+        $Delivery = $Object->getDeliveryAddress();
 
-        if ($addressData) {
-            $Shipping->setAddress(
-                new QUI\ERP\Address($addressData)
-            );
+        if ($Delivery) {
+            $Shipping->setAddress($Delivery);
         }
-
 
         return $Shipping;
     }

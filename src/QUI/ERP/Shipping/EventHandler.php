@@ -210,8 +210,12 @@ class EventHandler
             return;
         }
 
-        $Order->setData('shipping-address', $Address->getAttributes());
-        $Order->setData('shipping-address-id', $Address->getId());
+
+        $ErpAddress = new QUI\ERP\Address(
+            \array_merge($Address->getAttributes(), ['id' => $Address->getId()])
+        );
+
+        $Order->setDeliveryAddress($ErpAddress);
         $Order->save();
     }
 
@@ -293,7 +297,7 @@ class EventHandler
                 $Engine->fetch(dirname(__FILE__).'/Mails/orderConfirmation.html')
             );
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);;
+            QUI\System\Log::writeDebugException($Exception);
         }
     }
 }
