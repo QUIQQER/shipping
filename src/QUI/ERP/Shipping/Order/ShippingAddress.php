@@ -73,8 +73,13 @@ class ShippingAddress extends QUI\Control
 
         // current address
         $currentAddress  = '';
-        $Shipping        = QUI\ERP\Shipping\Shipping::getInstance()->getShippingByObject($Order);
-        $ShippingAddress = $Shipping->getAddress();
+        $ShippingAddress = null;
+        
+        $Shipping = QUI\ERP\Shipping\Shipping::getInstance()->getShippingByObject($Order);
+
+        if ($Shipping) {
+            $ShippingAddress = $Shipping->getAddress();
+        }
 
         if ($ShippingAddress) {
             $currentAddress = $ShippingAddress->getId();

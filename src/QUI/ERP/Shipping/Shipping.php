@@ -310,7 +310,7 @@ class Shipping extends QUI\Utils\Singleton
         $Shipping = $Object->getShipping();
         $Delivery = $Object->getDeliveryAddress();
 
-        if ($Delivery) {
+        if ($Delivery && $Shipping) {
             $Shipping->setAddress($Delivery);
         }
 
