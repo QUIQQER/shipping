@@ -1,0 +1,11 @@
+.quiqqer-shipping-fields-shippingtimeperiod {
+    border-bottom: 1px solid #dedede;
+    flex-basis: 100%;
+    margin: 0 0 10px 0;
+    padding: 0 0 10px 0;
+    width: 100%;
+}
+
+.quiqqer-shipping-fields-shippingtimeperiod select {
+    width: 100%;
+}

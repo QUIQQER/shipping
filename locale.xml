@@ -157,6 +157,81 @@
                 This message is displayed to the user if the order can't be continued and will be canceled.
             ]]></en>
         </locale>
+
+        <!-- Fields -->
+        <locale name="field.ShippingTimePeriod">
+            <de><![CDATA[Lieferzeitraum]]></de>
+            <en><![CDATA[Delivery period]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.unavailable">
+            <de><![CDATA[derzeit nicht verfügbar]]></de>
+            <en><![CDATA[currently not available]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.immediately_available">
+            <de><![CDATA[sofort verfügbar]]></de>
+            <en><![CDATA[immediately available]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.from_to">
+            <de><![CDATA[ca. [from] bis [to]]]></de>
+            <en><![CDATA[approx. [from] to [to]]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.second">
+            <de><![CDATA[Sekunde]]></de>
+            <en><![CDATA[second]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.minute">
+            <de><![CDATA[Minute]]></de>
+            <en><![CDATA[minute]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.hour">
+            <de><![CDATA[Stunde]]></de>
+            <en><![CDATA[hour]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.day">
+            <de><![CDATA[Tag]]></de>
+            <en><![CDATA[day]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.week">
+            <de><![CDATA[Woche]]></de>
+            <en><![CDATA[week]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.month">
+            <de><![CDATA[Monat]]></de>
+            <en><![CDATA[month]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.year">
+            <de><![CDATA[Jahr]]></de>
+            <en><![CDATA[year]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.second">
+            <de><![CDATA[Sekunden]]></de>
+            <en><![CDATA[seconds]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.minute">
+            <de><![CDATA[Minuten]]></de>
+            <en><![CDATA[minutes]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.hour">
+            <de><![CDATA[Stunden]]></de>
+            <en><![CDATA[hours]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.day">
+            <de><![CDATA[Tage]]></de>
+            <en><![CDATA[days]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.week">
+            <de><![CDATA[Wochen]]></de>
+            <en><![CDATA[weeks]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.month">
+            <de><![CDATA[Monate]]></de>
+            <en><![CDATA[months]]></en>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.year">
+            <de><![CDATA[Jahre]]></de>
+            <en><![CDATA[years]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
@@ -544,6 +619,21 @@
             <de><![CDATA[Erstellen]]></de>
             <en><![CDATA[Create]]></en>
         </locale>
+        
+        <!-- Fields -->
+        <locale name="controls.products.fields.ShippingTimePeriod.option.timeperiod">
+            <de><![CDATA[Lieferzeit auswählen]]></de>
+            <en><![CDATA[Choose shipping time]]></en>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.unavailable">
+            <de><![CDATA[Derzeit nicht lieferbar]]></de>
+            <en><![CDATA[Currently not available]]></en>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.immediately_available">
+            <de><![CDATA[Sofort verfügbar]]></de>
+            <en><![CDATA[Immediately available]]></en>
+        </locale>
+        
     </groups>
 
     <groups name="quiqqer/order">

@@ -73,10 +73,11 @@ class ShippingAddress extends QUI\Control
 
         // current address
         $currentAddress  = '';
-        $shippingAddress = $Order->getDataEntry('shipping-address-id');
+        $Shipping        = QUI\ERP\Shipping\Shipping::getInstance()->getShippingByObject($Order);
+        $ShippingAddress = $Shipping->getAddress();
 
-        if (!empty($shippingAddress)) {
-            $currentAddress = $shippingAddress;
+        if ($ShippingAddress) {
+            $currentAddress = $ShippingAddress->getId();
         } elseif ($User->getAttribute('quiqqer.delivery.address')) {
             $currentAddress = $User->getAttribute('quiqqer.delivery.address');
         }

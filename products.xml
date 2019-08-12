@@ -1,0 +1,9 @@
+<quiqqer>
+    <products>
+        <fields>
+            <field src="\QUI\ERP\Shipping\Products\Fields\ShippingTimePeriod" name="shipping.ShippingTimePeriod">
+                <locale group="quiqqer/shipping" var="field.ShippingTimePeriod"/>
+            </field>
+        </fields>
+    </products>
+</quiqqer>
