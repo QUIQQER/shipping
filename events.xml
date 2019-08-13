@@ -22,9 +22,4 @@
     <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
     />
-
-    <!-- Mails -->
-    <event on="onQuiqqer::order::mail::orderConfirmation::end"
-           fire="\QUI\ERP\Shipping\EventHandler::onOrderConfirmationEnd"
-    />
 </events>

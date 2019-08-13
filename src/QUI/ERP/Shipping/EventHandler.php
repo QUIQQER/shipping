@@ -264,40 +264,4 @@ class EventHandler
             QUI\System\Log::writeDebugException($Exception);
         }
     }
-
-    /**
-     * @param Collector $Collector
-     * @param $Order
-     */
-    public static function onOrderConfirmationEnd(
-        Collector $Collector,
-        QUI\ERP\Order\OrderInterface $Order
-    ) {
-        $Shipping = Shipping::getInstance()->getShippingByObject($Order);
-
-        if (!$Shipping) {
-            return;
-        }
-
-        try {
-            $Address = $Shipping->getAddress();
-            $address = $Address->render();
-
-            if (empty($address)) {
-                return;
-            }
-
-            $Engine = QUI::getTemplateManager()->getEngine();
-
-            $Engine->assign([
-                'address' => $address
-            ]);
-
-            $Collector->append(
-                $Engine->fetch(dirname(__FILE__).'/Mails/orderConfirmation.html')
-            );
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-        }
-    }
 }

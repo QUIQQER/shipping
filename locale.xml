@@ -368,11 +368,6 @@
             <de><![CDATA[Wählen Sie bitte hier Ihre standard Versandaddresse aus.]]></de>
             <en><![CDATA[Please select your standard shipping address here.]]></en>
         </locale>
-
-        <locale name="mail.order.confirmation.title">
-            <de><![CDATA[Lieferaddresse]]></de>
-            <en><![CDATA[Delivery address]]></en>
-        </locale>
     </groups>
 
 
