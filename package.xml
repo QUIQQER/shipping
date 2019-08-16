@@ -11,6 +11,14 @@
 
         <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/Logo.png"/>
 
+        <preview>
+            <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/en/shipping-order.png"/>
+            <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/en/shipping-panel.png"/>
+            <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/en/shipping-panel-ups.png"/>
+            <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/en/shipping-rule.png"/>
+            <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/en/shipping-rule-settings.png"/>
+        </preview>
+
         <provider>
             <shipping src="\QUI\ERP\Shipping\Provider"/>
             <orderProcess src="\QUI\ERP\Shipping\OrderProcessProvider"/>

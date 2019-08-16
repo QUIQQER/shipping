@@ -18,6 +18,16 @@ Features
     - Allow certain Shipping methods only for certain groups of people
     - Define different shipping costs for time periods
     - Set different shipping costs for specific products
+- Different rules can be assigned to each shipping method
+- Each rule has a variety of adjustment options
+    - Priority
+    - Discount
+    - Unit rule
+    - Usage from / to
+    - Shopping amouunt of / to
+    - Purchase value of / to
+    - User specification
+    - Product specification
 
 Installation
 ------------
