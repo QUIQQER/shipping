@@ -6,7 +6,7 @@
         </title>
 
         <description>
-            <locale group="quiqqer/shipping" var="package.title"/>
+            <locale group="quiqqer/shipping" var="package.description"/>
         </description>
 
         <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/Logo.png"/>
