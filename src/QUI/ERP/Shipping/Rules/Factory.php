@@ -68,11 +68,10 @@ class Factory extends QUI\CRUD\Factory
             'purchase_value_until',
             'discount',
             'discount_type',
-            'unit',
-            'unit_value',
             'articles',
             'articles_only',
-            'user_groups'
+            'user_groups',
+            'unit_terms'
         ]);
 
         $data = \array_filter($data, function ($k) use ($allowed) {
@@ -100,12 +99,18 @@ class Factory extends QUI\CRUD\Factory
             $data['discount'] = 0;
         }
 
-        if (!isset($data['unit'])) {
-            $data['unit'] = '';
+        if (isset($data['unit_terms']) && \is_array($data['unit_terms'])) {
+            $data['unit_terms'] = \json_encode($data['unit_terms']);
         }
 
-        if (!isset($data['unit_value'])) {
-            $data['unit_value'] = '';
+        if (!isset($data['unit_terms'])) {
+            $data['unit_terms'] = '';
+        }
+
+        if (!isset($data['articles_only']) || empty($data['articles_only'])) {
+            $data['articles_only'] = 0;
+        } else {
+            $data['articles_only'] = (int)$data['articles_only'];
         }
 
         // discount
@@ -224,6 +229,7 @@ class Factory extends QUI\CRUD\Factory
             'id',
             'active',
 
+            'unit_terms',
             'date_from',
             'date_until',
             'purchase_quantity_from',
@@ -241,8 +247,6 @@ class Factory extends QUI\CRUD\Factory
 
             'discount',
             'discount_type',
-            'unit',
-            'unit_value',
             'articles',
             'user_groups'
         ];

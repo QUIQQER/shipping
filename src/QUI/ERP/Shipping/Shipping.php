@@ -266,6 +266,28 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
+     * Return the unit field ids, for the shipping rule definition
+     *
+     * @return array
+     */
+    public function getShippingRuleUnitFieldIds()
+    {
+        try {
+            $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
+        }
+
+        $ids = $Config->getValue('shipping', 'ruleFields');
+
+        if (empty($ids)) {
+            return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
+        }
+
+        return \explode(',', $ids);
+    }
+
+    /**
      * @return bool|string
      */
     public function getHost()
@@ -283,7 +305,7 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         $host = $Project->getVHost(true, true);
-        $host = trim($host, '/');
+        $host = \trim($host, '/');
 
         return $host;
     }

@@ -15,10 +15,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
     'Locale',
     'Mustache',
 
-    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule.html'
+    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule.html',
+    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html'
 
 ], function (QUI, QUIControl, Translator, TranslateUpdater, InputMultiLang, Fields,
-             ShippingRules, FormUtils, QUILocale, Mustache, template) {
+             ShippingRules, FormUtils, QUILocale, Mustache, template, templateUnit) {
     "use strict";
 
     var lg = 'quiqqer/shipping';
@@ -51,15 +52,16 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
         create: function () {
             this.$Elm = this.parent();
             this.$Elm.set('html', Mustache.render(template, {
-                generalHeader      : QUILocale.get(lg, 'shipping.edit.template.general'),
-                title              : QUILocale.get(lg, 'shipping.edit.template.title'),
-                workingTitle       : QUILocale.get('quiqqer/system', 'workingtitle'),
-                calculationPriority: QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
-                discountTitle      : QUILocale.get(lg, 'shipping.edit.template.discount'),
-                discountAbsolute   : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
-                discountPercentage : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
-                unitTitle          : QUILocale.get(lg, 'shipping.edit.template.unit'),
-
+                generalHeader         : QUILocale.get(lg, 'shipping.edit.template.general'),
+                title                 : QUILocale.get(lg, 'shipping.edit.template.title'),
+                workingTitle          : QUILocale.get('quiqqer/system', 'workingtitle'),
+                calculationPriority   : QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
+                discountTitle         : QUILocale.get(lg, 'shipping.edit.template.discount'),
+                discountDescription   : QUILocale.get(lg, 'shipping.edit.template.discount.description'),
+                discountAbsolute      : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
+                discountPercentage    : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
+                unitTitle             : QUILocale.get(lg, 'shipping.edit.template.unit'),
+                unitHeader            : QUILocale.get(lg, 'shipping.edit.template.unit'),
                 usageHeader           : QUILocale.get(lg, 'shipping.edit.template.usage'),
                 usageFrom             : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
                 usageTo               : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
@@ -78,40 +80,50 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
          * event: on inject
          */
         $onInject: function () {
-            var self = this;
+            var self    = this,
+                current = QUILocale.getCurrent();
 
-            Fields.getChild(Fields.FIELD_UNIT).then(function (Unit) {
-                var title;
+            var getOptions = function (field) {
+                var entries = field.options.entries,
+                    result  = [];
 
-                var entries = Unit.options.entries,
-                    Select  = self.getElm().getElement('.field-shipping-unit select'),
-                    Input   = self.getElm().getElement('.field-shipping-unit input'),
-                    current = QUILocale.getCurrent();
-
-                new Element('option', {
-                    value: '',
-                    html : '---'
-                }).inject(Select);
-
-                for (var unit in entries) {
-                    if (!entries.hasOwnProperty(unit)) {
+                for (var i in entries) {
+                    if (!entries.hasOwnProperty(i)) {
                         continue;
                     }
 
-                    title = unit;
-
-                    if (typeof entries[unit].title[current] !== 'undefined') {
-                        title = entries[unit].title[current];
-                    }
-
-                    new Element('option', {
-                        value: unit,
-                        html : title
-                    }).inject(Select);
+                    result.push({
+                        key  : i,
+                        title: entries[i].title[current]
+                    });
                 }
 
-                Select.set('disabled', false);
-                Input.set('disabled', false);
+                return result;
+            };
+
+            ShippingRules.getShippingRuleUnitFields().then(function (unitFields) {
+                var i, len, html, field;
+
+                var Table = self.getElm().getElement('.unit-table'),
+                    Tbody = Table.getElement('tbody');
+
+                Tbody.set('html', '');
+
+                for (i = 0, len = unitFields.length; i < len; i++) {
+                    field = unitFields[i];
+                    html  = Mustache.render(templateUnit, {
+                        options: getOptions(field),
+                        id     : field.id,
+                        title  : field.title
+                    });
+
+                    new Element('tr', {
+                        html: '<td>' + html + '</td>'
+                    }).inject(Tbody);
+                }
+
+                Tbody.getElements('select').set('disabled', false);
+                Tbody.getElements('input').set('disabled', false);
             }).then(function () {
                 return QUI.parse(self.getElm());
             }).then(function () {
@@ -137,6 +149,27 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
 
             formData.title        = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
+
+            var i, len, Unit, Term, Value, Label;
+
+            var unitData = [];
+            var UnitRows = this.getElm().getElements('.unit-table td');
+
+            for (i = 0, len = UnitRows.length; i < len; i++) {
+                Unit  = UnitRows[i].getElement('[name="unit"]');
+                Term  = UnitRows[i].getElement('[name="term"]');
+                Value = UnitRows[i].getElement('[name="value"]');
+                Label = UnitRows[i].getElement('label');
+
+                unitData.push({
+                    id   : parseInt(Label.get('data-id')),
+                    value: Value.value,
+                    term : Term.value,
+                    unit : Unit.value
+                });
+            }
+
+            formData.unit_terms = unitData;
 
             return ShippingRules.create(formData);
         }

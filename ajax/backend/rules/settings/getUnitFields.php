@@ -7,7 +7,7 @@
 use QUI\ERP\Products\Handler\Fields;
 
 /**
- * Return all unit fields
+ * Return all available unit fields
  *
  * @return array
  */
