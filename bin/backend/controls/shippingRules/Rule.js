@@ -79,6 +79,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 discountPercentage    : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
                 statusTitle           : QUILocale.get(lg, 'shipping.edit.template.status'),
                 statusDescription     : QUILocale.get(lg, 'shipping.edit.template.status.description'),
+                noRulesTitle          : QUILocale.get(lg, 'shipping.edit.template.noRules'),
+                noRulesText           : QUILocale.get(lg, 'shipping.edit.template.noRules.text'),
                 unitTitle             : QUILocale.get(lg, 'shipping.edit.template.unit'),
                 unitHeader            : QUILocale.get(lg, 'shipping.edit.template.unitTitle'),
                 usageHeader           : QUILocale.get(lg, 'shipping.edit.template.usage'),

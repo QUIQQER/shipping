@@ -535,50 +535,20 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $debugging    = QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled();
         $debuggingLog = [];
 
-        $result = [];
-        $Rules  = RuleFactory::getInstance();
+        // get rules
+        $rules = [];
+        $Rules = RuleFactory::getInstance();
 
         foreach ($shippingRules as $shippingRule) {
             try {
-                $Rule = $Rules->getChild($shippingRule);
-
-                /* @var $Rule ShippingRule */
-                if (!$Rule->isValid()) {
-                    $debuggingLog[] = [
-                        'id'     => $Rule->getId(),
-                        'title'  => $Rule->getTitle(),
-                        'reason' => 'is not valid',
-                        'valid'  => false
-                    ];
-                    continue;
-                }
-
-                if (!$Rule->canUsedInOrder($this->Order)) {
-                    $debuggingLog[] = [
-                        'id'     => $Rule->getId(),
-                        'title'  => $Rule->getTitle(),
-                        'reason' => 'is not valid for order',
-                        'valid'  => false
-                    ];
-
-                    continue;
-                }
-
-                $result[] = $Rule;
-
-                $debuggingLog[] = [
-                    'id'     => $Rule->getId(),
-                    'title'  => $Rule->getTitle(),
-                    'reason' => 'is valid',
-                    'valid'  => true
-                ];
+                $rules[] = $Rules->getChild($shippingRule);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception);
             }
         }
 
         // sort by priority
-        \usort($result, function ($ShippingRuleA, $ShippingRuleB) {
+        \usort($rules, function ($ShippingRuleA, $ShippingRuleB) {
             /* @var $ShippingRuleA ShippingRule */
             /* @var $ShippingRuleB ShippingRule */
             $priorityA = (int)$ShippingRuleA->getPriority();
@@ -590,6 +560,47 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
             return $priorityA < $priorityB ? -1 : 1;
         });
+
+        // check rules
+        $result = [];
+
+        foreach ($rules as $Rule) {
+            /* @var $Rule ShippingRule */
+            if (!$Rule->isValid()) {
+                $debuggingLog[] = [
+                    'id'     => $Rule->getId(),
+                    'title'  => $Rule->getTitle(),
+                    'reason' => 'is not valid',
+                    'valid'  => false
+                ];
+                continue;
+            }
+
+            if (!$Rule->canUsedInOrder($this->Order)) {
+                $debuggingLog[] = [
+                    'id'     => $Rule->getId(),
+                    'title'  => $Rule->getTitle(),
+                    'reason' => 'is not valid for order',
+                    'valid'  => false
+                ];
+
+                continue;
+            }
+
+            $result[] = $Rule;
+
+            $debuggingLog[] = [
+                'id'     => $Rule->getId(),
+                'title'  => $Rule->getTitle(),
+                'reason' => 'is valid',
+                'valid'  => true
+            ];
+
+
+            if ($Rule->noRulesAfter()) {
+                break;
+            }
+        }
 
         // debug shipping entry / rules
         if ($debugging) {

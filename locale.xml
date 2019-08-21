@@ -545,6 +545,14 @@
             <de><![CDATA[Einheit]]></de>
             <en><![CDATA[Unit]]></en>
         </locale>
+        <locale name="shipping.edit.template.noRules">
+            <de><![CDATA[Keine weiteren Regeln]]></de>
+            <en><![CDATA[No further rules]]></en>
+        </locale>
+        <locale name="shipping.edit.template.noRules.text">
+            <de><![CDATA[Nach dieser Regel sollen keine weitere Regeln mehr beachtet werden.]]></de>
+            <en><![CDATA[After this rule, no further rules should be observed.]]></en>
+        </locale>
 
         <locale name="window.delete.title">
             <de><![CDATA[Versandart löschen]]></de>
