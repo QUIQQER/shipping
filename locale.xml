@@ -330,6 +330,21 @@
             ]]></en>
         </locale>
 
+        <locale name="shipping.settings.ruleFields">
+            <de><![CDATA[Einheits-Feld für Versandregeln]]></de>
+            <en><![CDATA[Unit fields for shipping rules]]></en>
+        </locale>
+        <locale name="shipping.settings.ruleFields.description">
+            <de><![CDATA[
+            Bestimme welche Einheits-Felder bei Versandregeln beachtet werden können.
+            Alle hier eingestellten Felder können bei in den Versandregeln verwendet werden.
+            ]]></de>
+            <en><![CDATA[
+            Determine which unit fields can be observed in shipping rules.
+            All fields set here can be used in the shipping rules.
+            ]]></en>
+        </locale>
+
         <locale name="shipping.order.title">
             <de><![CDATA[Versand: [shipping]]]></de>
             <en><![CDATA[Shipping: [shipping]]]></en>
@@ -614,7 +629,7 @@
             <de><![CDATA[Erstellen]]></de>
             <en><![CDATA[Create]]></en>
         </locale>
-        
+
         <!-- Fields -->
         <locale name="controls.products.fields.ShippingTimePeriod.option.timeperiod">
             <de><![CDATA[Lieferzeit auswählen]]></de>
@@ -628,7 +643,7 @@
             <de><![CDATA[Sofort verfügbar]]></de>
             <en><![CDATA[Immediately available]]></en>
         </locale>
-        
+
     </groups>
 
     <groups name="quiqqer/order">

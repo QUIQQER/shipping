@@ -1,0 +1,22 @@
+.quiqqer-shipping-settings-ruleFields {
+    flex-grow: 1;
+    height: 120px;
+    overflow: auto;
+}
+
+.quiqqer-shipping-settings-ruleFields-entry {
+    border-bottom: 1px solid #ddd;
+    display: inline-block;
+    padding: 5px;
+    width: 100% !important;
+}
+
+.quiqqer-shipping-settings-ruleFields-entry:last-child {
+    border-bottom: 0;
+}
+
+.quiqqer-shipping-settings-ruleFields-entry:hover {
+    background-color: #d1d4da;
+    color: #555;
+    cursor: pointer;
+}
