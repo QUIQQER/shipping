@@ -41,7 +41,7 @@
         <tr>
             <td>
                 <label class="field-container">
-                    <span class="field-container-item" title="{{discountTitle}}">
+                    <span class="field-container-item" title="{{discountDescription}}">
                         {{discountTitle}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
@@ -67,7 +67,7 @@
         <tr>
             <td>
                 <label class="field-container">
-                    <span class="field-container-item" title="{{statusTitle}}">
+                    <span class="field-container-item" title="{{statusDescription}}">
                         {{statusTitle}}
                     </span>
                     <span class="field-container-field field-shipping-rules"></span>
@@ -77,10 +77,27 @@
         </tbody>
     </table>
 
+    <table class="unit-table data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th>
+                {{unitHeader}}
+            </th>
+        </tr>
+        </thead>
+        <tr>
+            <td>
+                <span class="fa fa-spinner fa-spin"></span>
+            </td>
+        </tr>
+        <tbody>
+        </tbody>
+    </table>
+
     <table class="data-table data-table-flexbox usage-table">
         <thead>
         <tr>
-            <th colspan="2">
+            <th>
                 <div class="data-table-toggle"></div>
                 <div class="data-table-text">
                     {{usageHeader}}
@@ -90,25 +107,6 @@
         </thead>
 
         <tbody>
-        <tr>
-            <td>
-                <label class="field-container">
-                    <span class="field-container-item" title="{{unitTitle}}">
-                        {{unitTitle}}
-                    </span>
-                    <span class="field-container-field field-container-field-no-padding field-shipping-unit">
-                        <select disabled
-                                name="unit"
-                                style="width: 40%" class="field-container-field"
-                        ></select>
-                        <input disabled
-                               name="unit_value"
-                               type="number"
-                               style="width: 59%" class="field-container-field"/>
-                    </span>
-                </label>
-            </td>
-        </tr>
         <tr>
             <td>
                 <label class="field-container">
@@ -193,7 +191,7 @@
     <table class="data-table data-table-flexbox product-table">
         <thead>
         <tr>
-            <th colspan="2">
+            <th>
                 <div class="data-table-toggle"></div>
                 <div class="data-table-text">
                     {{productHeader}}

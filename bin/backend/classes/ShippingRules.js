@@ -125,6 +125,18 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
             return this.getRules([ruleId]).then(function (result) {
                 return result[0];
             });
+        },
+
+        /**
+         *
+         * @return {Promise}
+         */
+        getShippingRuleUnitFields: function () {
+            return new Promise(function (resolve) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_settings_getUnitFieldSetting', resolve, {
+                    'package': 'quiqqer/shipping'
+                });
+            });
         }
     });
 });

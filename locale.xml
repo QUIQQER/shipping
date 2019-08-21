@@ -407,9 +407,13 @@
             <de><![CDATA[Versandart]]></de>
             <en><![CDATA[Shipping method]]></en>
         </locale>
-        <locale name="shipping.edit.template.usage">
+        <locale name="shipping.edit.template.unitTitle">
+            <de><![CDATA[Einheit definieren]]></de>
+            <en><![CDATA[Defining terms]]></en>
+        </locale>
+        <locale name="shipping.edit.template.unitTitle">
             <de><![CDATA[Nutzung definieren]]></de>
-            <en><![CDATA[Defining Terms]]></en>
+            <en><![CDATA[Defining unit]]></en>
         </locale>
         <locale name="shipping.edit.template.usage.from">
             <de><![CDATA[Nutzbar von]]></de>
@@ -509,6 +513,10 @@
             <de><![CDATA[Abschlag]]></de>
             <en><![CDATA[Discount]]></en>
         </locale>
+        <locale name="shipping.edit.template.discount.description">
+            <de><![CDATA[Bestimmt wieviel zum Preis hinzukommt.]]></de>
+            <en><![CDATA[Determines how much is added to the price.]]></en>
+        </locale>
         <locale name="shipping.edit.template.discount.absolute">
             <de><![CDATA[Auf / Abschlag (absolut)]]></de>
             <en><![CDATA[Discount (absolute)]]></en>
@@ -524,6 +532,14 @@
         <locale name="shipping.edit.template.status">
             <de><![CDATA[Status]]></de>
             <en><![CDATA[State]]></en>
+        </locale>
+        <locale name="shipping.edit.template.status.description">
+            <de><![CDATA[
+            Aktiviere oder deaktviere die Regel. Wenn die Regel deaktiviert ist, wird diese komplett ignoriert.
+            ]]></de>
+            <en><![CDATA[
+            Activate or deactivate the rule. If the rule is disabled, it will be completely ignored.
+            ]]></en>
         </locale>
         <locale name="shipping.edit.template.unit">
             <de><![CDATA[Einheit]]></de>

@@ -26,8 +26,7 @@
             <field type="DOUBLE NOT NULL">discount</field>
             <field type="INT(1) NOT NULL">discount_type</field>
 
-            <field type="VARCHAR(255) NULL">unit</field>
-            <field type="DOUBLE NULL">unit_value</field>
+            <field type="text NULL">unit_terms</field>
             <field type="INT(4) NULL">priority</field>
 
             <field type="text NULL">date_from</field>

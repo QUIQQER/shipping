@@ -17,10 +17,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
     'Locale',
     'Mustache',
 
-    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.html'
+    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.html',
+    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html'
 
 ], function (QUI, QUIControl, ControlUtils, Translator, TranslateUpdater, InputMultiLang, Fields,
-             ShippingRules, FormUtils, ElementsUtils, QUILocale, Mustache, template
+             ShippingRules, FormUtils, ElementsUtils, QUILocale, Mustache,
+             template, templateUnit
 ) {
     "use strict";
 
@@ -67,16 +69,18 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             });
 
             this.$Elm.set('html', Mustache.render(template, {
-                generalHeader      : QUILocale.get(lg, 'shipping.edit.template.general'),
-                title              : QUILocale.get(lg, 'shipping.edit.template.title'),
-                workingTitle       : QUILocale.get('quiqqer/system', 'workingtitle'),
-                calculationPriority: QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
-                discountTitle      : QUILocale.get(lg, 'shipping.edit.template.discount'),
-                discountAbsolute   : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
-                discountPercentage : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
-                statusTitle        : QUILocale.get(lg, 'shipping.edit.template.status'),
-                unitTitle          : QUILocale.get(lg, 'shipping.edit.template.unit'),
-
+                generalHeader         : QUILocale.get(lg, 'shipping.edit.template.general'),
+                title                 : QUILocale.get(lg, 'shipping.edit.template.title'),
+                workingTitle          : QUILocale.get('quiqqer/system', 'workingtitle'),
+                calculationPriority   : QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
+                discountTitle         : QUILocale.get(lg, 'shipping.edit.template.discount'),
+                discountDescription   : QUILocale.get(lg, 'shipping.edit.template.discount.description'),
+                discountAbsolute      : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
+                discountPercentage    : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
+                statusTitle           : QUILocale.get(lg, 'shipping.edit.template.status'),
+                statusDescription     : QUILocale.get(lg, 'shipping.edit.template.status.description'),
+                unitTitle             : QUILocale.get(lg, 'shipping.edit.template.unit'),
+                unitHeader            : QUILocale.get(lg, 'shipping.edit.template.unitTitle'),
                 usageHeader           : QUILocale.get(lg, 'shipping.edit.template.usage'),
                 usageFrom             : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
                 usageTo               : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
@@ -100,40 +104,50 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          * event: on inject
          */
         $onInject: function () {
-            var self = this;
+            var self    = this,
+                current = QUILocale.getCurrent();
 
-            Fields.getChild(Fields.FIELD_WEIGHT).then(function (Unit) {
-                var title;
+            var getOptions = function (field) {
+                var entries = field.options.entries,
+                    result  = [];
 
-                var entries = Unit.options.entries,
-                    Select  = self.getElm().getElement('.field-shipping-unit select'),
-                    Input   = self.getElm().getElement('.field-shipping-unit input'),
-                    current = QUILocale.getCurrent();
-
-                new Element('option', {
-                    value: '',
-                    html : '---'
-                }).inject(Select);
-
-                for (var unit in entries) {
-                    if (!entries.hasOwnProperty(unit)) {
+                for (var i in entries) {
+                    if (!entries.hasOwnProperty(i)) {
                         continue;
                     }
 
-                    title = unit;
-
-                    if (typeof entries[unit].title[current] !== 'undefined') {
-                        title = entries[unit].title[current];
-                    }
-
-                    new Element('option', {
-                        value: unit,
-                        html : title
-                    }).inject(Select);
+                    result.push({
+                        key  : i,
+                        title: entries[i].title[current]
+                    });
                 }
 
-                Select.set('disabled', false);
-                Input.set('disabled', false);
+                return result;
+            };
+
+            ShippingRules.getShippingRuleUnitFields().then(function (unitFields) {
+                var i, len, html, field;
+
+                var Table = self.getElm().getElement('.unit-table'),
+                    Tbody = Table.getElement('tbody');
+
+                Tbody.set('html', '');
+
+                for (i = 0, len = unitFields.length; i < len; i++) {
+                    field = unitFields[i];
+                    html  = Mustache.render(templateUnit, {
+                        options: getOptions(field),
+                        id     : field.id,
+                        title  : field.title
+                    });
+
+                    new Element('tr', {
+                        html: '<td>' + html + '</td>'
+                    }).inject(Tbody);
+                }
+
+                Tbody.getElements('select').set('disabled', false);
+                Tbody.getElements('input').set('disabled', false);
             }).then(function () {
                 return ControlUtils.parse(self.getElm());
             }).then(function () {
@@ -191,6 +205,26 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
                             FormUtils.setDataToForm(rule, self.getElm().getElement('form'));
 
+                            // unit terms
+                            var i, len, term, Row;
+                            var terms     = rule.unit_terms;
+                            var UnitTable = self.getElm().getElement('.unit-table');
+
+                            for (i = 0, len = terms.length; i < len; i++) {
+                                term = terms[i];
+                                Row  = UnitTable.getElement('[data-id="' + term.id + '"]');
+
+                                if (!Row) {
+                                    continue;
+                                }
+
+                                Row.getElement('[name="unit"]').value  = term.unit;
+                                Row.getElement('[name="term"]').value  = term.term;
+                                Row.getElement('[name="value"]').value = term.value;
+
+                                //console.log(term);
+                            }
+
                             resolve();
                         });
                     });
@@ -225,6 +259,27 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             formData.title        = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
             formData.active       = parseInt(formData.status);
+
+            var i, len, Unit, Term, Value, Label;
+
+            var unitData = [];
+            var UnitRows = this.getElm().getElements('.unit-table td');
+
+            for (i = 0, len = UnitRows.length; i < len; i++) {
+                Unit  = UnitRows[i].getElement('[name="unit"]');
+                Term  = UnitRows[i].getElement('[name="term"]');
+                Value = UnitRows[i].getElement('[name="value"]');
+                Label = UnitRows[i].getElement('label');
+
+                unitData.push({
+                    id   : parseInt(Label.get('data-id')),
+                    value: Value.value,
+                    term : Term.value,
+                    unit : Unit.value
+                });
+            }
+
+            formData.unit_terms = unitData;
 
             return ShippingRules.update(this.getAttribute('ruleId'), formData);
         }

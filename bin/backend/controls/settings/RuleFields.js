@@ -42,14 +42,25 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/RuleFields', [
             }).wraps(this.$Input);
 
             new Element('span', {
-                html: '<span class="fa fa-"></span>'
+                html: '<span class="fa fa-spinner fa-spin"></span>'
             }).inject(this.$Elm);
 
             var self      = this,
                 Container = this.$Elm;
 
+            this.$Elm
+                .getParent('.field-container')
+                .getElement('.field-container-item')
+                .addEvent('click', function (event) {
+                    event.stop();
+                });
+
             QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_settings_getUnitFields', function (unitFields) {
-                Container.set('html', '');
+                Container.getChildren().forEach(function (Node) {
+                    if (Node.nodeName !== 'INPUT') {
+                        Node.destroy();
+                    }
+                });
 
                 for (var i = 0, len = unitFields.length; i < len; i++) {
                     new Element('label', {
