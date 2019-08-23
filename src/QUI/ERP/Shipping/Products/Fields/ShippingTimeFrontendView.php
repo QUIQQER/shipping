@@ -54,11 +54,17 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                 $singleTime = true;
 
                 if ($from === $to) {
-                    $valueText = $from;
+                    $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
+                        'period' => $from
+                    ]);
                 } elseif (empty($from) && !empty($to)) {
-                    $valueText = $to;
+                    $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
+                        'period' => $to
+                    ]);
                 } elseif (!empty($from) && empty($to)) {
-                    $valueText = $from;
+                    $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
+                        'period' => $from
+                    ]);
                 } else {
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.from_to', [
                         'from' => $from,
@@ -80,6 +86,6 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             'valueText' => $valueText
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/UnitSelectFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ShippingTimePeriodFrontendView.html');
     }
 }

@@ -175,6 +175,10 @@
             <de><![CDATA[ca. [from] bis [to]]]></de>
             <en><![CDATA[approx. [from] to [to]]]></en>
         </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.period">
+            <de><![CDATA[ca. [period]]]></de>
+            <en><![CDATA[approx. [period]]]></en>
+        </locale>
         <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.second">
             <de><![CDATA[Sekunde]]></de>
             <en><![CDATA[second]]></en>
@@ -343,6 +347,15 @@
             Determine which unit fields can be observed in shipping rules.
             All fields set here can be used in the shipping rules.
             ]]></en>
+        </locale>
+
+        <locale name="shipping.settings.deliveryTimeDefault">
+            <de><![CDATA[Standard-Lieferzeit]]></de>
+            <en><![CDATA[Default delivery time]]></en>
+        </locale>
+        <locale name="shipping.settings.deliveryTimeDefault.description">
+            <de><![CDATA[Legt den Standardwert für das "Lieferzeit"-Feld fest, wenn ein Produkt neu angelegt wird bzw. kein Feldwert gesetzt ist.]]></de>
+            <en><![CDATA[Determines the default value for the "Delivery time" field for newly created products or if no field value is set.]]></en>
         </locale>
 
         <locale name="shipping.order.title">

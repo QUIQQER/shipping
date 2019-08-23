@@ -15,6 +15,10 @@
                 <conf name="ruleFields">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="deliveryTimeDefault">
+                    <type><![CDATA[string]]></type>
+                    <defaultvalue><![CDATA[{"from":"","to":"","unit":"second","option":"immediately_available"}]]></defaultvalue>
+                </conf>
             </section>
 
             <section name="no_rules">
@@ -74,6 +78,19 @@
 
                             <description>
                                 <locale group="quiqqer/shipping" var="shipping.settings.ruleFields.description"/>
+                            </description>
+                        </input>
+
+                        <input type="hidden"
+                               conf="shipping.deliveryTimeDefault"
+                               data-qui="package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod"
+                        >
+                            <text>
+                                <locale group="quiqqer/shipping" var="shipping.settings.deliveryTimeDefault"/>
+                            </text>
+
+                            <description>
+                                <locale group="quiqqer/shipping" var="shipping.settings.deliveryTimeDefault.description"/>
                             </description>
                         </input>
                     </settings>
