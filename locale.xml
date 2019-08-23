@@ -111,8 +111,8 @@
             <en><![CDATA[Unfortunately you cannot continue with your order.]]></en>
         </locale>
         <locale name="shipping.mail.settings.title">
-            <de><![CDATA[Mail Verhalten]]></de>
-            <en><![CDATA[Mail behavior]]></en>
+            <de><![CDATA[Bestell Verhalten]]></de>
+            <en><![CDATA[Order behavior]]></en>
         </locale>
         <locale name="shipping.mail.settings.order.title">
             <de><![CDATA[Verhalten bei keiner Regel]]></de>
