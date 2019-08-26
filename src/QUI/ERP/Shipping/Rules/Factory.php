@@ -71,7 +71,8 @@ class Factory extends QUI\CRUD\Factory
             'articles',
             'articles_only',
             'user_groups',
-            'unit_terms'
+            'unit_terms',
+            'no_rule_after'
         ]);
 
         $data = \array_filter($data, function ($k) use ($allowed) {
@@ -111,6 +112,12 @@ class Factory extends QUI\CRUD\Factory
             $data['articles_only'] = 0;
         } else {
             $data['articles_only'] = (int)$data['articles_only'];
+        }
+
+        if (!isset($data['no_rule_after']) || empty($data['no_rule_after'])) {
+            $data['no_rule_after'] = 0;
+        } else {
+            $data['no_rule_after'] = (int)$data['no_rule_after'];
         }
 
         // discount
@@ -228,6 +235,7 @@ class Factory extends QUI\CRUD\Factory
         return [
             'id',
             'active',
+            'no_rule_after',
 
             'unit_terms',
             'date_from',

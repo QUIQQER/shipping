@@ -94,6 +94,12 @@ class ShippingRule extends QUI\CRUD\Child
                 $attributes['articles_only'] = (int)$attributes['articles_only'];
             }
 
+            if (!isset($attributes['no_rule_after']) || empty($attributes['no_rule_after'])) {
+                $attributes['no_rule_after'] = 0;
+            } else {
+                $attributes['no_rule_after'] = (int)$attributes['no_rule_after'];
+            }
+
             if (isset($attributes['unit_terms']) && \is_array($attributes['unit_terms'])) {
                 $attributes['unit_terms'] = \json_encode($attributes['unit_terms']);
             }
@@ -384,14 +390,14 @@ class ShippingRule extends QUI\CRUD\Child
                     continue;
                 }
 
+                if ($unitTerm['value'] === '') {
+                    continue;
+                }
+
                 $id    = (int)$unitTerm['id'];
                 $unit  = $unitTerm['unit'];
                 $value = \floatval($unitTerm['value']);
                 $term  = $unitTerm['term'];
-
-                if ($value === '') {
-                    continue;
-                }
 
                 if (!isset($articleUnits[$id])) {
                     continue;
@@ -466,6 +472,20 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         return true;
+    }
+
+    /**
+     * no further rules are used after this rule
+     *
+     * @return bool
+     */
+    public function noRulesAfter()
+    {
+        if ($this->existsAttribute('no_rule_after')) {
+            return !!$this->getAttribute('no_rule_after');
+        }
+
+        return false;
     }
 
     /**

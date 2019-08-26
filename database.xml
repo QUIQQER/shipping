@@ -28,6 +28,7 @@
 
             <field type="text NULL">unit_terms</field>
             <field type="INT(4) NULL">priority</field>
+            <field type="INT(1) NULL">no_rule_after</field>
 
             <field type="text NULL">date_from</field>
             <field type="text NULL">date_until</field>
