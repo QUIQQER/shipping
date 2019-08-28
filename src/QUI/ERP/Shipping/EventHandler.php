@@ -96,6 +96,10 @@ class EventHandler
             return;
         }
 
+        if (!$Shipping->getPrice()) {
+            return;
+        }
+
         $Shipping->setOrder($Order);
 
         $PriceFactors = $Products->getPriceFactors();
