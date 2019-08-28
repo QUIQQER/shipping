@@ -102,7 +102,9 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      */
     public function getIcon()
     {
-        return URL_OPT_DIR.'quiqqer/shipping/bin/shipping/default.png';
+        return QUI\ERP\Shipping\Shipping::getInstance()->getHost().
+               URL_OPT_DIR
+               .'quiqqer/shipping/bin/images/shipping/default.png';
     }
 
     /**
