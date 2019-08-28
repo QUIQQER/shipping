@@ -172,6 +172,35 @@
             <td>
                 <label class="field-container">
                     <span class="field-container-item">
+                        {{usageAssignmentArea}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding">
+                        <input type="text" name="areas"
+                               data-qui="package/quiqqer/areas/bin/controls/Select"
+                        />
+                    </span>
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="data-table data-table-flexbox product-table">
+        <thead>
+        <tr>
+            <th>
+                <div class="data-table-toggle"></div>
+                <div class="data-table-text">
+                    {{productHeader}}
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
                         {{usageAssignmentProduct}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding">
@@ -182,6 +211,24 @@
                 </label>
             </td>
         </tr>
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{usageAssignmentProductOnly}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="articles_only"/>
+                        {{usageAssignmentProductOnlyText}}
+                    </span>
+                </label>
+
+                <div class="field-container-item-desc">
+                    {{usageAssignmentProductOnlyDesc}}
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
+
 </form>
