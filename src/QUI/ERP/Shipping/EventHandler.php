@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields as ProductFields;
 use \Quiqqer\Engine\Collector;
 
 /**
@@ -23,6 +24,8 @@ class EventHandler
      */
     public static function onPackageSetup()
     {
+        // Translations
+
         $languages = QUI\Translator::getAvailableLanguages();
 
         // create locale
@@ -66,6 +69,9 @@ class EventHandler
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }
+
+        // Product fields
+        self::createProductFields();
     }
 
     /**
@@ -262,6 +268,60 @@ class EventHandler
             $User->setAttribute('quiqqer.delivery.address', $Address->getId());
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
+        }
+    }
+
+    /**
+     * Create all fixed product fields that quiqqer/shipping provides
+     *
+     * @return void
+     * @throws QUI\Exception
+     */
+    protected static function createProductFields()
+    {
+        $fields = [
+            Shipping::PRODUCT_FIELD_SHIPPING_TIME => [
+                'title'    => [
+                    'de' => 'Lieferzeit',
+                    'en' => 'Delivery time'
+                ],
+                'type'     => Shipping::PRODUCT_FIELD_TYPE_SHIPPING_TIME,
+                'public'   => true,
+                'standard' => true
+            ]
+        ];
+
+        $fieldsCreated = false;
+
+        foreach ($fields as $fieldId => $field) {
+            try {
+                ProductFields::getField($fieldId);
+                continue;
+            } catch (\Exception $Exception) {
+                // Field does not exist -> create it
+            }
+
+            try {
+                ProductFields::createField([
+                    'id'            => $fieldId,
+                    'type'          => $field['type'],
+                    'titles'        => $field['title'],
+                    'workingtitles' => $field['title'],
+                    'systemField'   => 0,
+                    'standardField' => !empty($field['standard']) ? 1 : 0,
+                    'publicField'   => !empty($field['public']) ? 1 : 0,
+                    'options'       => !empty($field['options']) ? $field['options'] : null
+                ]);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                continue;
+            }
+
+            $fieldsCreated = true;
+        }
+
+        if ($fieldsCreated) {
+            QUI\Translator::publish('quiqqer/products');
         }
     }
 }
