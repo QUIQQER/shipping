@@ -48,6 +48,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             this.$DataTitle        = null;
             this.$DataWorkingTitle = null;
             this.$UserGroups       = null;
+            this.$Areas            = null;
             this.$Articles         = null;
 
             this.addEvents({
@@ -92,6 +93,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 usageValueTo          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to'),
                 usageAssignmentUser   : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
                 usageAssignmentProduct: QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
+                usageAssignmentArea   : QUILocale.get(lg, 'shipping.edit.template.assignment.areas'),
 
                 productHeader                 : QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
                 usageAssignmentProductOnly    : QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
@@ -180,6 +182,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                         .get('data-quiid')
                 );
 
+                self.$Areas = QUI.Controls.getById(
+                    self.$Elm
+                        .getElement('[name="areas"]')
+                        .getParent('.qui-elements-select')
+                        .get('data-quiid')
+                );
+
                 self.$Articles = QUI.Controls.getById(
                     self.$Elm
                         .getElement('[name="articles"]')
@@ -197,6 +206,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                             self.$DataTitle.setData(rule.title);
                             self.$DataWorkingTitle.setData(rule.workingTitle);
 
+                            self.$Areas.importValue(rule.areas);
                             self.$UserGroups.importValue(rule.user_groups);
                             self.$Articles.importValue(rule.articles);
 
@@ -223,8 +233,6 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                                 Row.getElement('[name="unit"]').value  = term.unit;
                                 Row.getElement('[name="term"]').value  = term.term;
                                 Row.getElement('[name="value"]').value = term.value;
-
-                                //console.log(term);
                             }
 
                             resolve();

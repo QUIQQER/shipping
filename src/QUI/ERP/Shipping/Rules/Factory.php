@@ -70,6 +70,7 @@ class Factory extends QUI\CRUD\Factory
             'discount_type',
             'articles',
             'articles_only',
+            'areas',
             'user_groups',
             'unit_terms',
             'no_rule_after'
