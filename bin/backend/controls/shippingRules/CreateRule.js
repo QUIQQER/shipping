@@ -60,8 +60,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
                 discountDescription   : QUILocale.get(lg, 'shipping.edit.template.discount.description'),
                 discountAbsolute      : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
                 discountPercentage    : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
+                statusTitle           : QUILocale.get(lg, 'shipping.edit.template.status'),
+                statusDescription     : QUILocale.get(lg, 'shipping.edit.template.status.description'),
+                noRulesTitle          : QUILocale.get(lg, 'shipping.edit.template.noRules'),
+                noRulesText           : QUILocale.get(lg, 'shipping.edit.template.noRules.text'),
                 unitTitle             : QUILocale.get(lg, 'shipping.edit.template.unit'),
-                unitHeader            : QUILocale.get(lg, 'shipping.edit.template.unit'),
+                unitHeader            : QUILocale.get(lg, 'shipping.edit.template.unitTitle'),
                 usageHeader           : QUILocale.get(lg, 'shipping.edit.template.usage'),
                 usageFrom             : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
                 usageTo               : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
@@ -70,7 +74,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
                 usageValueOf          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
                 usageValueTo          : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to'),
                 usageAssignmentUser   : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
-                usageAssignmentProduct: QUILocale.get(lg, 'shipping.edit.template.assignment.product')
+                usageAssignmentProduct: QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
+                usageAssignmentArea   : QUILocale.get(lg, 'shipping.edit.template.assignment.areas'),
+
+                productHeader                 : QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
+                usageAssignmentProductOnly    : QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
+                usageAssignmentProductOnlyText: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.text'),
+                usageAssignmentProductOnlyDesc: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.desc')
             }));
 
             return this.$Elm;
