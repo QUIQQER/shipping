@@ -18,6 +18,16 @@ use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 class Shipping extends QUI\Utils\Singleton
 {
     /**
+     * Product fields provided by quiqqer/shipping
+     */
+    const PRODUCT_FIELD_SHIPPING_TIME = 300;
+
+    /**
+     * Product field types provided by quiqqer/shipping
+     */
+    const PRODUCT_FIELD_TYPE_SHIPPING_TIME = 'shipping.ShippingTimePeriod';
+
+    /**
      * Continue order if no rule was found
      */
     const NO_RULE_FOUND_ORDER_CONTINUE = 1;

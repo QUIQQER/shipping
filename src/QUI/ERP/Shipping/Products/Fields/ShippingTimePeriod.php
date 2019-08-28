@@ -59,7 +59,7 @@ class ShippingTimePeriod extends TimePeriod
         $value = parent::cleanup($value);
 
         if (empty($value)) {
-            return $value;
+            return $this->getDefaultValueFromConfig();
         }
 
         switch ($value['option']) {
@@ -69,7 +69,7 @@ class ShippingTimePeriod extends TimePeriod
                 break;
 
             default:
-                return $this->defaultValue;
+                return $this->getDefaultValueFromConfig();
         }
 
         return $value;
@@ -91,5 +91,28 @@ class ShippingTimePeriod extends TimePeriod
     public function getFrontendView()
     {
         return new ShippingTimeFrontendView($this->getFieldDataForView());
+    }
+
+    /**
+     * Get default value for the ShippingTimePeriod field
+     *
+     * @return array|null
+     */
+    protected function getDefaultValueFromConfig()
+    {
+        try {
+            $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return null;
+        }
+
+        $defaultValue = $Conf->get('shipping', 'deliveryTimeDefault');
+
+        if (empty($defaultValue)) {
+            return null;
+        }
+
+        return \json_decode($defaultValue, true);
     }
 }
