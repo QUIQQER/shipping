@@ -354,8 +354,10 @@
             <en><![CDATA[Default delivery time]]></en>
         </locale>
         <locale name="shipping.settings.deliveryTimeDefault.description">
-            <de><![CDATA[Legt den Standardwert für das "Lieferzeit"-Feld fest, wenn ein Produkt neu angelegt wird bzw. kein Feldwert gesetzt ist.]]></de>
-            <en><![CDATA[Determines the default value for the "Delivery time" field for newly created products or if no field value is set.]]></en>
+            <de>
+                <![CDATA[Legt den Standardwert für das "Lieferzeit"-Feld fest, wenn ein Produkt neu angelegt wird bzw. kein Feldwert gesetzt ist.]]></de>
+            <en>
+                <![CDATA[Determines the default value for the "Delivery time" field for newly created products or if no field value is set.]]></en>
         </locale>
 
         <locale name="shipping.order.title">
@@ -513,6 +515,10 @@
         <locale name="shipping.edit.template.assignment.combine">
             <de><![CDATA[Kombinierbar mit]]></de>
             <en><![CDATA[Combined with]]></en>
+        </locale>
+        <locale name="shipping.edit.template.assignment.areas">
+            <de><![CDATA[Zonen]]></de>
+            <en><![CDATA[Areas]]></en>
         </locale>
         <locale name="shipping.edit.template.customIcon">
             <de><![CDATA[Benutzerdefiniertes Bild]]></de>
