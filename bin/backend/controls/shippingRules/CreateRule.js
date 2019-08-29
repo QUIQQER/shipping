@@ -16,7 +16,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
     'Mustache',
 
     'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule.html',
-    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html'
+    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html',
+    'css!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.css'
 
 ], function (QUI, QUIControl, Translator, TranslateUpdater, InputMultiLang, Fields,
              ShippingRules, FormUtils, QUILocale, Mustache, template, templateUnit) {
@@ -51,6 +52,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
          */
         create: function () {
             this.$Elm = this.parent();
+            this.$Elm.addClass('quiqqer-shipping-rule-create');
+
             this.$Elm.set('html', Mustache.render(template, {
                 generalHeader         : QUILocale.get(lg, 'shipping.edit.template.general'),
                 title                 : QUILocale.get(lg, 'shipping.edit.template.title'),
@@ -122,6 +125,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
                 for (i = 0, len = unitFields.length; i < len; i++) {
                     field = unitFields[i];
                     html  = Mustache.render(templateUnit, {
+                        andText: QUILocale.get(lg, 'shipping.edit.template.and'),
                         options: getOptions(field),
                         id     : field.id,
                         title  : field.title
@@ -160,7 +164,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
             formData.title        = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
 
-            var i, len, Unit, Term, Value, Label;
+            var i, len, Unit, Term, Term2, Value, Value2, Label;
 
             var unitData = [];
             var UnitRows = this.getElm().getElements('.unit-table td');
@@ -171,11 +175,16 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
                 Value = UnitRows[i].getElement('[name="value"]');
                 Label = UnitRows[i].getElement('label');
 
+                Term2  = UnitRows[i].getElement('[name="term"]');
+                Value2 = UnitRows[i].getElement('[name="value"]');
+
                 unitData.push({
-                    id   : parseInt(Label.get('data-id')),
-                    value: Value.value,
-                    term : Term.value,
-                    unit : Unit.value
+                    id    : parseInt(Label.get('data-id')),
+                    value : Value.value,
+                    value2: Value2.value,
+                    term  : Term.value,
+                    term2 : Term2.value,
+                    unit  : Unit.value
                 });
             }
 

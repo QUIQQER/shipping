@@ -1,0 +1,20 @@
+
+.quiqqer-shipping-rule-create select,
+.quiqqer-shipping-rule-edit select {
+    padding: 0.5rem 0;
+}
+
+.quiqqer-shipping-rule-andText {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    top: 3px;
+    white-space: nowrap;
+    width: 10%;
+}
+
+.quiqqer-shipping-rule-andText span {
+    float: left;
+    padding: 0 0 0 0.5rem;
+}

@@ -390,8 +390,24 @@ class ShippingRule extends QUI\CRUD\Child
                     continue;
                 }
 
-                if ($unitTerm['value'] === '') {
+                if (!isset($unitTerm['value'])) {
+                    $unitTerm['value'] = '';
+                }
+
+                if (!isset($unitTerm['value2'])) {
+                    $unitTerm['value2'] = '';
+                }
+
+                if ($unitTerm['value'] === '' && $unitTerm['value2'] === '') {
                     continue;
+                }
+
+                if (empty($unitTerm['term'])) {
+                    $unitTerm['term'] = 'gt';
+                }
+
+                if (empty($unitTerm['term2'])) {
+                    $unitTerm['term2'] = 'gt';
                 }
 
                 $id    = (int)$unitTerm['id'];
@@ -411,6 +427,19 @@ class ShippingRule extends QUI\CRUD\Child
                         return false;
                     }
 
+                    // term 2
+                    if (!empty($unitTerm['value2'])) {
+                        $value2 = \floatval($unitTerm['value2']);
+                        $term2  = $unitTerm['term2'];
+
+                        $unitValue = FieldUtils::weightToKilogram($value2, $unit);
+                        $compare2  = FieldUtils::compare($articleUnits[$id], $unitValue, $term2);
+
+                        if ($compare2 === false) {
+                            return false;
+                        }
+                    }
+
                     continue;
                 }
 
@@ -418,6 +447,17 @@ class ShippingRule extends QUI\CRUD\Child
 
                 if ($compare === false) {
                     return false;
+                }
+
+                // term 2
+                if (!empty($unitTerm['value2'])) {
+                    $value2   = \floatval($unitTerm['value2']);
+                    $term2    = $unitTerm['term2'];
+                    $compare2 = FieldUtils::compare($articleUnits[$id], $value2, $term2);
+
+                    if ($compare2 === false) {
+                        return false;
+                    }
                 }
             }
         }

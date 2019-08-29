@@ -18,7 +18,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
     'Mustache',
 
     'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.html',
-    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html'
+    'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html',
+    'css!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.css'
 
 ], function (QUI, QUIControl, ControlUtils, Translator, TranslateUpdater, InputMultiLang, Fields,
              ShippingRules, FormUtils, ElementsUtils, QUILocale, Mustache,
@@ -63,6 +64,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          */
         create: function () {
             this.$Elm = this.parent();
+
+            this.$Elm.addClass('quiqqer-shipping-rule-edit');
 
             this.$Elm.setStyles({
                 overflow: 'hidden',
@@ -137,9 +140,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
                 Tbody.set('html', '');
 
+                // defining units
                 for (i = 0, len = unitFields.length; i < len; i++) {
                     field = unitFields[i];
                     html  = Mustache.render(templateUnit, {
+                        andText: QUILocale.get(lg, 'shipping.edit.template.and'),
                         options: getOptions(field),
                         id     : field.id,
                         title  : field.title
@@ -270,22 +275,26 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             formData.workingTitle = this.$DataWorkingTitle.getData();
             formData.active       = parseInt(formData.status);
 
-            var i, len, Unit, Term, Value, Label;
+            var i, len, Unit, Term, Term2, Value, Value2, Label;
 
             var unitData = [];
             var UnitRows = this.getElm().getElements('.unit-table td');
 
             for (i = 0, len = UnitRows.length; i < len; i++) {
-                Unit  = UnitRows[i].getElement('[name="unit"]');
-                Term  = UnitRows[i].getElement('[name="term"]');
-                Value = UnitRows[i].getElement('[name="value"]');
-                Label = UnitRows[i].getElement('label');
+                Unit   = UnitRows[i].getElement('[name="unit"]');
+                Term   = UnitRows[i].getElement('[name="term"]');
+                Term2  = UnitRows[i].getElement('[name="term2"]');
+                Value  = UnitRows[i].getElement('[name="value"]');
+                Value2 = UnitRows[i].getElement('[name="value2"]');
+                Label  = UnitRows[i].getElement('label');
 
                 unitData.push({
-                    id   : parseInt(Label.get('data-id')),
-                    value: Value.value,
-                    term : Term.value,
-                    unit : Unit.value
+                    id    : parseInt(Label.get('data-id')),
+                    value : Value.value,
+                    value2: Value2.value,
+                    term  : Term.value,
+                    term2 : Term2.value,
+                    unit  : Unit.value
                 });
             }
 

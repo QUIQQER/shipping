@@ -5,7 +5,7 @@
     <span class="field-container-field field-container-field-no-padding field-shipping-unit">
         <select disabled
                 name="unit"
-                style="width: 20%" class="field-container-field"
+                style="width: 15%" class="field-container-field"
         >
             {{#options}}
             <option value="{{key}}">{{title}}</option>
@@ -13,7 +13,7 @@
         </select>
         <select disabled
                 name="term"
-                style="width: 20%" class="field-container-field"
+                style="width: 15%" class="field-container-field"
         >
             <option value="gt">&gt;</option>
             <option value="egt">&gt;=</option>
@@ -24,6 +24,27 @@
         <input disabled
                name="value"
                type="number"
-               style="width: 58%" class="field-container-field"/>
+               style="width: 20%" class="field-container-field"
+               placeholder="1000"
+        />
+        <span class="quiqqer-shipping-rule-andText" title="{{andText}}">
+            <span>{{andText}}</span>
+        </span>
+        <select disabled
+                name="term2"
+                style="width: 15%" class="field-container-field"
+        >
+            <option value="gt">&gt;</option>
+            <option value="egt">&gt;=</option>
+            <option value="lt">&lt;</option>
+            <option value="elt">&lt;=</option>
+            <option value="=">=</option>
+        </select>
+        <input disabled
+               name="value2"
+               type="number"
+               style="width: 20%" class="field-container-field"
+               placeholder="1000"
+        />
     </span>
 </label>
