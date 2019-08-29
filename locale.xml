@@ -572,6 +572,10 @@
             <de><![CDATA[Nach dieser Regel sollen keine weitere Regeln mehr beachtet werden.]]></de>
             <en><![CDATA[After this rule, no further rules should be observed.]]></en>
         </locale>
+        <locale name="shipping.edit.template.and">
+            <de><![CDATA[und]]></de>
+            <en><![CDATA[and]]></en>
+        </locale>
 
         <locale name="window.delete.title">
             <de><![CDATA[Versandart löschen]]></de>
