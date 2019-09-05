@@ -118,6 +118,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
+        $areasValue = \explode($areasValue, ',');
+
         // not in area
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
             return false;
