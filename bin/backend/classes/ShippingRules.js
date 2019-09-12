@@ -44,7 +44,7 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_create', function (ruleId) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_create', function (ruleId) {
                     resolve(ruleId);
                     self.fireEvent('create', [self, ruleId]);
                 }, {
@@ -66,7 +66,7 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_update', function () {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_update', function () {
                     resolve();
                     self.fireEvent('update', [self, ruleId]);
                 }, {
@@ -88,7 +88,7 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_delete', function () {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_delete', function () {
                     resolve();
                     self.fireEvent('delete', [self, ruleIds]);
                 }, {

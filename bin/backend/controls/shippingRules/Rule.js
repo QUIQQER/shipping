@@ -238,6 +238,18 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                                 Row.getElement('[name="unit"]').value  = term.unit;
                                 Row.getElement('[name="term"]').value  = term.term;
                                 Row.getElement('[name="value"]').value = term.value;
+
+                                if (typeof term.unit2 !== 'undefined') {
+                                    Row.getElement('[name="unit2"]').value = term.unit2;
+                                }
+
+                                if (typeof term.term2 !== 'undefined') {
+                                    Row.getElement('[name="term2"]').value = term.term2;
+                                }
+
+                                if (typeof term.value2 !== 'undefined') {
+                                    Row.getElement('[name="value2"]').value = term.value2;
+                                }
                             }
 
                             resolve();
