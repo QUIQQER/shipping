@@ -1,4 +1,16 @@
 
+form[name="create-rule"] {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    width: 100%;
+}
+
+/* strange workaround */
+form[name="create-rule"] .product-table .field-container-field {
+    width: 100px;
+}
+
 .quiqqer-shipping-rule-create select,
 .quiqqer-shipping-rule-edit select {
     padding: 0.5rem 0;
