@@ -80,6 +80,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
             $debugStack    = [];
             $debugShipping = $Shipping->getShippingList();
+            $Logger        = QUI\ERP\Shipping\Debug::getLoggerWithoutFormatter();
 
             foreach ($debugShipping as $DebugShippingEntry) {
                 $DebugShippingEntry->setOrder($Order);
@@ -100,10 +101,9 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             }
 
             QUI\ERP\Shipping\Debug::disable();
-            QUI\ERP\Shipping\Debug::getLoggerWithoutFormatter()->info(
-                "\n\n".
-                \implode("\n", $debugStack)
-            );
+
+            $Logger->info("\n\n".\implode("\n", $debugStack));
+            $Engine->assign('debug', \implode("\n", $debugStack));
         }
 
         // send email if empty

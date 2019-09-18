@@ -38,4 +38,9 @@
         {/foreach}
     </div>
 
+    {if isset($debug)}
+    <div class="shipping-debug-console">
+        <pre>{$debug}</pre>
+    </div>
+    {/if}
 </section>
