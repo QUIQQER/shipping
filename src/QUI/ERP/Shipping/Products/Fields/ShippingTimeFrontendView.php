@@ -34,11 +34,9 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
 
         switch ($value['option']) {
             case ShippingTimePeriod::OPTION_UNAVAILABLE:
-                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.unavailable');
-                break;
-
+            case ShippingTimePeriod::OPTION_ON_REQUEST:
             case ShippingTimePeriod::OPTION_IMMEDIATELY_AVAILABLE:
-                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.immediately_available');
+                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.'.$value['option']);
                 break;
 
             default:
