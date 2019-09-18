@@ -112,3 +112,17 @@
         margin-bottom: 0;
     }
 }
+
+.shipping-debug-console {
+    border: 1px solid #999;
+    background: #fff;
+    bottom: 10px;
+    height: 400px;
+    max-width: 100%;
+    overflow: auto;
+    padding: 10px;
+    position: fixed;
+    right: 10px;
+    width: 700px;
+    z-index: 100000;
+}
