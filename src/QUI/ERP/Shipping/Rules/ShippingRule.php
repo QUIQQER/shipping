@@ -355,6 +355,10 @@ class ShippingRule extends QUI\CRUD\Child
                         $weight = FieldUtils::weightFieldToKilogram($Weight);
                     }
 
+                    if (\is_array($weight)) {
+                        $weight = $weight['quantity'];
+                    }
+
                     if (!isset($articleUnits[$unitId])) {
                         $articleUnits[$unitId] = 0;
                     }
