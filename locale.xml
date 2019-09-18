@@ -175,6 +175,10 @@
             <de><![CDATA[auf Anfrage]]></de>
             <en><![CDATA[on request]]></en>
         </locale>
+        <locale name="fields.ShippingTimeFrontendView.available_soon">
+            <de><![CDATA[bald verfügbar]]></de>
+            <en><![CDATA[available soon]]></en>
+        </locale>
         <locale name="fields.ShippingTimeFrontendView.timeperiod.from_to">
             <de><![CDATA[ca. [from] bis [to]]]></de>
             <en><![CDATA[approx. [from] to [to]]]></en>
