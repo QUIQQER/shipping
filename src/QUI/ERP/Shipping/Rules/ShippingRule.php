@@ -376,7 +376,7 @@ class ShippingRule extends QUI\CRUD\Child
                     $Weight = $Product->getField($unitId);
                     $weight = $Weight->getValue();
 
-                    if ($unitId === Fields::FIELD_WEIGHT) {
+                    if ((int)$unitId === Fields::FIELD_WEIGHT) {
                         $weight = FieldUtils::weightFieldToKilogram($Weight);
                     }
 
@@ -476,7 +476,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                     if ($compare === false) {
                         QUI\ERP\Shipping\Debug::addLog(
-                            "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]}{$term} -> {$unitValue}{$term}"
+                            "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$term} {$unitValue}"
                         );
 
                         return false;
@@ -492,7 +492,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                         if ($compare2 === false) {
                             QUI\ERP\Shipping\Debug::addLog(
-                                "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]}{$term2} -> {$unitValue}{$term2}"
+                                "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$term2} {$unitValue}"
                             );
 
                             return false;
@@ -506,7 +506,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                 if ($compare === false) {
                     QUI\ERP\Shipping\Debug::addLog(
-                        "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]}{$term} -> {$value}{$term}"
+                        "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$term} {$value}"
                     );
 
                     return false;
@@ -520,7 +520,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                     if ($compare2 === false) {
                         QUI\ERP\Shipping\Debug::addLog(
-                            "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]}{$term} -> {$value2}{$term2}"
+                            "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$term} {$value2}"
                         );
 
                         return false;
