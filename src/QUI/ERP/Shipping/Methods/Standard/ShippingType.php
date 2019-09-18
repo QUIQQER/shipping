@@ -113,7 +113,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         $userGroupValue = $ShippingEntry->getAttribute('user_groups');
         $areasValue     = $ShippingEntry->getAttribute('areas');
 
-        // if groups and areas are empty, everbody is allowed
+        // if groups and areas are empty, everybody is allowed
         if (empty($userGroupValue) && empty($areasValue)) {
             return true;
         }

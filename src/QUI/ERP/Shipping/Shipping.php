@@ -92,7 +92,7 @@ class Shipping extends QUI\Utils\Singleton
         $result = [];
 
         foreach ($providers as $provider) {
-            if (!class_exists($provider)) {
+            if (!\class_exists($provider)) {
                 continue;
             }
 
