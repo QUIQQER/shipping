@@ -43,7 +43,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             case ShippingTimePeriod::OPTION_CUSTOM_TEXT:
                 $lang = $L->getCurrent();
 
-                if (isset($value['text'][$lang])) {
+                if (!empty($value['text'][$lang])) {
                     $valueText = $value['text'][$lang];
                 } else {
                     $valueText = current($value['text']);
