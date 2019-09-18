@@ -105,9 +105,10 @@ class Debug
             return self::$Logger;
         }
 
-        $Logger  = new \Monolog\Logger('quiqqer-shipping');
-        $Handler = new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG);
-        $Logger->pushHandler($Handler);
+        $Logger = new \Monolog\Logger('quiqqer-shipping');
+        $Logger->pushHandler(new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG));
+        $Logger->pushHandler(new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG));
+        $Logger->pushHandler(new \Monolog\Handler\ChromePHPHandler(\Monolog\Logger::DEBUG));
 
         self::$Logger = $Logger;
 
