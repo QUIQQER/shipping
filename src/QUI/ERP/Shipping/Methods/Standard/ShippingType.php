@@ -118,7 +118,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $areasValue = \explode($areasValue, ',');
+        $areasValue = \explode(',', \trim($areasValue, ','));
 
         // not in area
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
@@ -131,6 +131,10 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         $discountUsers  = $userGroups['users'];
         $discountGroups = $userGroups['groups'];
+
+        if (empty($discountUsers) && empty($discountGroups)) {
+            return true;
+        }
 
         // user checking
         foreach ($discountUsers as $uid) {
