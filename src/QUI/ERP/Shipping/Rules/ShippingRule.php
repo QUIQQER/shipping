@@ -365,7 +365,8 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         foreach ($articleList as $Article) {
-            $aid = $Article->getId();
+            $aid             = $Article->getId();
+            $articleQuantity = $Article->getQuantity();
 
             // get product because of units
             try {
@@ -387,7 +388,7 @@ class ShippingRule extends QUI\CRUD\Child
                         $articleUnits[$unitId] = 0;
                     }
 
-                    $articleUnits[$unitId] = $articleUnits[$unitId] + $weight;
+                    $articleUnits[$unitId] = $articleUnits[$unitId] + ($weight * $articleQuantity);
 
                     $debugUnits[$unitId] = [
                         'field'  => $Weight->getTitle(),
