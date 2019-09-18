@@ -104,6 +104,10 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
 
                     Value = JSON.decode(Elm.value);
 
+                    if (Value.option === 'custom_text') {
+                        self.$CustomText.setData(Value.text);
+                    }
+
                     self.$OptionsSelect.value = Value.option;
                     self.$onOptionSelectChange();
                 }).delay(200);
@@ -144,8 +148,6 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             if (customText !== '') {
                 customText = JSON.decode(customText);
             }
-
-            console.log(customText);
 
             this.getElm().value = JSON.encode({
                 from  : this.$FromInput.value.trim(),
