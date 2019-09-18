@@ -26,6 +26,42 @@ class Debug
     protected static $FormatLogger = null;
 
     /**
+     * Stack of log messages
+     *
+     * @var array
+     */
+    protected static $logStack = [];
+
+    /**
+     * @var bool
+     */
+    protected static $enable = false;
+
+    /**
+     * enable the debugging
+     */
+    public static function enable()
+    {
+        self::$enable = true;
+    }
+
+    /**
+     * disable the debugging
+     */
+    public static function disable()
+    {
+        self::$enable = false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isEnabled()
+    {
+        return self::$enable;
+    }
+
+    /**
      * @param $ruleId
      * @return bool
      */
@@ -40,6 +76,32 @@ class Debug
     public static function ruleIsDebugged($ruleId)
     {
         self::$shippingRuleDebugs[$ruleId] = true;
+    }
+
+    /**
+     * @param string $messages
+     */
+    public static function addLog($messages)
+    {
+        if (self::$enable) {
+            self::$logStack[] = $messages;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public static function getLogStack()
+    {
+        return self::$logStack;
+    }
+
+    /**
+     * clear the log stack
+     */
+    public static function clearLogStock()
+    {
+        self::$logStack = [];
     }
 
     /**
@@ -73,7 +135,11 @@ class Debug
         }
 
         try {
-            QUI::getEvents()->addEvent('onResponseSent', function () use ($Entry, $result, $debugMessage) {
+            QUI::getEvents()->addEvent('onResponseSent', function () use (
+                $Entry,
+                $result,
+                $debugMessage
+            ) {
                 $log = [];
 
                 /* @var $ShippingRule QUI\ERP\Shipping\Rules\ShippingRule */
@@ -124,8 +190,11 @@ class Debug
             return self::$FormatLogger;
         }
 
-        $Logger    = new \Monolog\Logger('quiqqer-shipping');
-        $Handler   = new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG);
+        $Logger  = new \Monolog\Logger('quiqqer-shipping');
+        $Console = new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG);
+        $FireFox = new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG);
+        $Chrome  = new \Monolog\Handler\ChromePHPHandler(\Monolog\Logger::DEBUG);
+
         $Formatter = new \Monolog\Formatter\LineFormatter(
             null,
             // Format of message in log, default [%datetime%] %channel%.%level_name%: %message% %context% %extra%\n
@@ -134,8 +203,13 @@ class Debug
             true  // ignoreEmptyContextAndExtra option, default false
         );
 
-        $Handler->setFormatter($Formatter);
-        $Logger->pushHandler($Handler);
+        $Console->setFormatter($Formatter);
+        $FireFox->setFormatter($Formatter);
+        $Chrome->setFormatter($Formatter);
+
+        $Logger->pushHandler($Console);
+        $Logger->pushHandler($FireFox);
+        $Logger->pushHandler($Chrome);
 
         self::$FormatLogger = $Logger;
 
