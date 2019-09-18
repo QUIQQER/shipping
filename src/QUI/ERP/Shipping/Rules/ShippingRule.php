@@ -464,7 +464,9 @@ class ShippingRule extends QUI\CRUD\Child
                 $id    = (int)$unitTerm['id'];
                 $unit  = $unitTerm['unit'];
                 $value = \floatval($unitTerm['value']);
+
                 $term  = $unitTerm['term'];
+                $hTerm = FieldUtils::termToHuman($term);
 
                 if (!isset($articleUnits[$id])) {
                     continue;
@@ -476,7 +478,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                     if ($compare === false) {
                         QUI\ERP\Shipping\Debug::addLog(
-                            "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$term} {$unitValue}"
+                            "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$hTerm} {$unitValue}"
                         );
 
                         return false;
@@ -486,13 +488,14 @@ class ShippingRule extends QUI\CRUD\Child
                     if (!empty($unitTerm['value2'])) {
                         $value2 = \floatval($unitTerm['value2']);
                         $term2  = $unitTerm['term2'];
+                        $hTerm2 = FieldUtils::termToHuman($term2);
 
                         $unitValue = FieldUtils::weightToKilogram($value2, $unit);
                         $compare2  = FieldUtils::compare($articleUnits[$id], $unitValue, $term2);
 
                         if ($compare2 === false) {
                             QUI\ERP\Shipping\Debug::addLog(
-                                "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$term2} {$unitValue}"
+                                "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$hTerm2} {$unitValue}"
                             );
 
                             return false;
@@ -506,7 +509,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                 if ($compare === false) {
                     QUI\ERP\Shipping\Debug::addLog(
-                        "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$term} {$value}"
+                        "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$hTerm} {$value}"
                     );
 
                     return false;
@@ -516,11 +519,12 @@ class ShippingRule extends QUI\CRUD\Child
                 if (!empty($unitTerm['value2'])) {
                     $value2   = \floatval($unitTerm['value2']);
                     $term2    = $unitTerm['term2'];
+                    $hTerm2   = FieldUtils::termToHuman($term2);
                     $compare2 = FieldUtils::compare($articleUnits[$id], $value2, $term2);
 
                     if ($compare2 === false) {
                         QUI\ERP\Shipping\Debug::addLog(
-                            "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$term} {$value2}"
+                            "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$hTerm2} {$value2}"
                         );
 
                         return false;
