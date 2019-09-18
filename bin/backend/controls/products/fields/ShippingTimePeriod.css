@@ -9,3 +9,12 @@
 .quiqqer-shipping-fields-shippingtimeperiod select {
     width: 100%;
 }
+
+.quiqqer-shipping-fields-shippingtimeperiod-customtext {
+    display: flex;
+    width: 100%;
+}
+
+.quiqqer-shipping-fields-shippingtimeperiod__hidden {
+    display: none;
+}
