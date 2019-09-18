@@ -12,6 +12,7 @@ use QUI\Translator;
 use QUI\Permissions\Permission;
 
 use QUI\ERP\Shipping\Api;
+use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 use QUI\ERP\Shipping\Rules\ShippingRule;
 
@@ -252,6 +253,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
     {
         if ($this->isActive() === false) {
+            Debug::addLog($this->getTitle().' is not active');
+
             return false;
         }
 
@@ -564,47 +567,73 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         // check rules
         $result = [];
 
+        Debug::addLog("### Check Shipping Rules for {$this->getTitle()}");
+
         foreach ($rules as $Rule) {
             /* @var $Rule ShippingRule */
             if (!$Rule->isValid()) {
-                $debuggingLog[] = [
-                    'id'     => $Rule->getId(),
-                    'title'  => $Rule->getTitle(),
-                    'reason' => 'is not valid',
-                    'valid'  => false
-                ];
+                if ($debugging) {
+                    Debug::addLog("### {$Rule->getTitle()} is not valid");
+
+                    $debuggingLog[] = [
+                        'id'     => $Rule->getId(),
+                        'title'  => $Rule->getTitle(),
+                        'reason' => 'is not valid',
+                        'valid'  => false
+                    ];
+                }
                 continue;
             }
 
+            if ($debugging) {
+                Debug::addLog("### {$Rule->getTitle()} is valid");
+            }
+
             if (!$Rule->canUsedInOrder($this->Order)) {
-                $debuggingLog[] = [
-                    'id'     => $Rule->getId(),
-                    'title'  => $Rule->getTitle(),
-                    'reason' => 'is not valid for order',
-                    'valid'  => false
-                ];
+                if ($debugging) {
+                    Debug::addLog("### {$Rule->getTitle()} can not use in order");
+
+                    $debuggingLog[] = [
+                        'id'     => $Rule->getId(),
+                        'title'  => $Rule->getTitle(),
+                        'reason' => 'is not valid for order',
+                        'valid'  => false
+                    ];
+                }
+
+                if ($debugging) {
+                    Debug::addLog("### {$Rule->getTitle()} can use in order");
+                }
 
                 continue;
             }
 
             $result[] = $Rule;
 
-            $debuggingLog[] = [
-                'id'     => $Rule->getId(),
-                'title'  => $Rule->getTitle(),
-                'reason' => 'is valid',
-                'valid'  => true
-            ];
+            if ($debugging) {
+                $debuggingLog[] = [
+                    'id'     => $Rule->getId(),
+                    'title'  => $Rule->getTitle(),
+                    'reason' => 'is valid',
+                    'valid'  => true
+                ];
+            }
 
 
             if ($Rule->noRulesAfter()) {
+                if ($debugging) {
+                    Debug::addLog("### {$Rule->getTitle()} - no rules after");
+                }
+
                 break;
             }
         }
 
         // debug shipping entry / rules
         if ($debugging) {
+            QUI\ERP\Shipping\Debug::enable();
             QUI\ERP\Shipping\Debug::generateShippingEntryDebuggingLog($this, $result, $debuggingLog);
+            QUI\ERP\Shipping\Debug::disable();
         }
 
         return $result;
@@ -618,6 +647,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     public function isValid()
     {
         if (!$this->isActive()) {
+            Debug::addLog("{$this->getTitle()} :: is not active");
+
             return false;
         }
 
@@ -625,14 +656,20 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $shippingRules = \json_decode($shippingRules, true);
 
         if (!\is_array($shippingRules)) {
+            Debug::addLog("{$this->getTitle()} :: has no rules [OK]");
+
             return true;
         }
 
         $rules = $this->getShippingRules();
 
         if (empty($rules)) {
+            Debug::addLog("{$this->getTitle()} :: has no active rules");
+
             return false;
         }
+
+        Debug::addLog("{$this->getTitle()} :: has active rules [OK]");
 
         return true;
     }

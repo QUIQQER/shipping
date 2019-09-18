@@ -8,6 +8,7 @@ namespace QUI\ERP\Shipping\Methods\Standard;
 
 use QUI;
 use QUI\ERP\Areas\Utils as AreaUtils;
+use QUI\ERP\Shipping\Debug;
 
 /**
  * Class ShippingType
@@ -50,6 +51,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
     ) {
         if ($ShippingEntry->isActive() === false) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
+
             return false;
         }
 
@@ -64,6 +67,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // if articles and categories are empty, its allowed
         if (empty($articles) && empty($categories)) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: no products or categories [ok]");
+
             return true;
         }
 
@@ -75,6 +80,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                 $productId = $Article->getId();
 
                 if (\in_array($productId, $articles)) {
+                    Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]");
+
                     return true;
                 }
 
@@ -84,6 +91,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
                     foreach ($articleCategories as $categoryId) {
                         if (\in_array($categoryId, $categories)) {
+                            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]");
+
                             return true;
                         }
                     }
@@ -93,7 +102,9 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             }
         }
 
-        return true;
+        Debug::addLog("{$this->getTitle()} :: no products found in this order which are fit");
+
+        return false;
     }
 
     /**
@@ -106,6 +117,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
     ) {
         if ($ShippingEntry->isActive() === false) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
+
             return false;
         }
 
@@ -115,6 +128,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // if groups and areas are empty, everybody is allowed
         if (empty($userGroupValue) && empty($areasValue)) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: users + areas are empty [OK]");
+
             return true;
         }
 
@@ -122,6 +137,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // not in area
         if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
+
             return false;
         }
 
@@ -133,12 +150,16 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         $discountGroups = $userGroups['groups'];
 
         if (empty($discountUsers) && empty($discountGroups)) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: no discounts [OK]");
+
             return true;
         }
 
         // user checking
         foreach ($discountUsers as $uid) {
             if ($User->getId() == $uid) {
+                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: user found {$uid} [OK]");
+
                 return true;
             }
         }
@@ -150,10 +171,14 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         foreach ($discountGroups as $gid) {
             foreach ($groupsOfUser as $Group) {
                 if ($Group->getId() == $gid) {
+                    Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: group found {$gid} [OK]");
+
                     return true;
                 }
             }
         }
+
+        Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} ::User is not in allowed users or groups");
 
         return false;
     }

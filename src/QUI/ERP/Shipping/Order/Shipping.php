@@ -74,6 +74,38 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             }
         }
 
+        // debugging logger
+        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
+            QUI\ERP\Shipping\Debug::clearLogStock();
+
+            $debugStack    = [];
+            $debugShipping = $Shipping->getShippingList();
+
+            foreach ($debugShipping as $DebugShippingEntry) {
+                $DebugShippingEntry->setOrder($Order);
+
+                QUI\ERP\Shipping\Debug::enable();
+                QUI\ERP\Shipping\Debug::addLog('# '.$DebugShippingEntry->getTitle());
+
+                if ($DebugShippingEntry->canUsedBy($User)) {
+                    $DebugShippingEntry->isValid();
+                    $DebugShippingEntry->canUsedInOrder($Order);
+                    $DebugShippingEntry->canUsedBy($User);
+                }
+
+                $debugStack   = \array_merge($debugStack, QUI\ERP\Shipping\Debug::getLogStack());
+                $debugStack[] = "";
+
+                QUI\ERP\Shipping\Debug::clearLogStock();
+            }
+
+            QUI\ERP\Shipping\Debug::disable();
+            QUI\ERP\Shipping\Debug::getLoggerWithoutFormatter()->info(
+                "\n\n".
+                \implode("\n", $debugStack)
+            );
+        }
+
         // send email if empty
         if (empty($shippingList)) {
             QUI\ERP\Shipping\Debug::sendAdminInfoMailAboutEmptyShipping($Order);
