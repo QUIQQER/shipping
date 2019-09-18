@@ -15,6 +15,7 @@ class ShippingTimePeriod extends TimePeriod
     const OPTION_TIMEPERIOD            = 'timeperiod';
     const OPTION_UNAVAILABLE           = 'unavailable';
     const OPTION_IMMEDIATELY_AVAILABLE = 'immediately_available';
+    const OPTION_ON_REQUEST            = 'on_request';
 
     /**
      * Check the value
@@ -66,6 +67,7 @@ class ShippingTimePeriod extends TimePeriod
             case self::OPTION_TIMEPERIOD:
             case self::OPTION_UNAVAILABLE:
             case self::OPTION_IMMEDIATELY_AVAILABLE:
+            case self::OPTION_ON_REQUEST:
                 break;
 
             default:
