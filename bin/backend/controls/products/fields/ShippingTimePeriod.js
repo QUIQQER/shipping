@@ -4,12 +4,13 @@
  */
 define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod', [
 
+    'qui/QUI',
     'package/quiqqer/products/bin/controls/fields/types/TimePeriod',
     'Locale',
 
     'css!package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod.css'
 
-], function (TimePeriod, QUILocale) {
+], function (QUI, TimePeriod, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/shipping';
@@ -29,7 +30,10 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
         initialize: function (options) {
             this.parent(options);
 
-            this.$OptionsSelect = null;
+            this.$OptionsSelect       = null;
+            this.$CustomTextContainer = null;
+            this.$CustomTextInput     = null;
+            this.$CustomText          = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -46,6 +50,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
 
             this.parent();
 
+            // Options select
             var OptionsContainer = new Element('div', {
                 'class': 'quiqqer-shipping-fields-shippingtimeperiod'
             }).inject(this.$Content, 'top');
@@ -57,7 +62,10 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
                 }
             }).inject(OptionsContainer);
 
-            var options  = ['timeperiod', 'unavailable', 'immediately_available'],
+            var options  = [
+                    'timeperiod', 'unavailable', 'immediately_available',
+                    'on_request', 'available_soon', 'custom_text'
+                ],
                 lgPrefix = 'controls.products.fields.ShippingTimePeriod.';
 
             for (var i = 0, len = options.length; i < len; i++) {
@@ -69,17 +77,37 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
                 }).inject(this.$OptionsSelect);
             }
 
-            (function () {
-                if (!Elm.value) {
-                    self.$OptionsSelect.value = 'timeperiod';
-                    return;
-                }
+            // Custom text input
+            this.$CustomTextContainer = new Element('div', {
+                'class': 'quiqqer-shipping-fields-shippingtimeperiod-customtext quiqqer-shipping-fields-shippingtimeperiod__hidden',
+            }).inject(
+                Elm.getParent().getElement('.quiqqer-products-fields-types-timeperiod')
+            );
 
-                Value = JSON.decode(Elm.value);
+            var CustomTextInput = new Element('input', {
+                type      : 'text',
+                'data-qui': 'package/quiqqer/products/bin/controls/fields/types/InputMultiLang'
+            }).inject(this.$CustomTextContainer);
 
-                self.$OptionsSelect.value = Value.option;
-                self.$onOptionSelectChange();
-            }).delay(200);
+            QUI.parse(this.$CustomTextContainer).then(function () {
+                self.$CustomText = QUI.Controls.getById(
+                    CustomTextInput.get('data-quiid')
+                );
+
+                self.$CustomText.getElm().getElements('input').addEvent('change', self.$onOptionSelectChange);
+
+                (function () {
+                    if (!Elm.value) {
+                        self.$OptionsSelect.value = 'timeperiod';
+                        return;
+                    }
+
+                    Value = JSON.decode(Elm.value);
+
+                    self.$OptionsSelect.value = Value.option;
+                    self.$onOptionSelectChange();
+                }).delay(200);
+            });
         },
 
         /**
@@ -89,13 +117,19 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             var option = this.$OptionsSelect.value;
 
             if (option === 'timeperiod') {
-                this.$UnitSelect.disabled = false;
-                this.$FromInput.disabled  = false;
-                this.$ToInput.disabled    = false;
+                this.$UnitSelect.getParent().removeClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
+                this.$FromInput.getParent().removeClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
+                this.$ToInput.getParent().removeClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
             } else {
-                this.$UnitSelect.disabled = true;
-                this.$FromInput.disabled  = true;
-                this.$ToInput.disabled    = true;
+                this.$UnitSelect.getParent().addClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
+                this.$FromInput.getParent().addClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
+                this.$ToInput.getParent().addClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
+            }
+
+            if (option === 'custom_text') {
+                this.$CustomTextContainer.removeClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
+            } else {
+                this.$CustomTextContainer.addClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
             }
 
             this.$setValue();
@@ -105,11 +139,20 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          * Set field value to input
          */
         $setValue: function () {
+            var customText = this.$CustomText.getValue().trim();
+
+            if (customText !== '') {
+                customText = JSON.decode(customText);
+            }
+
+            console.log(customText);
+
             this.getElm().value = JSON.encode({
                 from  : this.$FromInput.value.trim(),
                 to    : this.$ToInput.value.trim(),
                 unit  : this.$UnitSelect.value,
-                option: this.$OptionsSelect.value
+                option: this.$OptionsSelect.value,
+                text  : customText
             });
         },
 
@@ -119,11 +162,18 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          * @returns {Object}
          */
         getValue: function () {
+            var customText = this.$CustomText.getValue().trim();
+
+            if (customText !== '') {
+                customText = JSON.decode(customText);
+            }
+
             return {
                 from  : this.$FromInput.value.trim(),
                 to    : this.$ToInput.value.trim(),
                 unit  : this.$UnitSelect.value,
-                option: this.$OptionsSelect.value
+                option: this.$OptionsSelect.value,
+                text  : customText
             };
         }
     });

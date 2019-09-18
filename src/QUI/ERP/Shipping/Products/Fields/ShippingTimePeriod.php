@@ -17,6 +17,7 @@ class ShippingTimePeriod extends TimePeriod
     const OPTION_IMMEDIATELY_AVAILABLE = 'immediately_available';
     const OPTION_ON_REQUEST            = 'on_request';
     const OPTION_AVAILABLE_SOON        = 'available_soon';
+    const OPTION_CUSTOM_TEXT           = 'custom_text';
 
     /**
      * Check the value
@@ -37,16 +38,23 @@ class ShippingTimePeriod extends TimePeriod
             $value = \json_decode($value, true);
         }
 
-        if (!\array_key_exists('option', $value)) {
-            throw new QUI\ERP\Products\Field\Exception([
-                'quiqqer/products',
-                'exception.field.invalid',
-                [
-                    'fieldId'    => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
-                ]
-            ]);
+        $needles = [
+            'option',
+            'text'
+        ];
+
+        foreach ($needles as $needle) {
+            if (!\array_key_exists($needle, $value)) {
+                throw new QUI\ERP\Products\Field\Exception([
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    [
+                        'fieldId'    => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType'  => $this->getType()
+                    ]
+                ]);
+            }
         }
     }
 
@@ -58,10 +66,11 @@ class ShippingTimePeriod extends TimePeriod
      */
     public function cleanup($value)
     {
-        $value = parent::cleanup($value);
+        $value        = parent::cleanup($value);
+        $defaultValue = $this->getDefaultValueFromConfig();
 
         if (empty($value)) {
-            return $this->getDefaultValueFromConfig();
+            return $defaultValue;
         }
 
         switch ($value['option']) {
@@ -70,10 +79,11 @@ class ShippingTimePeriod extends TimePeriod
             case self::OPTION_IMMEDIATELY_AVAILABLE:
             case self::OPTION_ON_REQUEST:
             case self::OPTION_AVAILABLE_SOON:
+            case self::OPTION_CUSTOM_TEXT:
                 break;
 
             default:
-                return $this->getDefaultValueFromConfig();
+                return $defaultValue;
         }
 
         return $value;

@@ -36,7 +36,18 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             case ShippingTimePeriod::OPTION_UNAVAILABLE:
             case ShippingTimePeriod::OPTION_ON_REQUEST:
             case ShippingTimePeriod::OPTION_IMMEDIATELY_AVAILABLE:
+            case ShippingTimePeriod::OPTION_AVAILABLE_SOON:
                 $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.'.$value['option']);
+                break;
+
+            case ShippingTimePeriod::OPTION_CUSTOM_TEXT:
+                $lang = $L->getCurrent();
+
+                if (isset($value['text'][$lang])) {
+                    $valueText = $value['text'][$lang];
+                } else {
+                    $valueText = current($value['text']);
+                }
                 break;
 
             default:
