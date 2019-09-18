@@ -66,12 +66,26 @@ class ShippingTimePeriod extends TimePeriod
      */
     public function cleanup($value)
     {
-        $value        = parent::cleanup($value);
         $defaultValue = $this->getDefaultValueFromConfig();
 
         if (empty($value)) {
             return $defaultValue;
         }
+
+        if (!\is_string($value) && !\is_array($value)) {
+            return $defaultValue;
+        }
+
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
+
+            if (\json_last_error() !== \JSON_ERROR_NONE) {
+                return $defaultValue;
+            }
+        }
+
+        $value['from'] = (int)$value['from'];
+        $value['to']   = (int)$value['to'];
 
         switch ($value['option']) {
             case self::OPTION_TIMEPERIOD:
