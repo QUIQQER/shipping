@@ -217,9 +217,10 @@ class EventHandler
         try {
             $Address = $User->getAddress($_REQUEST['shipping-address']);
         } catch (QUI\Exception $Exception) {
+            $Order->clearAddressDelivery();
+            $Order->save();
             return;
         }
-
 
         $ErpAddress = new QUI\ERP\Address(
             \array_merge($Address->getAttributes(), ['id' => $Address->getId()])
