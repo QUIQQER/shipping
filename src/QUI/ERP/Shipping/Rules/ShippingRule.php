@@ -335,6 +335,10 @@ class ShippingRule extends QUI\CRUD\Child
         $Articles    = $Order->getArticles();
         $articleList = $Articles->getArticles();
 
+        if (!$Articles->count()) {
+            return false;
+        }
+
         $articles    = $this->getAttribute('articles');
         $articleOnly = (int)$this->getAttribute('articles_only');
         $unitTerms   = $this->getUnitTerms();
