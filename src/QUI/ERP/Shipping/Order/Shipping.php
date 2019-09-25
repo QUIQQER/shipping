@@ -58,6 +58,8 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Order = $this->getOrder();
         $Order->recalculate();
 
+        $SelectedShipping = $Order->getShipping();
+
         $Customer     = $Order->getCustomer();
         $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
         $userShipping = $Shipping->getUserShipping($User);
@@ -134,7 +136,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Engine->assign([
             'User'             => $User,
             'Customer'         => $Customer,
-            'SelectedShipping' => $Shipping,
+            'SelectedShipping' => $SelectedShipping,
             'shippingList'     => $shippingList
         ]);
 

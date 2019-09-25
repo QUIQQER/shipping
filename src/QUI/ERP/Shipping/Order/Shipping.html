@@ -17,7 +17,7 @@
                        type="radio"
                        name="shipping"
                        value="{$Shipping->getId()}"
-                       checked="checked"
+                       {if $SelectedShipping && $SelectedShipping->getId() === $Shipping->getId()}checked="checked"{/if}
                 />
             </div>
             <div class="quiqqer-order-step-shipping-list-entry-icon">
