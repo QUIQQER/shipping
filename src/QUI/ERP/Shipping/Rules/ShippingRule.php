@@ -335,7 +335,7 @@ class ShippingRule extends QUI\CRUD\Child
         $articleList = $Articles->getArticles();
 
         $articles    = $this->getAttribute('articles');
-        $articleOnly = $this->getAttribute('articles_only');
+        $articleOnly = (int)$this->getAttribute('articles_only');
         $unitTerms   = $this->getUnitTerms();
 
         $quantityFrom  = $this->getAttribute('purchase_quantity_from');     // Einkaufsmenge ab
@@ -362,6 +362,8 @@ class ShippingRule extends QUI\CRUD\Child
             }
 
             $articles = \array_flip($articles);
+        } else {
+            $articleOnly = 0;
         }
 
         foreach ($articleList as $Article) {
@@ -416,7 +418,6 @@ class ShippingRule extends QUI\CRUD\Child
                 );
             }
         }
-
 
         if ($articleFound && $articleOnly && \count($articleList) !== 1) {
             QUI\ERP\Shipping\Debug::addLog(

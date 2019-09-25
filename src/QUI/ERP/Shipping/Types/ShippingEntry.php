@@ -591,7 +591,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
             if (!$Rule->canUsedInOrder($this->Order)) {
                 if ($debugging) {
-                    Debug::addLog("### {$Rule->getTitle()} can not use in order");
+                    Debug::addLog("### {$Rule->getTitle()} can not used in order");
 
                     $debuggingLog[] = [
                         'id'     => $Rule->getId(),
@@ -601,11 +601,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                     ];
                 }
 
-                if ($debugging) {
-                    Debug::addLog("### {$Rule->getTitle()} can use in order");
-                }
-
                 continue;
+            }
+
+            if ($debugging) {
+                Debug::addLog("### {$Rule->getTitle()} can used in order");
             }
 
             $result[] = $Rule;

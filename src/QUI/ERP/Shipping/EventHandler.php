@@ -100,8 +100,6 @@ class EventHandler
             return;
         }
 
-        $Shipping->setOrder($Order);
-
         $PriceFactors = $Products->getPriceFactors();
         $PriceFactors->addToEnd($Shipping->toPriceFactor());
 
