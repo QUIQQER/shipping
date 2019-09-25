@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping\Rules;
 
 use QUI;
+use QUI\Translator;
 use QUI\CRUD\Factory;
 use QUI\ERP\Shipping\Debug;
 use QUI\Permissions\Permission;
@@ -736,6 +737,79 @@ class ShippingRule extends QUI\CRUD\Child
         $this->setAttribute('active', 0);
         $this->update();
         $this->refresh();
+    }
+
+    //endregion
+
+    //region setter
+
+    /**
+     * Set the title
+     *
+     * @param array $titles
+     */
+    public function setTitle(array $titles)
+    {
+        $this->setLocaleVar(
+            'shipping.'.$this->getId().'.rule.title',
+            $titles
+        );
+    }
+
+    /**
+     * Set the working title
+     *
+     * @param array $titles
+     */
+    public function setWorkingTitle(array $titles)
+    {
+        $this->setLocaleVar(
+            'shipping.'.$this->getId().'.rule.workingTitle',
+            $titles
+        );
+    }
+
+    /**
+     * Creates a locale
+     *
+     * @param string $var
+     * @param array $title
+     */
+    protected function setLocaleVar($var, $title)
+    {
+        $data = [
+            'datatype' => 'php,js',
+            'package'  => 'quiqqer/shipping'
+        ];
+
+        $languages = QUI::availableLanguages();
+
+        foreach ($languages as $language) {
+            if (!isset($title[$language])) {
+                continue;
+            }
+
+            $data[$language]         = $title[$language];
+            $data[$language.'_edit'] = $title[$language];
+        }
+
+        $exists = Translator::getVarData('quiqqer/shipping', $var, 'quiqqer/shipping');
+
+        try {
+            if (empty($exists)) {
+                Translator::addUserVar('quiqqer/shipping', $var, $data);
+            } else {
+                Translator::edit('quiqqer/shipping', $var, 'quiqqer/shipping', $data);
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addNotice($Exception->getMessage());
+        }
+
+        try {
+            Translator::publish('quiqqer/shipping');
+        } catch (QUi\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     //endregion

@@ -6,7 +6,6 @@
 
 use \QUI\ERP\Shipping\Rules\Factory;
 
-
 /**
  * Update a shipping method
  *
@@ -18,8 +17,18 @@ QUI::$Ajax->registerFunction(
         $data    = \json_decode($data, true);
         $Factory = new Factory();
 
+        /* @var $Rule QUI\ERP\Shipping\Rules\ShippingRule */
         $Rule = $Factory->getChild($ruleId);
         $Rule->setAttributes($data);
+
+        if (isset($data['title'])) {
+            $Rule->setTitle($data['title']);
+        }
+
+        if (isset($data['workingTitle'])) {
+            $Rule->setWorkingTitle($data['workingTitle']);
+        }
+
         $Rule->update();
     },
     ['ruleId', 'data'],

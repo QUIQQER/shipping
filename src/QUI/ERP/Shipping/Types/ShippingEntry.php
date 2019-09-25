@@ -489,6 +489,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             QUI\System\Log::writeException($Exception);
         }
     }
+
     //endregion
 
     //region rules
