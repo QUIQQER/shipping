@@ -690,11 +690,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
     /**
      * @param null $Locale
+     * @param QUI\ERP\Order\AbstractOrder|null $Order
      *
      * @return QUI\ERP\Products\Utils\PriceFactor
      */
-    public function toPriceFactor($Locale = null)
-    {
+    public function toPriceFactor(
+        $Locale = null,
+        QUI\ERP\Order\AbstractOrder $Order = null
+    ) {
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
             'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
                 'shipping' => $this->getTitle($Locale)
@@ -706,6 +709,30 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             'value'       => $this->getPrice(),
             'visible'     => true
         ]);
+
+        /* @var $Article QUI\ERP\Accounting\Article */
+        $Articles = $Order->getArticles();
+        $vats     = [];
+
+        foreach ($Articles as $Article) {
+            $vat   = $Article->getVat();
+            $price = $Article->getPrice()->getValue();
+
+            if (!isset($vats[$vat])) {
+                $vats[$vat] = 0;
+            }
+
+            $vats[$vat] = $vats[$vat] + $price;
+        }
+
+        // look at vat, which vat should be used
+        if (\count($vats) === 1) {
+            $PriceFactor->setVat(\key($vats));
+        } else {
+            // get max
+            $maxVat = \array_keys($vats, \max($vats))[0];
+            $PriceFactor->setVat($maxVat);
+        }
 
         return $PriceFactor;
     }

@@ -101,7 +101,7 @@ class EventHandler
         }
 
         $PriceFactors = $Products->getPriceFactors();
-        $PriceFactors->addToEnd($Shipping->toPriceFactor());
+        $PriceFactors->addToEnd($Shipping->toPriceFactor(null, $Order));
 
         try {
             $Products->recalculation();
@@ -217,6 +217,7 @@ class EventHandler
         } catch (QUI\Exception $Exception) {
             $Order->clearAddressDelivery();
             $Order->save();
+
             return;
         }
 
