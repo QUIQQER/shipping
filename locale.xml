@@ -711,6 +711,11 @@
             <en><![CDATA[Custom text]]></en>
         </locale>
 
+        <locale name="control.search.ShippingWindow.title">
+            <de><![CDATA[Versandarten durchsuchen]]></de>
+            <en><![CDATA[Search shipping types]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/order">

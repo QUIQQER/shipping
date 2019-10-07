@@ -76,8 +76,9 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $lg = 'quiqqer/shipping';
         $id = $this->getId();
 
-        $attributes = $this->getAttributes();
-        $Locale     = QUI::getLocale();
+        $attributes  = $this->getAttributes();
+        $Locale      = QUI::getLocale();
+        $currentLang = $Locale->getCurrent();
 
         try {
             $availableLanguages = QUI\Translator::getAvailableLanguages();
@@ -104,6 +105,12 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 $lg,
                 'shipping.'.$id.'.workingTitle'
             );
+
+            if ($language === $currentLang) {
+                $attributes['currentTitle']        = $attributes['title'][$language];
+                $attributes['currentDescription']  = $attributes['description'][$language];
+                $attributes['currentWorkingTitle'] = $attributes['workingTitle'][$language];
+            }
         }
 
         // shipping type
