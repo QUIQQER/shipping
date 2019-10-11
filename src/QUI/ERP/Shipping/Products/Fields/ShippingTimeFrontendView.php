@@ -32,6 +32,10 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
 
         $value = $this->getValue();
 
+        if (empty($value)) {
+            return '';
+        }
+        
         switch ($value['option']) {
             case ShippingTimePeriod::OPTION_UNAVAILABLE:
             case ShippingTimePeriod::OPTION_ON_REQUEST:
