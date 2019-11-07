@@ -438,6 +438,10 @@
             <de><![CDATA[Nutzung definieren]]></de>
             <en><![CDATA[Defining unit]]></en>
         </locale>
+        <locale name="shipping.edit.template.usage">
+            <de><![CDATA[Nutzung]]></de>
+            <en><![CDATA[Usage]]></en>
+        </locale>
         <locale name="shipping.edit.template.usage.from">
             <de><![CDATA[Nutzbar von]]></de>
             <en><![CDATA[Usage from]]></en>

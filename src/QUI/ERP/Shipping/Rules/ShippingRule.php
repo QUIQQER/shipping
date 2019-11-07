@@ -570,7 +570,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseFrom)) {
-            $purchaseFrom = \floatval($purchaseFrom);
+            $purchaseFrom = QUI\ERP\Money\Price::validatePrice($purchaseFrom);
 
             if ($purchaseFrom < $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
@@ -582,7 +582,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseUntil)) {
-            $purchaseUntil = \floatval($purchaseUntil);
+            $purchaseUntil = QUI\ERP\Money\Price::validatePrice($purchaseUntil);
 
             if ($purchaseUntil > $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
