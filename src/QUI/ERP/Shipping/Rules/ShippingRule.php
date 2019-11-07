@@ -562,7 +562,8 @@ class ShippingRule extends QUI\CRUD\Child
         // purchase
         try {
             $Calculation = $Order->getPriceCalculation();
-            $sum         = $Calculation->getSum();
+            $Sum         = $Calculation->getSum();
+            $sum         = $Sum->get();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
@@ -570,7 +571,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseFrom)) {
-            $purchaseFrom = QUI\ERP\Money\Price::validatePrice($purchaseFrom);
+            $purchaseFrom = \floatval($purchaseFrom);
 
             if ($purchaseFrom < $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
@@ -582,7 +583,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseUntil)) {
-            $purchaseUntil = QUI\ERP\Money\Price::validatePrice($purchaseUntil);
+            $purchaseUntil = \floatval($purchaseUntil);
 
             if ($purchaseUntil > $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
