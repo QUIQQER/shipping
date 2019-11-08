@@ -571,9 +571,9 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseFrom)) {
-            $purchaseFrom = \floatval($purchaseFrom);
+            $purchaseFrom = QUI\Erp\Money\Price::validatePrice($purchaseFrom);
 
-            if ($purchaseFrom < $sum) {
+            if ($purchaseFrom > $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
                     "{$this->getTitle()} :: purchase from is not valid, {$purchaseFrom} < {$sum}"
                 );
@@ -583,9 +583,9 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseUntil)) {
-            $purchaseUntil = \floatval($purchaseUntil);
+            $purchaseUntil = QUI\Erp\Money\Price::validatePrice($purchaseUntil);
 
-            if ($purchaseUntil > $sum) {
+            if ($purchaseUntil < $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
                     "{$this->getTitle()} :: purchase from is not valid, {$purchaseFrom} > {$sum}"
                 );
