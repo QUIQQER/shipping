@@ -562,7 +562,7 @@ class ShippingRule extends QUI\CRUD\Child
         // purchase
         try {
             $Calculation = $Order->getPriceCalculation();
-            $Sum         = $Calculation->getSum();
+            $Sum         = $Calculation->getNettoSum();
             $sum         = $Sum->get();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
