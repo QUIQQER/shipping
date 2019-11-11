@@ -62,19 +62,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $Customer     = $Order->getCustomer();
         $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
-        $userShipping = $Shipping->getUserShipping($User);
-
-        $shippingList = [];
-
-        foreach ($userShipping as $ShippingEntry) {
-            $ShippingEntry->setOrder($Order);
-
-            if ($ShippingEntry->isValid()
-                && $ShippingEntry->canUsedInOrder($Order)
-                && $ShippingEntry->canUsedBy($User)) {
-                $shippingList[] = $ShippingEntry;
-            }
-        }
+        $shippingList = $this->getValidShipping();
 
         // debugging logger
         if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
@@ -166,7 +154,30 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
 
+        // if shipping are selectable and no shipping is selected
+        $shippingList = $this->getValidShipping();
+
+        if ($Shipping === null && \count($shippingList) === 1) {
+            try {
+                $Order->setShipping($shippingList[0]);
+                $Order->save();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+
+            $Shipping = $Order->getShipping();
+        }
+
+
+        if ($Shipping === null && !empty($shippingList)) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/shipping',
+                'exception.no.shipping.selected'
+            ]);
+        }
+
         // if no shipping exists, BUT order can be continued
+        // and if really no shipping is selectable
         if ($Shipping === null
             && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
             throw new QUI\ERP\Order\Exception([
@@ -194,6 +205,30 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
                 'exception.shipping.is.not.allowed'
             ]);
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getValidShipping()
+    {
+        $Order = $this->getOrder();
+        $User  = $Order->getCustomer();
+
+        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User);
+        $shippingList = [];
+
+        foreach ($userShipping as $ShippingEntry) {
+            $ShippingEntry->setOrder($Order);
+
+            if ($ShippingEntry->isValid()
+                && $ShippingEntry->canUsedInOrder($Order)
+                && $ShippingEntry->canUsedBy($User)) {
+                $shippingList[] = $ShippingEntry;
+            }
+        }
+
+        return $shippingList;
     }
 
     /**

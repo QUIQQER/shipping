@@ -110,6 +110,10 @@
             <de><![CDATA[Sie können mit der Bestellung leider nicht fortfahren.]]></de>
             <en><![CDATA[Unfortunately you cannot continue with your order.]]></en>
         </locale>
+        <locale name="exception.no.shipping.selected">
+            <de><![CDATA[Bitte wählen Sie eine Versandart aus.]]></de>
+            <en><![CDATA[Please select a shipping method.]]></en>
+        </locale>
         <locale name="shipping.mail.settings.title">
             <de><![CDATA[Bestell Verhalten]]></de>
             <en><![CDATA[Order behavior]]></en>
