@@ -66,7 +66,7 @@ class ShippingTimePeriod extends TimePeriod
      */
     public function cleanup($value)
     {
-        $defaultValue = $this->getDefaultValueFromConfig();
+        $defaultValue = $this->getDefaultValue();
 
         if (empty($value)) {
             return $defaultValue;
@@ -122,11 +122,11 @@ class ShippingTimePeriod extends TimePeriod
     }
 
     /**
-     * Get default value for the ShippingTimePeriod field
+     * Return the default value
      *
-     * @return array|null
+     * @return mixed|null
      */
-    protected function getDefaultValueFromConfig()
+    public function getDefaultValue()
     {
         try {
             $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
