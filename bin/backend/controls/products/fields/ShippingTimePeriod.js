@@ -27,6 +27,13 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             'getValue'
         ],
 
+        options: {
+            selectOptions: [
+                'timeperiod', 'unavailable', 'immediately_available',
+                'on_request', 'available_soon', 'custom_text'
+            ]
+        },
+
         initialize: function (options) {
             this.parent(options);
 
@@ -62,10 +69,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
                 }
             }).inject(OptionsContainer);
 
-            var options  = [
-                    'timeperiod', 'unavailable', 'immediately_available',
-                    'on_request', 'available_soon', 'custom_text'
-                ],
+            var options  = this.getAttribute('selectOptions'),
                 lgPrefix = 'controls.products.fields.ShippingTimePeriod.';
 
             for (var i = 0, len = options.length; i < len; i++) {
