@@ -413,6 +413,23 @@
             <de><![CDATA[Wählen Sie bitte hier Ihre standard Versandaddresse aus.]]></de>
             <en><![CDATA[Please select your standard shipping address here.]]></en>
         </locale>
+
+        <locale name="shipping.status.notification.subject">
+            <de><![CDATA[Änderung Ihrer Bestellung [orderNo]]]></de>
+            <en><![CDATA[Change of your order [orderNo]]]></en>
+        </locale>
+        <locale name="shipping.status.notification.template" html="true">
+            <de><![CDATA[
+                <p>Hallo [customerName],</p>
+                <p>der Versandstatus Ihrer Bestellung <b>[orderNo]</b> vom <b>[orderDate]</b> hat sich geändert.
+                Die Bestellung ist nun <b>[shippingStatus]</b>.
+            ]]></de>
+            <en><![CDATA[
+                <p>Hello [customerName],</p>
+                <p>the shipping status of your order <b>[orderNo]</b> from <b>[orderDate]</b> changed.
+                The order is now <b>[shippingStatus]</b>.
+            ]]></en>
+        </locale>
     </groups>
 
 

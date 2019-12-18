@@ -107,12 +107,23 @@ class Status
 
         $Customer = $Order->getCustomer();
 
-        return $Locale->get('quiqqer/shipping', 'shipping.status.notification.'.$this->id, [
-            'customerName' => $Customer->getName(),
-            'orderNo'      => $Order->getPrefixedId(),
-            'orderDate'    => $Locale->formatDate($Order->getCreateDate()),
-            'orderStatus'  => $this->getTitle($Locale)
+        $message = $Locale->get('quiqqer/shipping', 'shipping.status.notification.'.$this->id, [
+            'customerName'   => $Customer->getName(),
+            'orderNo'        => $Order->getPrefixedId(),
+            'orderDate'      => $Locale->formatDate($Order->getCreateDate()),
+            'shippingStatus' => $this->getTitle($Locale)
         ]);
+
+        if (QUI::getLocale()->isLocaleString($message)) {
+            $message = $Locale->get('quiqqer/shipping', 'shipping.status.notification.template', [
+                'customerName'   => $Customer->getName(),
+                'orderNo'        => $Order->getPrefixedId(),
+                'orderDate'      => $Locale->formatDate($Order->getCreateDate()),
+                'shippingStatus' => $this->getTitle($Locale)
+            ]);
+        }
+
+        return $message;
     }
 
     /**
@@ -143,8 +154,9 @@ class Status
      * @param null|QUI\Locale $Locale - optional. if no locale, all translations would be returned
      * @return array
      */
-    public function toArray($Locale = null)
-    {
+    public function toArray(
+        $Locale = null
+    ) {
         $title = $this->getTitle($Locale);
 
         if ($Locale === null) {

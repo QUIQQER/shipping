@@ -143,16 +143,16 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
         /**
          * Get status change notification text for a specific shipping
          *
-         * @param {Number} id - ShippingStatus ID
-         * @param {Number} shippingId - shipping ID
+         * @param {Number} shippingId - ShippingStatus ID
+         * @param {Number} orderId - shipping ID
          * @return {Promise}
          */
-        getNotificationText: function (id, shippingId) {
+        getNotificationText: function (shippingId, orderId) {
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_shippingStatus_getNotificationText', resolve, {
                     'package' : 'quiqqer/shipping',
-                    id        : id,
                     shippingId: shippingId,
+                    orderId   : orderId,
                     onError   : reject
                 });
             });

@@ -16,17 +16,19 @@ use QUI\ERP\Order\Handler as OrderHandler;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_getNotificationText',
-    function ($id, $orderId) {
+    function ($shippingId, $orderId) {
         try {
             $Order = OrderHandler::getInstance()->get($orderId);
 
-            return Handler::getInstance()->getShippingStatus($id)->getStatusChangeNotificationText($Order);
+            return Handler::getInstance()
+                ->getShippingStatus($shippingId)
+                ->getStatusChangeNotificationText($Order);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return '';
         }
     },
-    ['id', 'orderId'],
+    ['shippingId', 'orderId'],
     'Permission::checkAdminUser'
 );
