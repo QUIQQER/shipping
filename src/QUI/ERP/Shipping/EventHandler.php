@@ -25,8 +25,8 @@ class EventHandler
     public static function onPackageSetup()
     {
         // Translations
-
-        $languages = QUI\Translator::getAvailableLanguages();
+        $languages     = QUI\Translator::getAvailableLanguages();
+        $StatusFactory = QUI\ERP\Shipping\ShippingStatus\Factory::getInstance();
 
         // create locale
         $var    = 'message.no.rule.found.order.continue';
@@ -69,6 +69,23 @@ class EventHandler
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }
+
+        // create shipping order status
+        $getLocaleTranslations = function ($key) use ($languages) {
+            $result = [];
+
+            foreach ($languages as $language) {
+                $result[$language] = QUI::getLocale()->getByLang($language, 'quiqqer/order', $key);
+            }
+
+            return $result;
+        };
+
+
+        $StatusFactory->createShippingStatus(1, '#dbb50c', $getLocaleTranslations('processing.status.default.1'));
+        $StatusFactory->createShippingStatus(2, '#418e73', $getLocaleTranslations('processing.status.default.2'));
+        $StatusFactory->createShippingStatus(3, '#4fd500', $getLocaleTranslations('processing.status.default.3'));
+
 
         // Product fields
         self::createProductFields();

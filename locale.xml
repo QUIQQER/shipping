@@ -251,6 +251,10 @@
             <de><![CDATA[Versandstatus]]></de>
             <en><![CDATA[Shipping status]]></en>
         </locale>
+        <locale name="control.profile.orders.shipping">
+            <de><![CDATA[Versandstatus]]></de>
+            <en><![CDATA[Shipping status]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
@@ -429,6 +433,19 @@
                 <p>the shipping status of your order <b>[orderNo]</b> from <b>[orderDate]</b> changed.
                 The order is now <b>[shippingStatus]</b>.
             ]]></en>
+        </locale>
+
+        <locale name="shipping.status.default.1">
+            <de><![CDATA[Aufgenommen]]></de>
+            <en><![CDATA[Received]]></en>
+        </locale>
+        <locale name="shipping.status.default.2">
+            <de><![CDATA[In Bearbeitung]]></de>
+            <en><![CDATA[In process]]></en>
+        </locale>
+        <locale name="shipping.status.default.3">
+            <de><![CDATA[Versendet]]></de>
+            <en><![CDATA[Sent]]></en>
         </locale>
     </groups>
 

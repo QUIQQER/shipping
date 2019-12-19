@@ -300,7 +300,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
 
                         var lgPrefix = 'dialog.shippingStatus.template.';
 
-                        Content.addClass('quiqqer-shipping-shipping-status-window');
+                        Content.addClass('quiqqer-order-shipping-status-window');
                         Content.set('html', Mustache.render(template, {
                             labelTitle       : QUILocale.get(lg, lgPrefix + 'labelTitle'),
                             labelStatusNo    : QUILocale.get(lg, lgPrefix + 'labelStatusNo'),
