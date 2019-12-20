@@ -28,20 +28,18 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
         $lg     = 'quiqqer/shipping';
 
         /** @var ShippingTimePeriod $Field */
-        $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
-
         $value = $this->getValue();
 
         if (empty($value)) {
             return '';
         }
-        
+
         switch ($value['option']) {
             case ShippingTimePeriod::OPTION_UNAVAILABLE:
             case ShippingTimePeriod::OPTION_ON_REQUEST:
             case ShippingTimePeriod::OPTION_IMMEDIATELY_AVAILABLE:
             case ShippingTimePeriod::OPTION_AVAILABLE_SOON:
-                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.' . $value['option']);
+                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.'.$value['option']);
                 $cssClass  = $value['option'];
                 break;
 
@@ -93,9 +91,9 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                 }
 
                 if ($singleTime) {
-                    $valueText .= ' ' . $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_single.' . $unit);
+                    $valueText .= ' '.$L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_single.'.$unit);
                 } else {
-                    $valueText .= ' ' . $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_multi.' . $unit);
+                    $valueText .= ' '.$L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_multi.'.$unit);
                 }
         }
 
@@ -105,6 +103,6 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             'cssClass'  => $cssClass
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ShippingTimePeriodFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ShippingTimePeriodFrontendView.html');
     }
 }
