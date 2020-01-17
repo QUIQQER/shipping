@@ -25,6 +25,19 @@ class Handler extends QUI\Utils\Singleton
     protected $list = null;
 
     /**
+     * Exists a specific status?
+     *
+     * @param integer $id
+     * @return bool
+     */
+    public function exists($id)
+    {
+        $list = Handler::getInstance()->getList();
+
+        return isset($list[$id]);
+    }
+
+    /**
      * Return all shipping status entries from the config
      *
      * @return array

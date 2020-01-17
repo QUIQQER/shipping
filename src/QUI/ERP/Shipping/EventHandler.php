@@ -8,6 +8,7 @@ namespace QUI\ERP\Shipping;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
+use QUI\ERP\Shipping\ShippingStatus\Handler;
 use \Quiqqer\Engine\Collector;
 
 /**
@@ -82,9 +83,19 @@ class EventHandler
         };
 
 
-        $StatusFactory->createShippingStatus(1, '#dbb50c', $getLocaleTranslations('processing.status.default.1'));
-        $StatusFactory->createShippingStatus(2, '#418e73', $getLocaleTranslations('processing.status.default.2'));
-        $StatusFactory->createShippingStatus(3, '#4fd500', $getLocaleTranslations('processing.status.default.3'));
+        $Handler = QUI\ERP\Shipping\ShippingStatus\Handler::getInstance();
+
+        if (!$Handler->exists(1)) {
+            $StatusFactory->createShippingStatus(1, '#dbb50c', $getLocaleTranslations('processing.status.default.1'));
+        }
+
+        if (!$Handler->exists(2)) {
+            $StatusFactory->createShippingStatus(2, '#418e73', $getLocaleTranslations('processing.status.default.2'));
+        }
+
+        if (!$Handler->exists(3)) {
+            $StatusFactory->createShippingStatus(3, '#4fd500', $getLocaleTranslations('processing.status.default.3'));
+        }
 
 
         // Product fields
