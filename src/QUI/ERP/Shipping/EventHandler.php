@@ -23,8 +23,12 @@ class EventHandler
      *
      * @throws QUI\Exception
      */
-    public static function onPackageSetup()
+    public static function onPackageSetup(QUI\Package\Package $Package)
     {
+        if ($Package->getName() !== 'quiqqer/shipping') {
+            return;
+        }
+
         // Translations
         $languages     = QUI\Translator::getAvailableLanguages();
         $StatusFactory = QUI\ERP\Shipping\ShippingStatus\Factory::getInstance();
@@ -82,21 +86,14 @@ class EventHandler
             return $result;
         };
 
-
         $Handler = QUI\ERP\Shipping\ShippingStatus\Handler::getInstance();
+        $list    = $Handler->getList();
 
-        if (!$Handler->exists(1)) {
+        if (empty($list)) {
             $StatusFactory->createShippingStatus(1, '#dbb50c', $getLocaleTranslations('processing.status.default.1'));
-        }
-
-        if (!$Handler->exists(2)) {
             $StatusFactory->createShippingStatus(2, '#418e73', $getLocaleTranslations('processing.status.default.2'));
-        }
-
-        if (!$Handler->exists(3)) {
             $StatusFactory->createShippingStatus(3, '#4fd500', $getLocaleTranslations('processing.status.default.3'));
         }
-
 
         // Product fields
         self::createProductFields();
