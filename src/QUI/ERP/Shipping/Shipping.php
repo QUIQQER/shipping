@@ -363,4 +363,58 @@ class Shipping extends QUI\Utils\Singleton
 
         return $this->getShippingByObject($Order);
     }
+
+
+    /**
+     * Notify customer about an Order status change (via e-mail)
+     *
+     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param int $statusId
+     * @param string $message (optional) - Custom notification message [default: default status change message]
+     * @return void
+     *
+     * @throws QUI\Exception
+     */
+    public function sendStatusChangeNotification(
+        QUI\ERP\Order\AbstractOrder $Order,
+        $statusId,
+        $message = null
+    ) {
+        $Customer      = $Order->getCustomer();
+        $customerEmail = $Customer->getAttribute('email');
+
+        if (empty($customerEmail)) {
+            QUI\System\Log::addWarning(
+                'Status change notification for order #'.$Order->getPrefixedId().' cannot be sent'
+                .' because customer #'.$Customer->getId().' has no e-mail address.'
+            );
+
+            return;
+        }
+
+        if (empty($message)) {
+            $Status  = ShippingStatus\Handler::getInstance()->getShippingStatus($statusId);
+            $message = $Status->getStatusChangeNotificationText($Order);
+        }
+
+        $Mailer = new QUI\Mail\Mailer();
+        /** @var QUI\Locale $Locale */
+        $Locale = $Order->getCustomer()->getLocale();
+
+        $Mailer->setSubject(
+            $Locale->get('quiqqer/shipping', 'shipping.status.notification.subject', [
+                'orderNo' => $Order->getPrefixedId()
+            ])
+        );
+
+        $Mailer->setBody($message);
+        $Mailer->addRecipient($customerEmail);
+
+        try {
+            $Mailer->send();
+            $Order->addStatusMail($message);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+    }
 }

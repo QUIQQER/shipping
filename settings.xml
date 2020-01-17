@@ -17,7 +17,8 @@
                 </conf>
                 <conf name="deliveryTimeDefault">
                     <type><![CDATA[string]]></type>
-                    <defaultvalue><![CDATA[{"from":"","to":"","unit":"second","option":"immediately_available"}]]></defaultvalue>
+                    <defaultvalue>
+                        <![CDATA[{"from":"","to":"","unit":"second","option":"immediately_available"}]]></defaultvalue>
                 </conf>
             </section>
 
@@ -90,7 +91,8 @@
                             </text>
 
                             <description>
-                                <locale group="quiqqer/shipping" var="shipping.settings.deliveryTimeDefault.description"/>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.deliveryTimeDefault.description"/>
                             </description>
                         </input>
                     </settings>
@@ -142,6 +144,17 @@
                                 <locale group="quiqqer/shipping" var="shipping.mail.settings.text.cancel.description"/>
                             </description>
                         </input>
+                    </settings>
+
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/shipping" var="shipping.settings.shippingStatus.title"/>
+                        </title>
+
+                        <input type="hidden"
+                               label="false"
+                               data-qui="package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus"
+                        />
                     </settings>
                 </category>
             </categories>

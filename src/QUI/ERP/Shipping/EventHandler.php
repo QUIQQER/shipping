@@ -8,6 +8,7 @@ namespace QUI\ERP\Shipping;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
+use QUI\ERP\Shipping\ShippingStatus\Handler;
 use \Quiqqer\Engine\Collector;
 
 /**
@@ -22,11 +23,15 @@ class EventHandler
      *
      * @throws QUI\Exception
      */
-    public static function onPackageSetup()
+    public static function onPackageSetup(QUI\Package\Package $Package)
     {
-        // Translations
+        if ($Package->getName() !== 'quiqqer/shipping') {
+            return;
+        }
 
-        $languages = QUI\Translator::getAvailableLanguages();
+        // Translations
+        $languages     = QUI\Translator::getAvailableLanguages();
+        $StatusFactory = QUI\ERP\Shipping\ShippingStatus\Factory::getInstance();
 
         // create locale
         $var    = 'message.no.rule.found.order.continue';
@@ -68,6 +73,26 @@ class EventHandler
             QUI\Translator::addUserVar('quiqqer/shipping', $var, $params);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
+        }
+
+        // create shipping order status
+        $getLocaleTranslations = function ($key) use ($languages) {
+            $result = [];
+
+            foreach ($languages as $language) {
+                $result[$language] = QUI::getLocale()->getByLang($language, 'quiqqer/order', $key);
+            }
+
+            return $result;
+        };
+
+        $Handler = QUI\ERP\Shipping\ShippingStatus\Handler::getInstance();
+        $list    = $Handler->getList();
+
+        if (empty($list)) {
+            $StatusFactory->createShippingStatus(1, '#dbb50c', $getLocaleTranslations('processing.status.default.1'));
+            $StatusFactory->createShippingStatus(2, '#418e73', $getLocaleTranslations('processing.status.default.2'));
+            $StatusFactory->createShippingStatus(3, '#4fd500', $getLocaleTranslations('processing.status.default.3'));
         }
 
         // Product fields

@@ -247,7 +247,14 @@
             <de><![CDATA[Jahre]]></de>
             <en><![CDATA[years]]></en>
         </locale>
-
+        <locale name="shipping.settings.shippingStatus.title">
+            <de><![CDATA[Versandstatus]]></de>
+            <en><![CDATA[Shipping status]]></en>
+        </locale>
+        <locale name="control.profile.orders.shipping">
+            <de><![CDATA[Versandstatus]]></de>
+            <en><![CDATA[Shipping status]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
@@ -409,6 +416,36 @@
         <locale name="user.profile.invoice.address.description">
             <de><![CDATA[Wählen Sie bitte hier Ihre standard Versandaddresse aus.]]></de>
             <en><![CDATA[Please select your standard shipping address here.]]></en>
+        </locale>
+
+        <locale name="shipping.status.notification.subject">
+            <de><![CDATA[Änderung Ihrer Bestellung [orderNo]]]></de>
+            <en><![CDATA[Change of your order [orderNo]]]></en>
+        </locale>
+        <locale name="shipping.status.notification.template" html="true">
+            <de><![CDATA[
+                <p>Hallo [customerName],</p>
+                <p>der Versandstatus Ihrer Bestellung <b>[orderNo]</b> vom <b>[orderDate]</b> hat sich geändert.
+                Die Bestellung ist nun <b>[shippingStatus]</b>.
+            ]]></de>
+            <en><![CDATA[
+                <p>Hello [customerName],</p>
+                <p>the shipping status of your order <b>[orderNo]</b> from <b>[orderDate]</b> changed.
+                The order is now <b>[shippingStatus]</b>.
+            ]]></en>
+        </locale>
+
+        <locale name="shipping.status.default.1">
+            <de><![CDATA[Aufgenommen]]></de>
+            <en><![CDATA[Received]]></en>
+        </locale>
+        <locale name="shipping.status.default.2">
+            <de><![CDATA[In Bearbeitung]]></de>
+            <en><![CDATA[In process]]></en>
+        </locale>
+        <locale name="shipping.status.default.3">
+            <de><![CDATA[Versendet]]></de>
+            <en><![CDATA[Sent]]></en>
         </locale>
     </groups>
 
@@ -722,6 +759,82 @@
         <locale name="control.search.ShippingWindow.title">
             <de><![CDATA[Versandarten durchsuchen]]></de>
             <en><![CDATA[Search shipping types]]></en>
+        </locale>
+
+        <locale name="grid.shippingStatus">
+            <de><![CDATA[Versandstatus]]></de>
+            <en><![CDATA[Shipping status]]></en>
+        </locale>
+        <locale name="shippingStatus.grid.id">
+            <de><![CDATA[ID]]></de>
+            <en><![CDATA[ID]]></en>
+        </locale>
+        <locale name="shippingStatus.grid.color">
+            <de><![CDATA[Farbe]]></de>
+            <en><![CDATA[Color]]></en>
+        </locale>
+        <locale name="shippingStatus.grid.notification">
+            <de><![CDATA[Autom. Benachrichtigung]]></de>
+            <en><![CDATA[Auto notification]]></en>
+        </locale>
+
+        <locale name="dialog.shippingStatus.create.title">
+            <de><![CDATA[Versandstatus hinzufügen]]></de>
+            <en><![CDATA[Create shipping status]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.edit.title">
+            <de><![CDATA[Versandstatus bearbeiten]]></de>
+            <en><![CDATA[Edit shipping status]]></en>
+        </locale>
+
+        <locale name="dialog.shippingStatus.delete.title">
+            <de><![CDATA[Versandstatus entfernen]]></de>
+            <en><![CDATA[Remove shipping status]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.delete.text">
+            <de><![CDATA[Versandstatus wirklich entfernen?]]></de>
+            <en><![CDATA[Really remove shipping status?]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.delete.information" html="true">
+            <de><![CDATA[
+            Folgender Versandstatus wird entfernt:<br />
+            <strong>#[id] - [title]</strong>
+            <br /><br />
+            Der Versandstatus ist nicht wiederherstellbar.
+            ]]></de>
+            <en><![CDATA[
+            The following shipping status will be removed: <br />
+            <strong>#[id] - [title]</strong>
+            <br /><br />
+            The shipping status is not recoverable.
+            ]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelTitle">
+            <de><![CDATA[Titel]]></de>
+            <en><![CDATA[Title]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelStatusNo">
+            <de><![CDATA[Status Nr.]]></de>
+            <en><![CDATA[Status no.]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelColor">
+            <de><![CDATA[Farbe]]></de>
+            <en><![CDATA[Color]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelNotification">
+            <de><![CDATA[Kunden benachrichtigen]]></de>
+            <en><![CDATA[Notify customer]]></en>
+        </locale>
+        <locale name="dialog.shippingStatus.template.descNotification" html="true">
+            <de><![CDATA[
+            Kunden sollen automatisch per E-Mail benachrichtigt werden, wenn der Versandstatus einer Bestellung
+            <b>automatisch</b> auf diesen Status geändert wird. Bei einer <b>manuellen Statusänderung</b>
+            wird vorher nochmal nachgefragt, ob eine Benachrichtigung erfolgen soll.
+            ]]></de>
+            <en><![CDATA[
+            Customers should be automatically notified by e-mail when the status of an shipping status <b>automatically</b>
+            is changed to this status. In case of a <b>manual status change</b> you will be asked if you want
+            to send a notification.]]></en>
         </locale>
 
     </groups>
