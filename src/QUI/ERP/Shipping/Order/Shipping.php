@@ -78,10 +78,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
                 QUI\ERP\Shipping\Debug::enable();
                 QUI\ERP\Shipping\Debug::addLog('# '.$DebugShippingEntry->getTitle());
 
-                if ($DebugShippingEntry->canUsedBy($User)) {
+                if ($DebugShippingEntry->canUsedBy($User, $Order)) {
                     $DebugShippingEntry->isValid();
                     $DebugShippingEntry->canUsedInOrder($Order);
-                    $DebugShippingEntry->canUsedBy($User);
+                    $DebugShippingEntry->canUsedBy($User, $Order);
                 }
 
                 $debugStack   = \array_merge($debugStack, QUI\ERP\Shipping\Debug::getLogStack());
@@ -192,7 +192,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             return;
         }
 
-        if (!$Shipping->canUsedBy($User)) {
+        if (!$Shipping->canUsedBy($User, $Order)) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/shipping',
                 'exception.shipping.is.not.allowed'
@@ -215,7 +215,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Order = $this->getOrder();
         $User  = $Order->getCustomer();
 
-        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User);
+        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Order);
         $shippingList = [];
 
         foreach ($userShipping as $ShippingEntry) {
@@ -223,7 +223,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
             if ($ShippingEntry->isValid()
                 && $ShippingEntry->canUsedInOrder($Order)
-                && $ShippingEntry->canUsedBy($User)) {
+                && $ShippingEntry->canUsedBy($User, $Order)) {
                 $shippingList[] = $ShippingEntry;
             }
         }
@@ -257,7 +257,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $ShippingEntry = $Shipping->getShippingEntry($shipping);
             $ShippingEntry->setOrder($Order);
 
-            if (!$ShippingEntry->canUsedBy($User)) {
+            if (!$ShippingEntry->canUsedBy($User, $Order)) {
                 return;
             }
 

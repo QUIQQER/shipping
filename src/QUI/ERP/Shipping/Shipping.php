@@ -255,24 +255,27 @@ class Shipping extends QUI\Utils\Singleton
      * Return all shipping entries for the user
      *
      * @param \QUI\Interfaces\Users\User|null $User - optional
+     * @param QUI\ERP\Order\AbstractOrder $Order - optional
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    public function getUserShipping($User = null)
+    public function getUserShipping($User = null, $Order = null)
     {
         if ($User === null) {
             $User = QUI::getUserBySession();
         }
 
-        $shipping = \array_filter($this->getShippingList(), function ($Shipping) use ($User) {
+        if ($Order === null) {
+            return [];
+        }
+
+        return \array_filter($this->getShippingList(), function ($Shipping) use ($User, $Order) {
             /* @var $Shipping QUI\ERP\Shipping\Types\ShippingEntry */
             if ($Shipping->isActive() === false) {
                 return false;
             }
 
-            return $Shipping->canUsedBy($User);
+            return $Shipping->canUsedBy($User, $Order);
         });
-
-        return $shipping;
     }
 
     /**

@@ -110,11 +110,13 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     /**
      * @param QUI\Interfaces\Users\User $User
      * @param QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
+     * @param QUI\ERP\Order\AbstractOrder $Order
      * @return bool
      */
     public function canUsedBy(
         QUI\Interfaces\Users\User $User,
-        QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
+        QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry,
+        QUI\ERP\Order\AbstractOrder $Order
     ) {
         if ($ShippingEntry->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
@@ -133,10 +135,11 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
+        $Address    = $Order->getDeliveryAddress();
         $areasValue = \explode(',', \trim($areasValue, ','));
 
         // not in area
-        if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
+        if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
 
             return false;
