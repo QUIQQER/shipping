@@ -8,6 +8,7 @@ namespace QUI\ERP\Shipping\Types;
 
 use QUI;
 use QUI\CRUD\Factory;
+use QUI\ERP\Order\AbstractOrder;
 use QUI\Translator;
 use QUI\Permissions\Permission;
 
@@ -228,11 +229,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * is the user allowed to use this shipping
      *
      * @param QUI\Interfaces\Users\User $User
+     * @param QUI\ERP\Order\AbstractOrder $Order
      *
      * @return boolean
      */
-    public function canUsedBy(QUI\Interfaces\Users\User $User)
-    {
+    public function canUsedBy(
+        QUI\Interfaces\Users\User $User,
+        QUI\ERP\Order\AbstractOrder $Order
+    ) {
         if ($this->isActive() === false) {
             return false;
         }
@@ -241,7 +245,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             $ShippingType = $this->getShippingType();
 
             if (\method_exists($ShippingType, 'canUsedBy')) {
-                return $ShippingType->canUsedBy($User, $this);
+                return $ShippingType->canUsedBy($User, $this, $Order);
             }
         } catch (QUI\Exception $Exception) {
             return false;
