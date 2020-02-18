@@ -170,7 +170,12 @@
                         <span class="fa fa-money"></span>
                         {{usageValueOf}}
                     </span>
-                    <input type="number" min="0" name="purchase_value_from" class="field-container-field"/>
+                    <input type="number"
+                           step="0.01"
+                           min="0"
+                           name="purchase_value_from"
+                           class="field-container-field"
+                    />
                 </label>
             </td>
         </tr>
@@ -181,7 +186,12 @@
                         <span class="fa fa-money"></span>
                         {{usageValueTo}}
                     </span>
-                    <input type="number" min="0" name="purchase_value_until" class="field-container-field"/>
+                    <input type="number"
+                           step="0.01"
+                           min="0"
+                           name="purchase_value_until"
+                           class="field-container-field"
+                    />
                 </label>
             </td>
         </tr>
