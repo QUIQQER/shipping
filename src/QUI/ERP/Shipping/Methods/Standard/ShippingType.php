@@ -145,6 +145,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return false;
         }
 
+        Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is in areas");
+
         $userGroups = QUI\Utils\UserGroups::parseUsersGroupsString(
             $ShippingEntry->getAttribute('user_groups')
         );

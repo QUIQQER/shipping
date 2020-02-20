@@ -85,6 +85,10 @@
             <de><![CDATA[Auf / Abschlag % (prozentual)]]></de>
             <en><![CDATA[Discount % (percentage)]]></en>
         </locale>
+        <locale name="discount.type.percentageOrder">
+            <de><![CDATA[Warenwert Auf / Abschlag % (prozentual vom Warenwert)]]></de>
+            <en><![CDATA[Value of goods Discount % (as a percentage of the value of the goods)]]></en>
+        </locale>
 
         <locale name="message.no.rule.found.order.continue">
             <de><![CDATA[
@@ -596,6 +600,10 @@
         <locale name="shipping.edit.template.discount.percentage">
             <de><![CDATA[Auf / Abschlag % (prozentual)]]></de>
             <en><![CDATA[Discount % (percentage)]]></en>
+        </locale>
+        <locale name="shipping.edit.template.discount.percentageOrder">
+            <de><![CDATA[Warenwert Auf / Abschlag % (prozentual vom Warenwert)]]></de>
+            <en><![CDATA[Value of goods Discount % (as a percentage of the value of the goods)]]></en>
         </locale>
         <locale name="shipping.edit.template.discount.type">
             <de><![CDATA[Typ]]></de>

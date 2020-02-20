@@ -205,6 +205,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $rules = $this->getShippingRules();
         $price = 0;
 
+        $Order = $this->Order;
+
         foreach ($rules as $Rule) {
             $discount = $Rule->getAttribute('discount');
             $type     = $Rule->getDiscountType();
@@ -212,6 +214,26 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_ABS) {
                 $price = $price + $discount;
                 continue;
+            }
+
+            if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $Order) {
+                try {
+                    /* @var $Order QUI\ERP\Order\Order */
+                    $Order       = $this->Order;
+                    $Calculation = $Order->getPriceCalculation();
+                    $nettoSum    = $Calculation->getNettoSum()->get();
+
+                    if (!$nettoSum) {
+                        continue;
+                    }
+
+                    $pc    = \round($nettoSum * ($discount / 100));
+                    $price = $price + $pc;
+
+                    continue;
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception->getMessage());
+                }
             }
 
             $pc    = \round($price * ($discount / 100));

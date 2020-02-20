@@ -86,6 +86,9 @@ class ShippingRule extends QUI\CRUD\Child
                 $attributes['discount_type'] === 'PERCENTAGE'
             ) {
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_PERCENTAGE;
+            } elseif ($attributes['discount_type'] === RuleFactory::DISCOUNT_TYPE_PC_ORDER ||
+                      $attributes['discount_type'] === 'PERCENTAGE_ORDER') {
+                $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_PC_ORDER;
             } else {
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
             }

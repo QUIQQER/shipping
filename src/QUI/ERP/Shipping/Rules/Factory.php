@@ -28,6 +28,11 @@ class Factory extends QUI\CRUD\Factory
     const DISCOUNT_TYPE_PERCENTAGE = 1;
 
     /**
+     * percentage discount from order sum (total) // PERCENTAGE_ORDER
+     */
+    const DISCOUNT_TYPE_PC_ORDER = 2;
+
+    /**
      * Handler constructor.
      */
     public function __construct()
@@ -135,8 +140,13 @@ class Factory extends QUI\CRUD\Factory
                 $data['discount_type'] = RuleFactory::DISCOUNT_TYPE_PERCENTAGE;
                 break;
 
+            case 'PERCENTAGE_ORDER':
+                $data['discount_type'] = RuleFactory::DISCOUNT_TYPE_PC_ORDER;
+                break;
+
             case RuleFactory::DISCOUNT_TYPE_ABS:
             case RuleFactory::DISCOUNT_TYPE_PERCENTAGE:
+            case RuleFactory::DISCOUNT_TYPE_PC_ORDER:
                 break;
 
             default:

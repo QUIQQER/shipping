@@ -51,6 +51,11 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
                     'quiqqer/shipping',
                     'discount.type.abs'
                 );
+            } else if (parseInt(ruleData.discount_type) === 2) {
+                ruleData.discount_type_text = QUILocale.get(
+                    'quiqqer/shipping',
+                    'discount.type.percentageOrder'
+                );
             } else {
                 ruleData.discount_type_text = QUILocale.get(
                     'quiqqer/shipping',
