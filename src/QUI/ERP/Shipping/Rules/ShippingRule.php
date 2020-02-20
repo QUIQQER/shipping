@@ -256,16 +256,9 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         // not in area
-        if ($areasValue) {
-            $areasValue = \explode(',', $areasValue);
-        }
+        // address need to be checked via order
 
-        if (!empty($areasValue) && !AreaUtils::isUserInAreas($User, $areasValue)) {
-            Debug::addLog("{$this->getTitle()} :: user is not in areas");
-
-            return false;
-        }
-
+        // user checking
         $userGroups = QUI\Utils\UserGroups::parseUsersGroupsString(
             $this->getAttribute('user_groups')
         );
@@ -279,7 +272,6 @@ class ShippingRule extends QUI\CRUD\Child
             return true;
         }
 
-        // user checking
         foreach ($discountUsers as $uid) {
             if ($User->getId() == $uid) {
                 Debug::addLog("{$this->getTitle()} :: user is found in users [ok]");
@@ -308,6 +300,29 @@ class ShippingRule extends QUI\CRUD\Child
     }
 
     /**
+     * Is this shipping rule allowed for this address?
+     *
+     * @param QUI\ERP\Address|QUI\Users\Address $Address
+     * @return bool
+     */
+    public function canUsedWithAddress($Address)
+    {
+        $areasValue = $this->getAttribute('areas');
+
+        if ($areasValue) {
+            $areasValue = \explode(',', $areasValue);
+        }
+
+        if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
+            Debug::addLog("{$this->getTitle()} :: user address is not in areas");
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * is the shipping allowed in the order?
      *
      * @param QUI\ERP\Order\OrderInterface $Order
@@ -327,6 +342,14 @@ class ShippingRule extends QUI\CRUD\Child
 
         if (!$this->canUsedBy($Order->getCustomer())) {
             Debug::addLog("{$this->getTitle()} :: can not be used by {$Order->getCustomer()->getId()}");
+
+            return false;
+        }
+
+        $DeliveryAddress = $Order->getDeliveryAddress();
+
+        if (!$this->canUsedWithAddress($DeliveryAddress)) {
+            Debug::addLog("{$this->getTitle()} :: can not be used with address");
 
             return false;
         }
