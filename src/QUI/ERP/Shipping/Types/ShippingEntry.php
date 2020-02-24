@@ -187,8 +187,18 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function getPriceDisplay()
     {
+        $PriceFactor = $this->toPriceFactor();
+
+        // display is incl vat
+        $vat   = $PriceFactor->getVat();
+        $price = $this->getPrice();
+
+        if ($vat) {
+            $price = $price + ($price * ($vat / 100));
+        }
+
         $Price = new QUI\ERP\Money\Price(
-            $this->getPrice(),
+            $price,
             QUI\ERP\Defaults::getCurrency()
         );
 
@@ -731,6 +741,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $Locale = null,
         QUI\ERP\Order\AbstractOrder $Order = null
     ) {
+        if ($Order === null) {
+            $Order = $this->Order;
+        }
+
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
             'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
                 'shipping' => $this->getTitle($Locale)
