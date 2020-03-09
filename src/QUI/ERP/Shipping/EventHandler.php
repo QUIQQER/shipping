@@ -287,6 +287,13 @@ class EventHandler
         $submit  = $Request->get('submit-shipping');
         $address = (int)$Request->get('shipping-address');
 
+        if (isset($_REQUEST['step'])
+            && $_REQUEST['step'] === 'Customer'
+            && !empty($_REQUEST['shipping-address'])
+        ) {
+            $address = (int)$_REQUEST['shipping-address'];
+        }
+
         if ($submit === false || !$address) {
             return;
         }
