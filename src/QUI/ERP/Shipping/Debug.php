@@ -234,10 +234,15 @@ class Debug
             return;
         }
 
+        $DeliveryAddress = $Order->getDeliveryAddress();
+        $delivery        = $DeliveryAddress->render();
+
         $adminMail = QUI::conf('mail', 'admin_mail');
         $subject   = QUI::getLocale()->get('quiqqer/shipping', 'mail.admin.info.empty.shipping.subject');
 
         $body = QUI::getLocale()->get('quiqqer/shipping', 'mail.admin.info.empty.shipping.body');
+        $body .= '<br /><br />------<br /><br />';
+        $body .= $delivery;
         $body .= '<br /><br />------<br /><br />';
         $body .= $articleHtml;
 
