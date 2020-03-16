@@ -189,11 +189,20 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     {
         $PriceFactor = $this->toPriceFactor();
 
+        $Order   = $this->Order;
+        $isNetto = false;
+
+        /* @var $Order QUI\ERP\Order\Order */
+        if ($Order) {
+            $Customer = $Order->getCustomer();
+            $isNetto  = $Customer->isNetto();
+        }
+
         // display is incl vat
         $vat   = $PriceFactor->getVat();
         $price = $this->getPrice();
 
-        if ($vat) {
+        if (!$isNetto && $vat) {
             $price = $price + ($price * ($vat / 100));
         }
 
