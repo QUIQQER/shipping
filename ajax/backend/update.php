@@ -49,7 +49,13 @@ QUI::$Ajax->registerFunction(
             }
 
             foreach ($shipping as $shippingId) {
-                $ShippingEntry->addShippingRuleId($shippingId);
+                try {
+                    $ShippingEntry->addShippingRuleId($shippingId);
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addError($Exception->getMessage(), [
+                        'shippingId' => $shippingId
+                    ]);
+                }
             }
         }
 

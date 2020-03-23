@@ -91,7 +91,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_create', function (shippingId) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_create', function (shippingId) {
                     self.$shippings = null;
 
                     require([
@@ -121,7 +121,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_update', function (result) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_update', function (result) {
                     self.$shippings = null;
 
                     require([
@@ -152,7 +152,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
             return new Promise(function (resolve, reject) {
                 self.$shippings = null;
 
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_delete', function () {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_delete', function () {
                     self.fireEvent('shippingDelete', [self, shippingId]);
                     resolve();
                 }, {
@@ -175,7 +175,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
             return new Promise(function (resolve, reject) {
                 self.$shippings = null;
 
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_activate', function (result) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_activate', function (result) {
                     self.fireEvent('shippingActivate', [self, shippingId, result]);
                     resolve(result);
                 }, {
@@ -198,7 +198,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
             return new Promise(function (resolve, reject) {
                 self.$shippings = null;
 
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_deactivate', function (result) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_deactivate', function (result) {
                     self.fireEvent('shippingDeactivate', [self, shippingId, result]);
                     resolve(result);
                 }, {
