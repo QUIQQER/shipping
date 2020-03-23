@@ -280,7 +280,10 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                 }).then(function () {
                     resolve();
                     self.Loader.hide();
-                }).catch(reject);
+                }).catch(function (exc) {
+                    self.Loader.hide();
+                    reject(exc);
+                });
             });
         },
 

@@ -8,7 +8,6 @@ namespace QUI\ERP\Shipping\Types;
 
 use QUI;
 use QUI\CRUD\Factory;
-use QUI\ERP\Order\AbstractOrder;
 use QUI\Translator;
 use QUI\Permissions\Permission;
 
@@ -81,12 +80,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $Locale      = QUI::getLocale();
         $currentLang = $Locale->getCurrent();
 
-        try {
-            $availableLanguages = QUI\Translator::getAvailableLanguages();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-            $availableLanguages = [];
-        }
+        $availableLanguages = QUI\Translator::getAvailableLanguages();
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
