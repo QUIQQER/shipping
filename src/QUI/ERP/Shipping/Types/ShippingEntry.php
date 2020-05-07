@@ -760,7 +760,16 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             'visible'     => true
         ]);
 
+        $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser(
+            $Order->getCustomer()
+        );
+
+        if ($isEuVatUser) {
+            return $PriceFactor;
+        }
+
         /* @var $Article QUI\ERP\Accounting\Article */
+
         $Articles = $Order->getArticles();
         $vats     = [];
 
