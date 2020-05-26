@@ -589,7 +589,7 @@ class ShippingRule extends QUI\CRUD\Child
         try {
             $Calculation = $Order->getPriceCalculation();
             $Sum         = $Calculation->getNettoSum();
-            $sum         = $Sum->get();
+            $sum         = $Sum->precision(2)->get(); // @todo use currency precision
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
