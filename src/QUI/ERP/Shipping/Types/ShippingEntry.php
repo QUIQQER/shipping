@@ -788,8 +788,9 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         if (\count($vats) === 1) {
             $PriceFactor->setVat(\key($vats));
         } else {
-            // get max
-            $maxVat = \array_keys($vats, \max($vats))[0];
+            // get max, use the max VAT if multiple exists
+            // @todo implement VAT setting for shipping
+            $maxVat = \max(\array_keys($vats));
             $PriceFactor->setVat($maxVat);
         }
 
