@@ -279,6 +279,32 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
+     * Get all valid shipping entries for an order
+     *
+     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @return QUI\ERP\Shipping\Types\ShippingEntry[]
+     */
+    public function getValidShippingEntriesByOrder(QUI\ERP\Order\AbstractOrder $Order)
+    {
+        $User = $Order->getCustomer();
+
+        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Order);
+        $shippingList = [];
+
+        foreach ($userShipping as $ShippingEntry) {
+            $ShippingEntry->setOrder($Order);
+
+            if ($ShippingEntry->isValid()
+                && $ShippingEntry->canUsedInOrder($Order)
+                && $ShippingEntry->canUsedBy($User, $Order)) {
+                $shippingList[] = $ShippingEntry;
+            }
+        }
+
+        return $shippingList;
+    }
+
+    /**
      * Return the unit field ids, for the shipping rule definition
      *
      * @return array
