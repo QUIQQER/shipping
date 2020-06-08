@@ -208,27 +208,11 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     }
 
     /**
-     * @return array
+     * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
     protected function getValidShipping()
     {
-        $Order = $this->getOrder();
-        $User  = $Order->getCustomer();
-
-        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Order);
-        $shippingList = [];
-
-        foreach ($userShipping as $ShippingEntry) {
-            $ShippingEntry->setOrder($Order);
-
-            if ($ShippingEntry->isValid()
-                && $ShippingEntry->canUsedInOrder($Order)
-                && $ShippingEntry->canUsedBy($User, $Order)) {
-                $shippingList[] = $ShippingEntry;
-            }
-        }
-
-        return $shippingList;
+        return ShippingHandler::getInstance()->getValidShippingEntriesByOrder($this->getOrder());
     }
 
     /**
