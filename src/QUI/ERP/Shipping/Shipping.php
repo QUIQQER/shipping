@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
+use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Shipping\Types\Factory;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 
@@ -279,12 +280,32 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
+     * Return the shipping price factor of an order
+     *
+     * @param AbstractOrder $Order
+     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface
+     */
+    public function getShippingPriceFactorByOrder(AbstractOrder $Order)
+    {
+        $PriceFactors = $Order->getArticles()->getPriceFactors();
+
+        foreach ($PriceFactors as $PriceFactor) {
+            /* @var $PriceFactor QUI\ERP\Products\Utils\PriceFactor */
+            if ($PriceFactor->getIdentifier() === 'shipping-pricefactor') {
+                return $PriceFactor;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get all valid shipping entries for an order
      *
      * @param QUI\ERP\Order\AbstractOrder $Order
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    public function getValidShippingEntriesByOrder(QUI\ERP\Order\AbstractOrder $Order)
+    public function getValidShippingEntriesByOrder(AbstractOrder $Order)
     {
         $User = $Order->getCustomer();
 
@@ -405,7 +426,7 @@ class Shipping extends QUI\Utils\Singleton
      * @throws QUI\Exception
      */
     public function sendStatusChangeNotification(
-        QUI\ERP\Order\AbstractOrder $Order,
+        AbstractOrder $Order,
         $statusId,
         $message = null
     ) {
