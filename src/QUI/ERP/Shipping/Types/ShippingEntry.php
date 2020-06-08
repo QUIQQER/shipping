@@ -749,6 +749,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
+            'identifier'  => 'shipping-pricefactor',
             'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
                 'shipping' => $this->getTitle($Locale)
             ]),
