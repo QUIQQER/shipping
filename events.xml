@@ -15,6 +15,9 @@
     <event on="onUserSaveBegin"
            fire="\QUI\ERP\Shipping\EventHandler::onUserSaveBegin"
     />
+    <event on="onTemplateGetHeader"
+           fire="\QUI\ERP\Shipping\EventHandler::onTemplateGetHeader"
+    />
 
     <event on="onQuiqqer::frontend-users::user-address-top"
            fire="\QUI\ERP\Shipping\EventHandler::onFrontendUsersAddressTop"

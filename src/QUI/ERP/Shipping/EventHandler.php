@@ -308,6 +308,28 @@ class EventHandler
     }
 
     /**
+     * event: onTemplateGetHeader
+     * sets the uer current address
+     */
+    public static function onTemplateGetHeader()
+    {
+        $User      = QUI::getUserBySession();
+        $addressId = $User->getAttribute('quiqqer.delivery.address');
+
+        if (!$addressId) {
+            return;
+        }
+
+        try {
+            QUI\ERP\Utils\User::setUserCurrentAddress(
+                $User,
+                $User->getAddress($addressId)
+            );
+        } catch (QUI\Exception $Exception) {
+        }
+    }
+
+    /**
      * Create all fixed product fields that quiqqer/shipping provides
      *
      * @return void
