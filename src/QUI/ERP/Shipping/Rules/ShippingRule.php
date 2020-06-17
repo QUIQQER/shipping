@@ -61,7 +61,7 @@ class ShippingRule extends QUI\CRUD\Child
                     'quiqqer/shipping',
                     $attributes['title']
                 );
-            };
+            }
 
             if (\is_array($attributes['workingTitle'])) {
                 QUI\Translator::edit(
@@ -70,7 +70,7 @@ class ShippingRule extends QUI\CRUD\Child
                     'quiqqer/shipping',
                     $attributes['workingTitle']
                 );
-            };
+            }
 
             QUI\Translator::publish('quiqqer/shipping');
 
@@ -587,9 +587,26 @@ class ShippingRule extends QUI\CRUD\Child
 
         // purchase
         try {
-            $Calculation = $Order->getPriceCalculation();
-            $Sum         = $Calculation->getNettoSum();
-            $sum         = $Sum->precision(2)->get(); // @todo use currency precision
+            $Calculation    = $Order->getPriceCalculation();
+            $Currency       = $Order->getCurrency();
+            $PriceFactors   = $Order->getArticles()->getPriceFactors();
+            $ShippingFactor = null;
+
+            /* @var $Factor QUI\ERP\Products\Interfaces\PriceFactorInterface */
+            foreach ($PriceFactors as $Factor) {
+                if ($Factor->getIdentifier() === 'shipping-pricefactor') {
+                    $ShippingFactor = $Factor;
+                    break;
+                }
+            }
+
+            $Sum = $Calculation->getNettoSum();
+            $sum = $Sum->precision($Currency->getPrecision())->get();
+
+            /* quiqqer/shipping#25 */
+            if ($ShippingFactor) {
+                $sum = $sum - \round($ShippingFactor->getNettoSum(), $Currency->getPrecision());
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
