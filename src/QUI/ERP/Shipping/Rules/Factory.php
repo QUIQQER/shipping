@@ -98,8 +98,10 @@ class Factory extends QUI\CRUD\Factory
             $data['purchase_quantity_until'] = 0;
         }
 
-        if (!isset($data['priority']) || !\is_integer($data['priority'])) {
+        if (!isset($data['priority']) || !\is_numeric($data['priority'])) {
             $data['priority'] = 0;
+        } elseif (isset($data['priority']) && !\is_int($data['priority'])) {
+            $data['priority'] = (int)$data['priority'];
         }
 
         if (!isset($data['discount']) || empty($data['discount'])) {
