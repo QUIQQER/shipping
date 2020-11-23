@@ -314,6 +314,7 @@ class ShippingRule extends QUI\CRUD\Child
 
         if ($areasValue) {
             $areasValue = \explode(',', $areasValue);
+            $areasValue = \array_filter($areasValue);
         }
 
         if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
@@ -386,6 +387,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if (\is_string($articles)) {
                 $articles = \explode(',', $articles);
+                $articles = \array_filter($articles);
             }
 
             if (!\is_array($articles)) {

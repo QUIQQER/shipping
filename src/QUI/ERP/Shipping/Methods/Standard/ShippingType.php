@@ -124,6 +124,13 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return false;
         }
 
+        if ($User instanceof QUI\ERP\User) {
+            try {
+                $User = QUI::getUsers()->get($User->getId());
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
         // assignment
         $userGroupValue = $ShippingEntry->getAttribute('user_groups');
         $areasValue     = $ShippingEntry->getAttribute('areas');
@@ -135,8 +142,12 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $Address    = $Order->getDeliveryAddress();
-        $areasValue = \explode(',', \trim($areasValue, ','));
+        $Address = $Order->getDeliveryAddress();
+
+        $areasValue = \trim($areasValue);
+        $areasValue = \trim($areasValue, ',');
+        $areasValue = \explode(',', $areasValue);
+        $areasValue = \array_filter($areasValue);
 
         // not in area
         if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
