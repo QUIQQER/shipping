@@ -219,6 +219,13 @@ class ShippingRule extends QUI\CRUD\Child
             return false;
         }
 
+        if ($User instanceof QUI\ERP\User) {
+            try {
+                $User = QUI::getUsers()->get($User->getId());
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
         try {
             QUI::getEvents()->fireEvent('quiqqerShippingCanUsedBy', [$this, $User]);
         } catch (ShippingCanNotBeUsed $Exception) {
