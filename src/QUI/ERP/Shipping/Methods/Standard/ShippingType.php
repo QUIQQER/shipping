@@ -79,7 +79,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             try {
                 $productId = $Article->getId();
 
-                if (\in_array($productId, $articles)) {
+                if (!empty($articles) && \in_array($productId, $articles)) {
                     Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]");
 
                     return true;
