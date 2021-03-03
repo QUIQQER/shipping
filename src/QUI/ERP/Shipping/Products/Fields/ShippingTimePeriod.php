@@ -39,8 +39,7 @@ class ShippingTimePeriod extends TimePeriod
         }
 
         $needles = [
-            'option',
-            'text'
+            'option'
         ];
 
         foreach ($needles as $needle) {
@@ -93,7 +92,16 @@ class ShippingTimePeriod extends TimePeriod
             case self::OPTION_IMMEDIATELY_AVAILABLE:
             case self::OPTION_ON_REQUEST:
             case self::OPTION_AVAILABLE_SOON:
+                break;
+
             case self::OPTION_CUSTOM_TEXT:
+                if (empty($value['text']) || !\is_array($value['text'])) {
+                    $value['text'] = [];
+
+                    foreach (QUI::availableLanguages() as $lang) {
+                        $value['text'][$lang] = '';
+                    }
+                }
                 break;
 
             default:
