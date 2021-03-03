@@ -76,6 +76,8 @@ class Factory extends QUI\CRUD\Factory
             $NewChild->getShippingType()->getTitle().' - '.$NewChild->getId()
         );
 
+        $this->createShippingLocale('shipping.'.$NewChild->getId().'.decription', '');
+
         try {
             QUI\Translator::publish('quiqqer/shipping');
         } catch (QUI\Exception $Exception) {
