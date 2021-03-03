@@ -65,6 +65,22 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         $articles   = $ShippingEntry->getAttribute('articles');
         $categories = $ShippingEntry->getAttribute('categories');
 
+        $toInt = function ($article) {
+            return (int)$article;
+        };
+
+        if (!empty($articles)) {
+            $articles = \array_map($toInt, \explode(',', $articles));
+        } else {
+            $articles = [];
+        }
+
+        if (!empty($categories)) {
+            $categories = \array_map($toInt, \explode(',', $categories));
+        } else {
+            $categories = [];
+        }
+
         // if articles and categories are empty, its allowed
         if (empty($articles) && empty($categories)) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: no products or categories [ok]");
@@ -89,7 +105,10 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                     $Product           = QUI\ERP\Products\Handler\Products::getProduct($productId);
                     $articleCategories = $Product->getCategories();
 
-                    foreach ($articleCategories as $categoryId) {
+                    /* @var $Category QUI\ERP\Products\Category\Category */
+                    foreach ($articleCategories as $Category) {
+                        $categoryId = $Category->getId();
+
                         if (\in_array($categoryId, $categories)) {
                             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]");
 
