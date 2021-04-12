@@ -161,6 +161,36 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             }).then(function () {
                 return ControlUtils.parse(self.getElm());
             }).then(function () {
+                var CalcButton = self.getElm().getElement('[name="calc"]');
+                var Discount   = self.getElm().getElement('[name="discount"]');
+
+                CalcButton.disabled = false;
+                CalcButton.title    = QUILocale.get('quiqqer/erp', 'control.window.price.brutto.title');
+
+                CalcButton.addEvent('click', function () {
+                    var Fa = CalcButton.getElement('.fa');
+
+                    Fa.addClass('fa-spinner');
+                    Fa.addClass('fa-spin');
+                    Fa.removeClass('fa-calculator');
+
+                    require([
+                        'package/quiqqer/erp/bin/backend/controls/articles/windows/PriceBrutto'
+                    ], function (PriceBruttoWindow) {
+                        new PriceBruttoWindow({
+                            events: {
+                                onSubmit: function (Win, value) {
+                                    Discount.value = value;
+                                }
+                            }
+                        }).open();
+
+                        Fa.removeClass('fa-spinner');
+                        Fa.removeClass('fa-spin');
+                        Fa.addClass('fa-calculator');
+                    });
+                });
+            }).then(function () {
                 ElementsUtils.simulateEvent(
                     self.getElm().getElement('.usage-table thead .data-table-toggle'),
                     'click'

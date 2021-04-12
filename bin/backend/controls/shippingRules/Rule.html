@@ -44,7 +44,9 @@
                     <span class="field-container-item" title="{{discountDescription}}">
                         {{discountTitle}}
                     </span>
-                    <span class="field-container-field field-container-field-no-padding">
+                    <span class="field-container-field field-container-field-no-padding"
+                          style="display: flex;"
+                    >
                         <select name="discount_type" class="field-container-field"
                                 style="width: 40%"
                         >
@@ -62,8 +64,10 @@
                                step="0.01"
                                name="discount"
                                class="field-container-field"
-                               style="width: 59%"
                         />
+                        <button disabled name="calc" class="qui-button" style="width: 50px;">
+                            <span class="fa fa-calculator"></span>
+                        </button>
                     </span>
                 </label>
             </td>
