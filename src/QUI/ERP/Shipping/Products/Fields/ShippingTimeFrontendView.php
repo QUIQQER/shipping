@@ -105,4 +105,29 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
 
         return $Engine->fetch(\dirname(__FILE__).'/ShippingTimePeriodFrontendView.html');
     }
+
+    /**
+     * Return the current value
+     *
+     * @return string|array
+     */
+    public function getValue()
+    {
+        if (!empty($this->value['option']) && $this->value['option'] === ShippingTimePeriod::OPTION_USE_DEFAULT) {
+            try {
+                $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                return null;
+            }
+
+            $defaultValue = $Conf->get('shipping', 'deliveryTimeDefault');
+
+            if (!empty($defaultValue)) {
+                return \json_decode($defaultValue, true);
+            }
+        }
+
+        return parent::getValue();
+    }
 }

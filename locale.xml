@@ -763,6 +763,14 @@
             <de><![CDATA[Individueller Text]]></de>
             <en><![CDATA[Custom text]]></en>
         </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.custom_text">
+            <de><![CDATA[Individueller Text]]></de>
+            <en><![CDATA[Custom text]]></en>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.use_default">
+            <de><![CDATA[Standard-Einstellung benutzen]]></de>
+            <en><![CDATA[Use default setting]]></en>
+        </locale>
 
         <locale name="control.search.ShippingWindow.title">
             <de><![CDATA[Versandarten durchsuchen]]></de>

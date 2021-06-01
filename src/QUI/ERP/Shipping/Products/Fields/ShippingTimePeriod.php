@@ -18,6 +18,7 @@ class ShippingTimePeriod extends TimePeriod
     const OPTION_ON_REQUEST            = 'on_request';
     const OPTION_AVAILABLE_SOON        = 'available_soon';
     const OPTION_CUSTOM_TEXT           = 'custom_text';
+    const OPTION_USE_DEFAULT           = 'use_default';
 
     /**
      * Check the value
@@ -92,6 +93,7 @@ class ShippingTimePeriod extends TimePeriod
             case self::OPTION_IMMEDIATELY_AVAILABLE:
             case self::OPTION_ON_REQUEST:
             case self::OPTION_AVAILABLE_SOON:
+            case self::OPTION_USE_DEFAULT:
                 break;
 
             case self::OPTION_CUSTOM_TEXT:

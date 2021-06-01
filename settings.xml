@@ -85,6 +85,7 @@
                         <input type="hidden"
                                conf="shipping.deliveryTimeDefault"
                                data-qui="package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod"
+                               data-qui-options-show_default_option="0"
                         >
                             <text>
                                 <locale group="quiqqer/shipping" var="shipping.settings.deliveryTimeDefault"/>
