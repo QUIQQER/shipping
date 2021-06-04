@@ -1,22 +1,17 @@
 <?php
 
-/**
- * This file contains QUI\ERP\Shipping\Methods\Standard\ShippingType
- */
-
-namespace QUI\ERP\Shipping\Methods\Standard;
+namespace QUI\ERP\Shipping\Methods\Digital;
 
 use QUI;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\Types\DigitalProduct;
 use QUI\ERP\Shipping\Debug;
+use QUI\ERP\Products\Product\Types\DigitalProduct;
 
 /**
- * Class ShippingType
- * - This class is a placeholder / helper class for the standard shipping
+ * Class DigitalType
  *
- * @package QUI\ERP\Shipping\Methods\Free\ShippingType
+ * Shipping for digital products that are deliverd via download and/or email.
  */
 class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 {
@@ -30,7 +25,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             $Locale = QUI::getLocale();
         }
 
-        return $Locale->get('quiqqer/shipping', 'shipping.standard.title');
+        return $Locale->get('quiqqer/shipping', 'shipping.DigitalType.title');
     }
 
     /**
@@ -62,9 +57,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return false;
         }
 
-        // Check if order contains only digital products
-        $digitalProductsOnly = true;
-
+        // Check if order contains NON-digital products
         /** @var QUI\ERP\Accounting\Article $Article */
         foreach ($Order->getArticles() as $Article) {
             try {
@@ -77,24 +70,19 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
                 // If a non-digital product is part of the order -> digital shipping is not possible
                 if (!($Product instanceof DigitalProduct)) {
-                    $digitalProductsOnly = false;
-                    break;
+                    Debug::addLog(
+                        "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: contains at least one NON-DIGITAL"
+                        ." product that must be shipped physically."
+                    );
+
+                    return false;
                 }
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
         }
 
-        if ($digitalProductsOnly) {
-            Debug::addLog(
-                "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: contains only DIGITAL products"
-                . " that cannot be shipped physically."
-            );
-
-            return false;
-        }
-
-        // assignment
+        // Check restriction to certain products / product categories
         $articles   = $ShippingEntry->getAttribute('articles');
         $categories = $ShippingEntry->getAttribute('categories');
 

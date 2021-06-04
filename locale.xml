@@ -63,6 +63,10 @@
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
         </locale>
+        <locale name="shipping.DigitalType.title">
+            <de><![CDATA[Digitaler Versand]]></de>
+            <en><![CDATA[Digital shipping]]></en>
+        </locale>
         <locale name="shipping.free.workingTitle">
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
