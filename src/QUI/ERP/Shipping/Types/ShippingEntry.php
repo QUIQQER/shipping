@@ -548,6 +548,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $shippingRules = $this->getAttribute('shipping_rules');
         $shippingRules = \json_decode($shippingRules, true);
 
+        if (!is_array($shippingRules)) {
+            $shippingRules = [];
+        }
+
         if (!\in_array($Rule->getId(), $shippingRules)) {
             $shippingRules[] = $Rule->getId();
         }
