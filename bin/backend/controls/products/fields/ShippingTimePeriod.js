@@ -31,7 +31,9 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             selectOptions: [
                 'timeperiod', 'unavailable', 'immediately_available',
                 'on_request', 'available_soon', 'custom_text'
-            ]
+            ],
+
+            show_default_option: true
         },
 
         initialize: function (options) {
@@ -71,6 +73,10 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
 
             var options  = this.getAttribute('selectOptions'),
                 lgPrefix = 'controls.products.fields.ShippingTimePeriod.';
+
+            if (this.getAttribute('show_default_option')) {
+                options.unshift('use_default');
+            }
 
             for (var i = 0, len = options.length; i < len; i++) {
                 var option = options[i];

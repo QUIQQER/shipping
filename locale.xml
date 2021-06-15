@@ -63,6 +63,10 @@
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
         </locale>
+        <locale name="shipping.DigitalType.title">
+            <de><![CDATA[Digitaler Versand]]></de>
+            <en><![CDATA[Digital shipping]]></en>
+        </locale>
         <locale name="shipping.free.workingTitle">
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Standard shipping]]></en>
@@ -762,6 +766,14 @@
         <locale name="controls.products.fields.ShippingTimePeriod.option.custom_text">
             <de><![CDATA[Individueller Text]]></de>
             <en><![CDATA[Custom text]]></en>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.custom_text">
+            <de><![CDATA[Individueller Text]]></de>
+            <en><![CDATA[Custom text]]></en>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.use_default">
+            <de><![CDATA[Standard-Einstellung benutzen]]></de>
+            <en><![CDATA[Use default setting]]></en>
         </locale>
 
         <locale name="control.search.ShippingWindow.title">
