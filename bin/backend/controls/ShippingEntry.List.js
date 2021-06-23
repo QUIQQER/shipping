@@ -16,7 +16,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 ], function (QUI, QUIControl, Grid, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
 
@@ -70,7 +70,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                 return;
             }
 
-            var value = this.$Grid.getData().map(function (entry) {
+            let value = this.$Grid.getData().map(function (entry) {
                 return parseInt(entry.id);
             });
 
@@ -85,30 +85,28 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
          * @return {Promise}
          */
         refresh: function () {
-            var self = this;
-
             this.fireEvent('refreshBegin', [this]);
 
-            return new Promise(function (resolve) {
+            return new Promise((resolve) => {
                 require([
                     'package/quiqqer/shipping/bin/backend/Shipping',
                     'package/quiqqer/shipping/bin/backend/ShippingRules',
                     'package/quiqqer/shipping/bin/backend/utils/ShippingUtils'
-                ], function (Shipping, ShippingRules, Utils) {
-                    var shippingRules = self.$Grid.getData().map(function (entry) {
+                ], (Shipping, ShippingRules, Utils) => {
+                    let shippingRules = this.$Grid.getData().map(function (entry) {
                         return entry.id;
                     });
 
-                    ShippingRules.getRules(shippingRules).then(function (rules) {
-                        self.$Grid.setData({
+                    ShippingRules.getRules(shippingRules).then((rules) => {
+                        this.$Grid.setData({
                             data: Utils.parseRulesDataForGrid(rules)
                         });
 
                         resolve();
-                        self.fireEvent('refreshEnd', [self]);
-                    }).catch(function (e) {
+                        this.fireEvent('refreshEnd', [this]);
+                    }).catch((e) => {
                         console.log(e);
-                        self.fireEvent('refreshEnd', [self]);
+                        this.fireEvent('refreshEnd', [this]);
                     });
                 });
             });
@@ -118,9 +116,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
          * event: on inject
          */
         $onInject: function () {
-            var self      = this;
-            var Container = new Element('div').inject(this.getElm());
-            var width     = Container.getSize().x - 5;
+            const Container = new Element('div').inject(this.getElm());
+            const width     = Container.getSize().x - 5;
 
             this.$Grid = new Grid(Container, {
                 height     : 300,
@@ -168,20 +165,20 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
 
             this.$Grid.setWidth(width);
             this.$Grid.addEvents({
-                onClick: function () {
-                    self.$Grid.getButtons().filter(function (Btn) {
+                onClick: () => {
+                    this.$Grid.getButtons().filter(function (Btn) {
                         return Btn.getAttribute('name') === 'remove';
                     })[0].enable();
                 },
 
-                onDblClick: function () {
-                    require(['package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow'], function (RuleWindow) {
+                onDblClick: () => {
+                    require(['package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow'], (RuleWindow) => {
                         new RuleWindow({
-                            ruleId: self.$Grid.getSelectedData()[0].id,
+                            ruleId: this.$Grid.getSelectedData()[0].id,
                             events: {
-                                onUpdateEnd: function () {
-                                    self.refreshInput();
-                                    self.refresh();
+                                onUpdateEnd: () => {
+                                    this.refreshInput();
+                                    this.refresh();
                                 }
                             }
                         }).open();
@@ -189,9 +186,9 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                 }
             });
 
-            require(['package/quiqqer/shipping/bin/backend/Shipping'], function (Shipping) {
-                Shipping.getShippingEntry(self.getAttribute('shippingId')).then(function (result) {
-                    var shippingRules = result.shipping_rules;
+            require(['package/quiqqer/shipping/bin/backend/Shipping'], (Shipping) => {
+                Shipping.getShippingEntry(this.getAttribute('shippingId')).then((result) => {
+                    let shippingRules = result.shipping_rules;
 
                     try {
                         shippingRules = JSON.decode(shippingRules);
@@ -203,19 +200,19 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         shippingRules = [];
                     }
 
-                    var data = shippingRules.map(function (entry) {
+                    let data = shippingRules.map(function (entry) {
                         return {
                             id: entry
                         };
                     });
 
-                    self.$Grid.setData({
+                    this.$Grid.setData({
                         data: data
                     });
 
-                    return self.refresh();
-                }).then(function () {
-                    self.fireEvent('load', [self]);
+                    return this.refresh();
+                }).then(() => {
+                    this.fireEvent('load', [this]);
                 });
             });
         },
@@ -226,18 +223,16 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
          * @param {Array} shippingRules - list of ids
          */
         addShippingRules: function (shippingRules) {
-            var self = this;
+            return new Promise((resolve) => {
+                require(['package/quiqqer/shipping/bin/backend/ShippingRules'], (ShippingRules) => {
+                    ShippingRules.getRules(shippingRules).then((rules) => {
+                        const current     = QUILocale.getCurrent(),
+                              currentData = this.$Grid.getData();
 
-            return new Promise(function (resolve) {
-                require(['package/quiqqer/shipping/bin/backend/ShippingRules'], function (ShippingRules) {
-                    ShippingRules.getRules(shippingRules).then(function (rules) {
-                        var current     = QUILocale.getCurrent(),
-                            currentData = self.$Grid.getData();
-
-                        var isInCurrentData = function (id) {
+                        const isInCurrentData = function (id) {
                             id = parseInt(id);
 
-                            for (var i = 0, len = currentData.length; i < len; i++) {
+                            for (let i = 0, len = currentData.length; i < len; i++) {
                                 if (parseInt(currentData[i].id) === id) {
                                     return true;
                                 }
@@ -247,7 +242,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         };
 
                         rules.forEach(function (v, k) {
-                            var title = '';
+                            let title = '';
 
                             if (typeof v.title[current] !== 'undefined') {
                                 title = v.title[current];
@@ -265,12 +260,12 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                             currentData.push(rules[k]);
                         });
 
-                        self.$Grid.setData({
+                        this.$Grid.setData({
                             data: currentData
                         });
 
-                        self.refreshInput();
-                        resolve();
+                        this.refreshInput();
+                        this.refresh().then(resolve);
                     });
                 });
             });
@@ -282,7 +277,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
          * @param {Array} shippingRuleIds - ids of the shipping rules
          */
         removeShippingRules: function (shippingRuleIds) {
-            var data = this.$Grid.getData();
+            let data = this.$Grid.getData();
 
             data = data.filter(function (entry) {
                 return shippingRuleIds.indexOf(entry.id) === -1;
@@ -299,15 +294,13 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
          * open rule window to add a rule to the shipping rules
          */
         $openAddDialog: function () {
-            var self = this;
-
             require([
                 'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleListWindow'
-            ], function (ShippingRuleListWindow) {
+            ], (ShippingRuleListWindow) => {
                 new ShippingRuleListWindow({
                     events: {
-                        onSubmit: function (Win, selected) {
-                            self.addShippingRules(selected);
+                        onSubmit: (Win, selected) => {
+                            this.addShippingRules(selected);
                         }
                     }
                 }).open();
@@ -319,24 +312,23 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
          * - The user has the possibility to remove a shipping rule from the shipping entry
          */
         $openRemoveDialog: function () {
-            var self     = this,
-                selected = this.$Grid.getSelectedData();
+            const selected = this.$Grid.getSelectedData();
 
             if (!selected.length) {
                 return;
             }
 
-            var shippingIds = selected.map(function (entry) {
+            const shippingIds = selected.map(function (entry) {
                 return entry.id;
             });
 
-            var idHtml = selected.map(function (entry) {
+            let idHtml = selected.map(function (entry) {
                 return '<li>#' + entry.id + ' ' + entry.title + '</li>';
             });
 
             idHtml = '<ul>' + idHtml + '</ul>';
 
-            require(['qui/controls/windows/Confirm'], function (QUIConfirm) {
+            require(['qui/controls/windows/Confirm'], (QUIConfirm) => {
                 new QUIConfirm({
                     icon       : 'fa fa-trash',
                     texticon   : 'fa fa-trash',
@@ -348,8 +340,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                     maxHeight  : 300,
                     maxWidth   : 600,
                     events     : {
-                        onSubmit: function () {
-                            self.removeShippingRules(shippingIds);
+                        onSubmit: () => {
+                            this.removeShippingRules(shippingIds);
                         }
                     }
                 }).open();

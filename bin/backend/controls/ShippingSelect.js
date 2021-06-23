@@ -58,25 +58,25 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelect', [
         $onSearchButtonClick: function (self, Btn) {
             Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
-            require(['package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window'], function (Window) {
+            require(['package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window'], (Window) => {
                 new Window({
                     autoclose: true,
                     multiple : this.getAttribute('multiple'),
                     events   : {
-                        onSubmit: function (Win, data) {
+                        onSubmit: (Win, data) => {
                             data = data.map(function (Entry) {
                                 return parseInt(Entry.id);
                             });
 
-                            for (var i = 0, len = data.length; i < len; i++) {
+                            for (let i = 0, len = data.length; i < len; i++) {
                                 this.addItem(data[i]);
                             }
-                        }.bind(this)
+                        }
                     }
                 }).open();
 
                 Btn.setAttribute('icon', 'fa fa-search');
-            }.bind(this));
+            });
         }
     });
 });

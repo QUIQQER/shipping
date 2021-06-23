@@ -5,9 +5,8 @@
 define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
 
     'Locale',
-    'qui/controls/buttons/Switch'
 
-], function (QUILocale, QUISwitch) {
+], function (QUILocale) {
 
     "use strict";
 
@@ -20,10 +19,8 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
          * @return {Array}
          */
         parseRulesDataForGrid: function (rules) {
-            var self = this;
-
-            return rules.map(function (entry) {
-                return self.parseRuleDataForGrid(entry);
+            return rules.map((entry) => {
+                return this.parseRuleDataForGrid(entry);
             });
         },
 
@@ -34,7 +31,7 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
          * @return {Object}
          */
         parseRuleDataForGrid: function (ruleData) {
-            var current = QUILocale.getCurrent();
+            let current = QUILocale.getCurrent();
 
             ruleData.title        = ruleData.title[current];
             ruleData.workingTitle = ruleData.workingTitle[current];

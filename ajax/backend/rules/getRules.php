@@ -31,14 +31,22 @@ QUI::$Ajax->registerFunction(
 
         // sort by priority
         \usort($result, function ($a, $b) {
-            $a = (int)$a['priority'];
-            $b = (int)$b['priority'];
+            if (!isset($a['priority'])) {
+                $a['priority'] = 0;
+            }
 
-            if ($a === $b) {
+            if (!isset($b['priority'])) {
+                $b['priority'] = 0;
+            }
+
+            $priorityA = (int)$a['priority'];
+            $priorityB = (int)$b['priority'];
+
+            if ($priorityA === $priorityB) {
                 return $a['id'] > $b['priority'];
             }
 
-            return $a > $b;
+            return $priorityA > $priorityB;
         });
 
         return $result;
