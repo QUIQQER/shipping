@@ -81,7 +81,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                     break;
                 }
             } catch (\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
+                QUI\System\Log::writeDebugException($Exception);
             }
         }
 
