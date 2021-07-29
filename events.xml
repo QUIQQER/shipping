@@ -12,6 +12,9 @@
     <event on="onQuiqqerOrderCustomerDataSave"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderCustomerDataSave"
     />
+    <event on="onQuiqqerOrderOrderProcessCheckoutOutput"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderOrderProcessCheckoutOutput"
+    />
     <event on="onUserSaveBegin"
            fire="\QUI\ERP\Shipping\EventHandler::onUserSaveBegin"
     />

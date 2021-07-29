@@ -8,7 +8,7 @@ namespace QUI\ERP\Shipping;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
-use QUI\ERP\Shipping\ShippingStatus\Handler;
+use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
 use \Quiqqer\Engine\Collector;
 
 /**
@@ -208,6 +208,50 @@ class EventHandler
         ]);
 
         $Collector->append($Control->create());
+    }
+
+    /**
+     * quiqqer/order: onQuiqqerOrderOrderProcessCheckoutOutput
+     *
+     * @param OrderCheckoutStepControl $Checkout
+     * @param string $text
+     * @return void
+     */
+    public static function onQuiqqerOrderOrderProcessCheckoutOutput(OrderCheckoutStepControl $Checkout, string $text)
+    {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
+        $Order = $Checkout->getOrder();
+
+        if (!$Order) {
+            return;
+        }
+
+        $DeliveryAddress = $Order->getDeliveryAddress();
+
+        if ($DeliveryAddress->getId() === 0) {
+            $customerId = $Order->getCustomer()->getId();
+            $Customer   = QUI::getUsers()->get($customerId);
+
+            $deliveryAddressId = $Customer->getAttribute('quiqqer.delivery.address');
+
+            if (!empty($deliveryAddressId)) {
+                try {
+                    $DeliveryAddress   = $Customer->getAddress($deliveryAddressId);
+                    $ErpDeliveryAddres = new QUI\ERP\Address(
+                        \json_decode($DeliveryAddress->toJSON(), true),
+                        $Order->getCustomer()
+                    );
+
+                    $Order->setDeliveryAddress($ErpDeliveryAddres);
+                    $Order->save(QUI::getUsers()->getSystemUser());
+                } catch (\Exception $Exception) {
+                    QUI\System\Log::writeException($Exception);
+                }
+            }
+        }
     }
 
     /**
