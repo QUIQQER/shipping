@@ -374,6 +374,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         $articles    = $this->getAttribute('articles');
+        $categories    = $this->getAttribute('categories');
         $articleOnly = (int)$this->getAttribute('articles_only');
         $unitTerms   = $this->getUnitTerms();
 
@@ -406,13 +407,22 @@ class ShippingRule extends QUI\CRUD\Child
             $articleOnly = 0;
         }
 
+        $categoryIdsInOrder = [];
+
         foreach ($articleList as $Article) {
             $aid             = $Article->getId();
             $articleQuantity = $Article->getQuantity();
 
             // get product because of units
             try {
-                $Product = Products::getProduct($aid);
+                $Product           = Products::getProduct($aid);
+                $productCategories = $Product->getCategories();
+
+                $categoryIds = \array_map(function($Category) {
+                    return $Category->getId();
+                }, $productCategories);
+
+                $categoryIdsInOrder = \array_merge($categoryIdsInOrder, $categoryIds);
 
                 foreach ($unitIds as $unitId) {
                     $Weight = $Product->getField($unitId);
@@ -473,6 +483,29 @@ class ShippingRule extends QUI\CRUD\Child
             );
 
             return false;
+        }
+
+        // category check
+        $categoryIdsInOrder = \array_unique($categoryIdsInOrder);
+        $categories = trim(',');
+        $categories = explode(',', $categories);
+
+        if (!empty($categoryIdsInOrder)
+            && !empty($categories)
+            && (count($categoryIdsInOrder) === 1 && $categoryIdsInOrder[0] !== 0)
+        ) {
+            $found = false;
+
+            foreach ($categories as $cid) {
+                if (!in_array($cid, $categoryIdsInOrder)) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if ($found === false) {
+                return false;
+            }
         }
 
         // unit terms check
@@ -646,6 +679,8 @@ class ShippingRule extends QUI\CRUD\Child
             }
         }
 
+        // categories check
+        
 
         try {
             QUI::getEvents()->fireEvent('shippingCanUsedInOrder', [$this, $Order]);

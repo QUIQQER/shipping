@@ -82,7 +82,7 @@ class Factory extends QUI\Utils\Singleton
      *
      * @return int
      */
-    public function getNextId()
+    public function getNextId(): int
     {
         $list = Handler::getInstance()->getList();
 

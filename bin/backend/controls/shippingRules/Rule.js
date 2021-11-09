@@ -232,6 +232,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                         .get('data-quiid')
                 );
 
+                self.$Categories = QUI.Controls.getById(
+                    self.$Elm
+                        .getElement('[name="categories"]')
+                        .get('data-quiid')
+                );
+
                 return new Promise(function (resolve) {
                     require([
                         'package/quiqqer/shipping/bin/backend/ShippingRules',
@@ -245,6 +251,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                             self.$Areas.importValue(rule.areas);
                             self.$UserGroups.importValue(rule.user_groups);
                             self.$Articles.importValue(rule.articles);
+                            self.$Categories.importValue(rule.categories);
 
                             new QUISwitch({
                                 status: parseInt(rule.active),

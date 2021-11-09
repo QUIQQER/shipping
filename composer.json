@@ -27,7 +27,8 @@
         "quiqqer\/quiqqer": ">=1.5|dev-master|dev-dev",
         "quiqqer\/erp": ">=1.0|dev-master|dev-dev",
         "quiqqer\/areas": ">=1.1|dev-master|dev-dev",
-        "quiqqer\/order": ">=1.0|dev-master|dev-dev"
+        "quiqqer\/order": ">=1.0|dev-master|dev-dev",
+        "quiqqer\/products": ">=1.5|dev-master|dev-dev"
     },
     "autoload": {
         "psr-4": {
