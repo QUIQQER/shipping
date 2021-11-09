@@ -418,7 +418,7 @@ class ShippingRule extends QUI\CRUD\Child
                 $Product           = Products::getProduct($aid);
                 $productCategories = $Product->getCategories();
 
-                $categoryIds = \array_map(function($Category) {
+                $categoryIds = \array_map(function ($Category) {
                     return $Category->getId();
                 }, $productCategories);
 
