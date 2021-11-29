@@ -126,7 +126,7 @@
                         </input>
 
                         <input type="hidden"
-                               data-qui="package/quiqqer/translator/bin/controls/Update"
+                               data-qui="package/quiqqer/translator/bin/controls/UpdateContent"
                                data-qui-options-group="quiqqer/shipping"
                                data-qui-options-var="frontend.shippingInfo.popup.content"
                                data-qui-options-html="1"
