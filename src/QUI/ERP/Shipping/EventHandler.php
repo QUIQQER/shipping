@@ -428,6 +428,13 @@ class EventHandler
         }
     }
 
+    /**
+     * Create a shipping information button
+     *
+     * @param Collector $Collector
+     * @param QUI\ERP\Products\Controls\Price $Price
+     * @throws QUI\Exception
+     */
     public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price)
     {
         $Config             = QUI::getPackage('quiqqer/shipping')->getConfig();
@@ -441,6 +448,5 @@ class EventHandler
         $html   = $Engine->fetch(dirname(__FILE__).'/templates/shippingInformation.html');
 
         $Collector->append($html);
-
     }
 }
