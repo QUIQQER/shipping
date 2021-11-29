@@ -122,6 +122,7 @@
             <de><![CDATA[Bitte wählen Sie eine Versandart aus.]]></de>
             <en><![CDATA[Please select a shipping method.]]></en>
         </locale>
+
         <locale name="shipping.mail.settings.title">
             <de><![CDATA[Bestell Verhalten]]></de>
             <en><![CDATA[Order behavior]]></en>
@@ -263,6 +264,31 @@
             <de><![CDATA[Versandstatus]]></de>
             <en><![CDATA[Shipping status]]></en>
         </locale>
+
+        <locale name="frontend.shippingInfo.button.text">
+            <de><![CDATA[zzgl. Versand]]></de>
+            <en><![CDATA[plus shipping]]></en>
+        </locale>
+        <locale name="frontend.shippingInfo.popup.content" html="true">
+            <de><![CDATA[<h2>Kostenloser Versand in Deutschland</h2>
+                        <p>Bei uns sind alle Bestellungen innerhalb Deutschlands versandkostenfrei! Wir versenden innerhalb Deutschlands per <strong>DHL Warenpost</strong> oder <strong>Deutsche Post Warenpost</strong>.</p>
+
+                        <h2>Lieferzeit</h2>
+                        <p>Die Artikel werden innerhalb von 1 bis 2 Werktagen nach Eingang der Bestellung versendet. Wir versenden nicht an Samstagen sowie Sonn- und Feiertagen.</p>
+                        <p>Die Lieferzeit beträgt, sofern nicht beim Angebot anders angegeben, innerhalb Deutschlands 3-6 Werktage. Sie erhalten zusätzlich eine E-Mail, wenn Ihre Ware unser Lager verlässt. Diese enthält eine Trackingnummer, mit der Sie jederzeit Ihre Sendung online verfolgen können.</p>
+
+                        <p class="content-message-information">Bitte beachte: Die Lieferzeiten erlauben lediglich eine geschätzte Ankunftszeit nach dem Versand!</p>]]>
+            </de>
+            <en><![CDATA[<h2>Free Shipping in Germany</h2>
+                        <p>With us, all orders within Germany are free of shipping costs! We ship within Germany by <strong>DHL Warenpost</strong> or <strong>Deutsche Post Warenpost</strong>.</p>
+
+                        <h2>Delivery time</h2>.
+                        <p>Items will be shipped within 1 to 2 business days after we receive your order. We do not ship on Saturdays and Sundays and holidays.</p>
+                        <p>The delivery time is 3-6 business days within Germany, unless otherwise stated in the offer. You will also receive an email when your goods leave our warehouse. This contains a tracking number, with which you can track your shipment online at any time.</p>.
+
+                        <p class="content-message-information">Please note: The delivery times only allow an estimated time of arrival after shipping!</p>]]>
+            </en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
@@ -385,6 +411,31 @@
                 <![CDATA[Legt den Standardwert für das "Lieferzeit"-Feld fest, wenn ein Produkt neu angelegt wird bzw. kein Feldwert gesetzt ist.]]></de>
             <en>
                 <![CDATA[Determines the default value for the "Delivery time" field for newly created products or if no field value is set.]]></en>
+        </locale>
+
+        <locale name="shipping.settings.showShippingInfoAfterPrice.enable">
+            <de><![CDATA[Versandinformation aktivieren]]></de>
+            <en><![CDATA[Active shipping information]]></en>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.enable.description">
+            <de><![CDATA[Wenn aktiviert, wird hinter jedem Preis ein kleiner Text angezeigt, den man klicken kann um mehr Informationen zu erhalten.]]></de>
+            <en><![CDATA[If enabled, a small text is displayed behind each price, which you can click to get more information.]]></en>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.button">
+            <de><![CDATA[Button Text]]></de>
+            <en><![CDATA[Button text]]></en>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.button.desc">
+            <de><![CDATA[Dieser Text erscheint hinter dem Preis]]></de>
+            <en><![CDATA[This text is appears after price]]></en>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.popup">
+            <de><![CDATA[Popup Inhalt]]></de>
+            <en><![CDATA[Popup content]]></en>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.popup.desc">
+            <de><![CDATA[Popup für mehr Informationen. Der Text kann kurz sein aber es sind auch längere Texte mit Tabellen möglich.]]></de>
+            <en><![CDATA[Popup for more information. The text can be short but longer texts with tables are also possible.]]></en>
         </locale>
 
         <locale name="shipping.order.title">

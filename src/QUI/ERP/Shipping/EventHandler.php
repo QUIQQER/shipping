@@ -9,6 +9,7 @@ namespace QUI\ERP\Shipping;
 use QUI;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
+use QUI\Template;
 use \Quiqqer\Engine\Collector;
 
 /**
@@ -425,5 +426,21 @@ class EventHandler
         if ($fieldsCreated) {
             QUI\Translator::publish('quiqqer/products');
         }
+    }
+
+    public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price)
+    {
+        $Config             = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $enableShippingInfo = !!$Config->getValue('shipping', 'showShippingInfoAfterPrice');
+
+        if (!$enableShippingInfo || !$Price->getAttribute('withVatText')) {
+            return;
+        }
+
+        $Engine = QUI::getTemplateManager()->getEngine();
+        $html   = $Engine->fetch(dirname(__FILE__).'/templates/shippingInformation.html');
+
+        $Collector->append($html);
+
     }
 }

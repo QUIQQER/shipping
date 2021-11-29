@@ -28,4 +28,8 @@
     <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
     />
+
+    <event on="onQuiqqer::products::price::end"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerProductsPriceEnd"
+    />
 </events>

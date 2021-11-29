@@ -20,6 +20,10 @@
                     <defaultvalue>
                         <![CDATA[{"from":"","to":"","unit":"second","option":"immediately_available"}]]></defaultvalue>
                 </conf>
+                <conf name="showShippingInfoAfterPrice">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
 
             <section name="no_rules">
@@ -94,6 +98,46 @@
                             <description>
                                 <locale group="quiqqer/shipping"
                                         var="shipping.settings.deliveryTimeDefault.description"/>
+                            </description>
+                        </input>
+
+                        <input type="checkbox" conf="shipping.showShippingInfoAfterPrice">
+                            <text>
+                                <locale group="quiqqer/shipping" var="shipping.settings.showShippingInfoAfterPrice.enable"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping" var="shipping.settings.showShippingInfoAfterPrice.enable.description"/>
+                            </description>
+                        </input>
+
+                        <input type="hidden"
+                               data-qui="package/quiqqer/translator/bin/controls/Update"
+                               data-qui-options-group="quiqqer/shipping"
+                               data-qui-options-var="frontend.shippingInfo.button.text"
+                        >
+                            <text>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.showShippingInfoAfterPrice.button"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.showShippingInfoAfterPrice.button.desc"/>
+                            </description>
+                        </input>
+
+                        <input type="hidden"
+                               data-qui="package/quiqqer/translator/bin/controls/Update"
+                               data-qui-options-group="quiqqer/shipping"
+                               data-qui-options-var="frontend.shippingInfo.popup.content"
+                               data-qui-options-html="1"
+                        >
+                            <text>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.showShippingInfoAfterPrice.popup"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.showShippingInfoAfterPrice.popup.desc"/>
                             </description>
                         </input>
                     </settings>
