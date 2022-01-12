@@ -269,6 +269,10 @@
             <de><![CDATA[zzgl. Versand]]></de>
             <en><![CDATA[plus shipping]]></en>
         </locale>
+        <locale name="frontend.shippingInfo.popup.content">
+            <de><![CDATA[Versandinformationen]]></de>
+            <en><![CDATA[Shipping information]]></en>
+        </locale>
         <locale name="frontend.shippingInfo.popup.content" html="true">
             <de><![CDATA[<h2>Kostenloser Versand in Deutschland</h2>
                         <p>Bei uns sind alle Bestellungen innerhalb Deutschlands versandkostenfrei! Wir versenden innerhalb Deutschlands per <strong>DHL Warenpost</strong> oder <strong>Deutsche Post Warenpost</strong>.</p>
