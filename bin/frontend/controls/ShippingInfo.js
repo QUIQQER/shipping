@@ -48,16 +48,16 @@ define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
 
             require([
                 'qui/controls/windows/Popup'
-            ], function (QUIConfirm) {
-
-                new QUIConfirm({
+            ], function (QUIPopup) {
+                new QUIPopup({
                     'maxWidth' : 700,
                     'maxHeight': 600,
-                    'icon'     : false,
-                    'title'    : false,
+                    'icon'     : 'fa fa-truck',
+                    'title'    : QUILocale.get('quiqqer/shipping', 'frontend.shippingInfo.popup.title'),
                     'content'  : QUILocale.get('quiqqer/shipping', 'frontend.shippingInfo.popup.content'),
                     draggable  : false,
-                    resizable  : false
+                    resizable  : false,
+                    buttons    : false
                 }).open();
             });
         }
