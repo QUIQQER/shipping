@@ -515,8 +515,8 @@
 
     <groups name="quiqqer/shipping" datatype="js">
         <locale name="shipping.type">
-            <de><![CDATA[Versand Art]]></de>
-            <en><![CDATA[Shipping type]]></en>
+            <de><![CDATA[Versandmethode]]></de>
+            <en><![CDATA[Shipping method]]></en>
         </locale>
         <locale name="shipping.edit.template.general">
             <de><![CDATA[Allgemein]]></de>
@@ -531,7 +531,7 @@
             <en><![CDATA[ID]]></en>
         </locale>
         <locale name="shipping.edit.template.type">
-            <de><![CDATA[Versandart]]></de>
+            <de><![CDATA[Versandmethode]]></de>
             <en><![CDATA[Shipping method]]></en>
         </locale>
         <locale name="shipping.edit.template.unitTitle">
@@ -736,8 +736,8 @@
         </locale>
 
         <locale name="window.create.shippingType">
-            <de><![CDATA[Welche Versandmethode soll Ihre Zahlungsart verwenden?]]></de>
-            <en><![CDATA[What shipping type should your Shipping type use?]]></en>
+            <de><![CDATA[Welche Versandmethode soll Ihre Versandart verwenden?]]></de>
+            <en><![CDATA[What shipping method should your shipping type use?]]></en>
         </locale>
 
         <locale name="window.shipping.rules.title">
