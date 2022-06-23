@@ -21,6 +21,9 @@
     <event on="onTemplateGetHeader"
            fire="\QUI\ERP\Shipping\EventHandler::onTemplateGetHeader"
     />
+    <event on="onHeaderLoaded"
+           fire="\QUI\ERP\Shipping\EventHandler::onTemplateGetHeader"
+    />
 
     <event on="onQuiqqer::frontend-users::user-address-top"
            fire="\QUI\ERP\Shipping\EventHandler::onFrontendUsersAddressTop"
