@@ -8,13 +8,18 @@ namespace QUI\ERP\Shipping\Types;
 
 use QUI;
 use QUI\CRUD\Factory;
-use QUI\Translator;
-use QUI\Permissions\Permission;
-
 use QUI\ERP\Shipping\Api;
 use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 use QUI\ERP\Shipping\Rules\ShippingRule;
+use QUI\Permissions\Permission;
+use QUI\Translator;
+
+use function array_keys;
+use function count;
+use function json_encode;
+use function key;
+use function max;
 
 /**
  * Class ShippingEntry
@@ -76,8 +81,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $lg = 'quiqqer/shipping';
         $id = $this->getId();
 
-        $attributes = $this->getAttributes();
-        $Locale = QUI::getLocale();
+        $attributes  = $this->getAttributes();
+        $Locale      = QUI::getLocale();
         $currentLang = $Locale->getCurrent();
 
         $availableLanguages = QUI\Translator::getAvailableLanguages();
@@ -102,8 +107,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             );
 
             if ($language === $currentLang) {
-                $attributes['currentTitle'] = $attributes['title'][$language];
-                $attributes['currentDescription'] = $attributes['description'][$language];
+                $attributes['currentTitle']        = $attributes['title'][$language];
+                $attributes['currentDescription']  = $attributes['description'][$language];
                 $attributes['currentWorkingTitle'] = $attributes['workingTitle'][$language];
             }
         }
@@ -118,11 +123,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         // icon
-        $attributes['icon'] = '';
+        $attributes['icon']      = '';
         $attributes['icon_path'] = '';
 
         try {
-            $attributes['icon'] = $this->getIcon();
+            $attributes['icon']      = $this->getIcon();
             $attributes['icon_path'] = $this->getAttribute('icon');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
@@ -140,7 +145,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function toJSON()
     {
-        return \json_encode($this->toArray());
+        return json_encode($this->toArray());
     }
 
     /**
@@ -183,17 +188,17 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     {
         $PriceFactor = $this->toPriceFactor();
 
-        $Order = $this->Order;
+        $Order   = $this->Order;
         $isNetto = false;
 
         /* @var $Order QUI\ERP\Order\Order */
         if ($Order) {
             $Customer = $Order->getCustomer();
-            $isNetto = $Customer->isNetto();
+            $isNetto  = $Customer->isNetto();
         }
 
         // display is incl vat
-        $vat = $PriceFactor->getVat();
+        $vat   = $PriceFactor->getVat();
         $price = $this->getPrice();
 
         if (!$isNetto && $vat) {
@@ -222,7 +227,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         foreach ($rules as $Rule) {
             $discount = $Rule->getAttribute('discount');
-            $type = $Rule->getDiscountType();
+            $type     = $Rule->getDiscountType();
 
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_ABS) {
                 $price = $price + $discount;
@@ -232,15 +237,15 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $Order) {
                 try {
                     /* @var $Order QUI\ERP\Order\Order */
-                    $Order = $this->Order;
+                    $Order       = $this->Order;
                     $Calculation = $Order->getPriceCalculation();
-                    $nettoSum = $Calculation->getNettoSum()->get();
+                    $nettoSum    = $Calculation->getNettoSum()->get();
 
                     if (!$nettoSum) {
                         continue;
                     }
 
-                    $pc = \round($nettoSum * ($discount / 100));
+                    $pc    = \round($nettoSum * ($discount / 100));
                     $price = $price + $pc;
 
                     continue;
@@ -249,7 +254,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 }
             }
 
-            $pc = \round($price * ($discount / 100));
+            $pc    = \round($price * ($discount / 100));
             $price = $price + $pc;
         }
 
@@ -513,7 +518,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 continue;
             }
 
-            $data[$language] = $title[$language];
+            $data[$language]           = $title[$language];
             $data[$language . '_edit'] = $title[$language];
         }
 
@@ -556,7 +561,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             $shippingRules[] = $Rule->getId();
         }
 
-        $this->setAttribute('shipping_rules', \json_encode($shippingRules));
+        $this->setAttribute('shipping_rules', json_encode($shippingRules));
     }
 
     /**
@@ -586,7 +591,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             return [];
         }
 
-        $debugging = QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled();
+        $debugging    = QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled();
         $debuggingLog = [];
 
         // get rules
@@ -777,26 +782,26 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         /* @var $Article QUI\ERP\Accounting\Article */
 
         $Articles = $Order->getArticles();
-        $vats = [];
+        $vats     = [];
 
         foreach ($Articles as $Article) {
-            $vat = $Article->getVat();
+            $vat   = $Article->getVat();
             $price = $Article->getPrice()->getValue();
 
-            if (!isset($vats[$vat])) {
-                $vats[$vat] = 0;
+            if (!isset($vats[(string)$vat])) {
+                $vats[(string)$vat] = 0;
             }
 
-            $vats[$vat] = $vats[$vat] + $price;
+            $vats[(string)$vat] = $vats[(string)$vat] + $price;
         }
 
         // look at vat, which vat should be used
-        if (\count($vats) === 1) {
-            $PriceFactor->setVat(\key($vats));
+        if (count($vats) === 1) {
+            $PriceFactor->setVat(key($vats));
         } else {
             // get max, use the max VAT if multiple exists
             // @todo implement VAT setting for shipping
-            $maxVat = \max(\array_keys($vats));
+            $maxVat = max(array_keys($vats));
             $PriceFactor->setVat($maxVat);
         }
 
