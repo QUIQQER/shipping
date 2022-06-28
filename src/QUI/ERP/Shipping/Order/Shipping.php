@@ -9,6 +9,8 @@ namespace QUI\ERP\Shipping\Order;
 use QUI;
 use QUI\ERP\Shipping\Shipping as ShippingHandler;
 
+use function count;
+
 /**
  * Class Shipping
  *
@@ -25,7 +27,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(\dirname(__FILE__).'/Shipping.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Shipping.css');
     }
 
     /**
@@ -76,7 +78,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
                 $DebugShippingEntry->setOrder($Order);
 
                 QUI\ERP\Shipping\Debug::enable();
-                QUI\ERP\Shipping\Debug::addLog('# '.$DebugShippingEntry->getTitle());
+                QUI\ERP\Shipping\Debug::addLog('# ' . $DebugShippingEntry->getTitle());
 
                 if ($DebugShippingEntry->canUsedBy($User, $Order)) {
                     $DebugShippingEntry->isValid();
@@ -92,7 +94,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
             QUI\ERP\Shipping\Debug::disable();
 
-            $Logger->info("\n\n".\implode("\n", $debugStack));
+            $Logger->info("\n\n" . \implode("\n", $debugStack));
             $Engine->assign('debug', \implode("\n", $debugStack));
         }
 
@@ -128,7 +130,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'shippingList'     => $shippingList
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/Shipping.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/Shipping.html');
     }
 
     /**
@@ -157,7 +159,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         // if shipping are selectable and no shipping is selected
         $shippingList = $this->getValidShipping();
 
-        if ($Shipping === null && \count($shippingList) === 1) {
+        if ($Shipping === null && count($shippingList) === 1) {
             try {
                 $Order->setShipping($shippingList[0]);
                 $Order->save();

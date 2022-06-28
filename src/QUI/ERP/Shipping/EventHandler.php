@@ -7,10 +7,14 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
-use QUI\ERP\Products\Handler\Fields as ProductFields;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
-use QUI\Template;
-use \Quiqqer\Engine\Collector;
+use QUI\ERP\Products\Handler\Fields as ProductFields;
+use Quiqqer\Engine\Collector;
+
+use function array_merge;
+use function explode;
+use function json_decode;
+use function method_exists;
 
 /**
  * Class EventHandler
@@ -137,7 +141,7 @@ class EventHandler
 
         $Order->getArticles()->calc();
 
-        if (\method_exists($Order, 'save')) {
+        if (method_exists($Order, 'save')) {
             $Order->save();
         }
     }
@@ -168,7 +172,7 @@ class EventHandler
             return;
         }
 
-        $payments = \explode(',', $payments);
+        $payments = explode(',', $payments);
         $Payments = QUI\ERP\Accounting\Payments\Payments::getInstance();
 
         foreach ($payments as $paymentId) {
@@ -211,6 +215,42 @@ class EventHandler
         $Collector->append($Control->create());
     }
 
+    public static function onQuiqqerOrderOrderProcessCheckoutOutputBefore(
+        OrderCheckoutStepControl $Checkout
+    ) {
+        if (Shipping::getInstance()->shippingDisabled()) {
+            return;
+        }
+
+        $Order = $Checkout->getOrder();
+
+        if (!$Order) {
+            return;
+        }
+
+        if ($Order->hasDeliveryAddress()) {
+            return;
+        }
+
+        $SessionUser = QUI::getUserBySession();
+        $Customer    = $Order->getCustomer();
+
+        if ($SessionUser->getId() !== $Customer->getId()) {
+            return;
+        }
+
+        $addressId = $SessionUser->getAttribute('quiqqer.delivery.address');
+
+        if ($addressId) {
+            try {
+                $DeliveryAddress = $Customer->getAddress($addressId);
+                $Order->setDeliveryAddress($DeliveryAddress);
+                $Order->save(QUI::getUsers()->getSystemUser());
+            } catch (\Exception $Exception) {
+            }
+        }
+    }
+
     /**
      * quiqqer/order: onQuiqqerOrderOrderProcessCheckoutOutput
      *
@@ -240,13 +280,13 @@ class EventHandler
 
             if (!empty($deliveryAddressId)) {
                 try {
-                    $DeliveryAddress   = $Customer->getAddress($deliveryAddressId);
-                    $ErpDeliveryAddres = new QUI\ERP\Address(
-                        \json_decode($DeliveryAddress->toJSON(), true),
+                    $DeliveryAddress    = $Customer->getAddress($deliveryAddressId);
+                    $ErpDeliveryAddress = new QUI\ERP\Address(
+                        json_decode($DeliveryAddress->toJSON(), true),
                         $Order->getCustomer()
                     );
 
-                    $Order->setDeliveryAddress($ErpDeliveryAddres);
+                    $Order->setDeliveryAddress($ErpDeliveryAddress);
                     $Order->save(QUI::getUsers()->getSystemUser());
                 } catch (\Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
@@ -292,7 +332,7 @@ class EventHandler
         }
 
         $ErpAddress = new QUI\ERP\Address(
-            \array_merge($Address->getAttributes(), ['id' => $Address->getId()])
+            array_merge($Address->getAttributes(), ['id' => $Address->getId()])
         );
 
         $Order->setDeliveryAddress($ErpAddress);
@@ -345,10 +385,13 @@ class EventHandler
 
         try {
             $Address = $User->getAddress($address);
-
             $User->setAttribute('quiqqer.delivery.address', $Address->getId());
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
+        }
+
+        if (isset($Address)) {
+            QUI\ERP\Utils\User::setUserCurrentAddress($User, $Address);
         }
     }
 
@@ -445,7 +488,7 @@ class EventHandler
         }
 
         $Engine = QUI::getTemplateManager()->getEngine();
-        $html   = $Engine->fetch(dirname(__FILE__).'/templates/shippingInformation.html');
+        $html   = $Engine->fetch(dirname(__FILE__) . '/templates/shippingInformation.html');
 
         $Collector->append($html);
     }
