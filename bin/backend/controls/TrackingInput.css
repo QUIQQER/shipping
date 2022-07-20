@@ -1,0 +1,17 @@
+.quiqqer-shipping-trackingInput {
+
+}
+
+.quiqqer-shipping-trackingInput-input {
+    border: none;
+    width: calc(100% - 100px);
+}
+
+.quiqqer-shipping-trackingInput-input:hover {
+    border: none;
+}
+
+.quiqqer-shipping-trackingInput-contextMenu .qui-contextitem-icon,
+.quiqqer-shipping-trackingInput .qui-select .icon {
+    background-size: 80% auto !important;
+}
