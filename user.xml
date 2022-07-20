@@ -2,5 +2,6 @@
 <user>
     <attributes>
         <attribute>quiqqer.delivery.address</attribute>
+        <attribute>quiqqer.erp.standard.shippingType</attribute>
     </attributes>
 </user>
