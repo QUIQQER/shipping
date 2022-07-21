@@ -6,6 +6,12 @@
     <event on="onPackageSetup"
            fire="\QUI\ERP\Shipping\EventHandler::onPackageSetup"
     />
+    <event on="onPackageSetup"
+           fire="\QUI\ERP\Shipping\Tracking\Tracking::onPackageInstall"
+    />
+    <event on="onPackageInstall"
+           fire="\QUI\ERP\Shipping\Tracking\Tracking::onPackageInstall"
+    />
     <event on="onQuiqqerPaymentCanUsedInOrder"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerPaymentCanUsedInOrder"
     />

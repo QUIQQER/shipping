@@ -422,8 +422,10 @@
             <en><![CDATA[Active shipping information]]></en>
         </locale>
         <locale name="shipping.settings.showShippingInfoAfterPrice.enable.description">
-            <de><![CDATA[Wenn aktiviert, wird hinter jedem Preis ein kleiner Text angezeigt, den man klicken kann um mehr Informationen zu erhalten.]]></de>
-            <en><![CDATA[If enabled, a small text is displayed behind each price, which you can click to get more information.]]></en>
+            <de>
+                <![CDATA[Wenn aktiviert, wird hinter jedem Preis ein kleiner Text angezeigt, den man klicken kann um mehr Informationen zu erhalten.]]></de>
+            <en>
+                <![CDATA[If enabled, a small text is displayed behind each price, which you can click to get more information.]]></en>
         </locale>
         <locale name="shipping.settings.showShippingInfoAfterPrice.button">
             <de><![CDATA[Button Text]]></de>
@@ -438,8 +440,10 @@
             <en><![CDATA[Popup content]]></en>
         </locale>
         <locale name="shipping.settings.showShippingInfoAfterPrice.popup.desc">
-            <de><![CDATA[Popup für mehr Informationen. Der Text kann kurz sein aber es sind auch längere Texte mit Tabellen möglich.]]></de>
-            <en><![CDATA[Popup for more information. The text can be short but longer texts with tables are also possible.]]></en>
+            <de>
+                <![CDATA[Popup für mehr Informationen. Der Text kann kurz sein aber es sind auch längere Texte mit Tabellen möglich.]]></de>
+            <en>
+                <![CDATA[Popup for more information. The text can be short but longer texts with tables are also possible.]]></en>
         </locale>
 
         <locale name="shipping.order.title">
@@ -490,11 +494,13 @@
                 <p>Hallo [customerName],</p>
                 <p>der Versandstatus Ihrer Bestellung <b>[orderNo]</b> vom <b>[orderDate]</b> hat sich geändert.
                 Die Bestellung ist nun <b>[shippingStatus]</b>.
+                [trackingInfo]
             ]]></de>
             <en><![CDATA[
                 <p>Hello [customerName],</p>
                 <p>the shipping status of your order <b>[orderNo]</b> from <b>[orderDate]</b> changed.
                 The order is now <b>[shippingStatus]</b>.
+                [trackingInfo]
             ]]></en>
         </locale>
 
