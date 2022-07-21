@@ -10,6 +10,7 @@ use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function json_decode;
+use function strtolower;
 
 use const ETC_DIR;
 use const JSON_PRETTY_PRINT;
@@ -72,7 +73,7 @@ class Tracking
             'type'    => 'dhl',
             'title'   => 'DHL',
             'image'   => 'quiqqer/shipping/bin/images/tracking/dhl.svg',
-            'url '    => 'https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=',
+            'url'     => 'https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=',
             'country' => [
                 'en' => 'https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=',
                 'de' => 'https://www.dhl.com/de-de/home/tracking/tracking-parcel.html?submit=1&tracking-id='
@@ -140,10 +141,11 @@ class Tracking
 
         if ($Country) {
             $country = $Country->getCode();
+            $country = strtolower($country);
         }
 
         foreach ($carriers as $entry) {
-            if ($entry['type'] !== $trackingId) {
+            if ($entry['type'] !== $carrier) {
                 continue;
             }
 
