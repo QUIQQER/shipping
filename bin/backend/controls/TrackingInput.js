@@ -95,9 +95,14 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
             if (typeof value === 'string') {
                 value = JSON.decode(value);
             }
-            
-            this.$TrackingType.setValue(value.type);
-            this.$Input.value = value.number;
+
+            if (value && typeof this.$TrackingType.setValue === 'function') {
+                this.$TrackingType.setValue(value.type);
+            }
+
+            if (value) {
+                this.$Input.value = value.number;
+            }
         }
     });
 });
