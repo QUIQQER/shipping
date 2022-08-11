@@ -27,6 +27,8 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
         initialize: function (options) {
             this.parent(options);
 
+            this.$value = null;
+
             this.addEvents({
                 onImport: this.$onImport
             });
@@ -65,6 +67,10 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
                         URL_OPT_DIR + list[i].image
                     );
                 }
+
+                if (this.$value) {
+                    this.setValue(this.$value);
+                }
             });
         },
 
@@ -95,6 +101,8 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
             if (typeof value === 'string') {
                 value = JSON.decode(value);
             }
+
+            this.$value = value;
 
             if (value && typeof this.$TrackingType.setValue === 'function') {
                 this.$TrackingType.setValue(value.type);
