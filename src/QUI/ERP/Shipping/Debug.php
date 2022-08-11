@@ -5,6 +5,8 @@ namespace QUI\ERP\Shipping;
 use QUI;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 
+use function class_exists;
+
 /**
  * Class Debug
  */
@@ -131,7 +133,7 @@ class Debug
                 $debugMessage .= '❌ ';
             }
 
-            $debugMessage .= $entry['id'].' - '.$entry['title'].' -> '.$entry['reason'];
+            $debugMessage .= $entry['id'] . ' - ' . $entry['title'] . ' -> ' . $entry['reason'];
         }
 
         try {
@@ -172,7 +174,11 @@ class Debug
         }
 
         $Logger = new \Monolog\Logger('quiqqer-shipping');
-        $Logger->pushHandler(new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG));
+
+        if (class_exists('Monolog\Handler\BrowserConsoleHandler')) {
+            $Logger->pushHandler(new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG));
+        }
+
         $Logger->pushHandler(new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG));
         $Logger->pushHandler(new \Monolog\Handler\ChromePHPHandler(\Monolog\Logger::DEBUG));
 
@@ -190,8 +196,12 @@ class Debug
             return self::$FormatLogger;
         }
 
-        $Logger  = new \Monolog\Logger('quiqqer-shipping');
-        $Console = new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG);
+        $Logger = new \Monolog\Logger('quiqqer-shipping');
+
+        if (class_exists('Monolog\Handler\BrowserConsoleHandler')) {
+            $Console = new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG);
+        }
+
         $FireFox = new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG);
         $Chrome  = new \Monolog\Handler\ChromePHPHandler(\Monolog\Logger::DEBUG);
 
@@ -203,12 +213,15 @@ class Debug
             true  // ignoreEmptyContextAndExtra option, default false
         );
 
-        $Console->setFormatter($Formatter);
-        $FireFox->setFormatter($Formatter);
-        $Chrome->setFormatter($Formatter);
+        if (isset($Console)) {
+            $Console->setFormatter($Formatter);
+            $Logger->pushHandler($Console);
+        }
 
-        $Logger->pushHandler($Console);
+        $FireFox->setFormatter($Formatter);
         $Logger->pushHandler($FireFox);
+
+        $Chrome->setFormatter($Formatter);
         $Logger->pushHandler($Chrome);
 
         self::$FormatLogger = $Logger;
