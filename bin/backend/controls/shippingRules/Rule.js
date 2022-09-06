@@ -46,11 +46,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$DataTitle        = null;
+            this.$DataTitle = null;
             this.$DataWorkingTitle = null;
-            this.$UserGroups       = null;
-            this.$Areas            = null;
-            this.$Articles         = null;
+            this.$UserGroups = null;
+            this.$Areas = null;
+            this.$Articles = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -98,6 +98,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 usageAssignmentUser    : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
                 usageAssignmentProduct : QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
                 usageAssignmentArea    : QUILocale.get(lg, 'shipping.edit.template.assignment.areas'),
+                usageAssignmentCategory: QUILocale.get(lg, 'shipping.edit.template.assignment.category'),
 
                 productHeader                 : QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
                 usageAssignmentProductOnly    : QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
@@ -144,7 +145,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 // defining units
                 for (i = 0, len = unitFields.length; i < len; i++) {
                     field = unitFields[i];
-                    html  = Mustache.render(templateUnit, {
+                    html = Mustache.render(templateUnit, {
                         andText: QUILocale.get(lg, 'shipping.edit.template.and'),
                         options: getOptions(field),
                         id     : field.id,
@@ -162,10 +163,10 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 return ControlUtils.parse(self.getElm());
             }).then(function () {
                 var CalcButton = self.getElm().getElement('[name="calc"]');
-                var Discount   = self.getElm().getElement('[name="discount"]');
+                var Discount = self.getElm().getElement('[name="discount"]');
 
                 CalcButton.disabled = false;
-                CalcButton.title    = QUILocale.get('quiqqer/erp', 'control.window.price.brutto.title');
+                CalcButton.title = QUILocale.get('quiqqer/erp', 'control.window.price.brutto.title');
 
                 CalcButton.addEvent('click', function () {
                     var Fa = CalcButton.getElement('.fa');
@@ -208,7 +209,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 return QUI.parse(self.getElm());
             }).then(function () {
                 // locale for title and working title
-                self.$DataTitle        = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
+                self.$DataTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
                 self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-workingTitle'));
 
                 self.$UserGroups = QUI.Controls.getById(
@@ -262,19 +263,19 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
                             // unit terms
                             var i, len, term, Row;
-                            var terms     = rule.unit_terms;
+                            var terms = rule.unit_terms;
                             var UnitTable = self.getElm().getElement('.unit-table');
 
                             for (i = 0, len = terms.length; i < len; i++) {
                                 term = terms[i];
-                                Row  = UnitTable.getElement('[data-id="' + term.id + '"]');
+                                Row = UnitTable.getElement('[data-id="' + term.id + '"]');
 
                                 if (!Row) {
                                     continue;
                                 }
 
-                                Row.getElement('[name="unit"]').value  = term.unit;
-                                Row.getElement('[name="term"]').value  = term.term;
+                                Row.getElement('[name="unit"]').value = term.unit;
+                                Row.getElement('[name="term"]').value = term.term;
                                 Row.getElement('[name="value"]').value = term.value;
 
                                 if (typeof term.unit2 !== 'undefined') {
@@ -321,9 +322,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
             var formData = FormUtils.getFormData(this.getElm().getElement('form'));
 
-            formData.title        = this.$DataTitle.getData();
+            formData.title = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
-            formData.active       = parseInt(formData.status);
+            formData.active = parseInt(formData.status);
 
             var i, len, Unit, Term, Term2, Value, Value2, Label;
 
@@ -331,12 +332,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             var UnitRows = this.getElm().getElements('.unit-table td');
 
             for (i = 0, len = UnitRows.length; i < len; i++) {
-                Unit   = UnitRows[i].getElement('[name="unit"]');
-                Term   = UnitRows[i].getElement('[name="term"]');
-                Term2  = UnitRows[i].getElement('[name="term2"]');
-                Value  = UnitRows[i].getElement('[name="value"]');
+                Unit = UnitRows[i].getElement('[name="unit"]');
+                Term = UnitRows[i].getElement('[name="term"]');
+                Term2 = UnitRows[i].getElement('[name="term2"]');
+                Value = UnitRows[i].getElement('[name="value"]');
                 Value2 = UnitRows[i].getElement('[name="value2"]');
-                Label  = UnitRows[i].getElement('label');
+                Label = UnitRows[i].getElement('label');
 
                 unitData.push({
                     id    : parseInt(Label.get('data-id')),
