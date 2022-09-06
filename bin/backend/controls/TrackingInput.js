@@ -110,6 +110,7 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
 
             if (value) {
                 this.$Input.value = value.number;
+                this.$onChange();
             }
         }
     });
