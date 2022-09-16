@@ -20,6 +20,8 @@ use function count;
 use function json_encode;
 use function key;
 use function max;
+use function method_exists;
+use function round;
 
 /**
  * Class ShippingEntry
@@ -245,7 +247,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                         continue;
                     }
 
-                    $pc    = \round($nettoSum * ($discount / 100));
+                    $pc    = round($nettoSum * ($discount / 100));
                     $price = $price + $pc;
 
                     continue;
@@ -254,7 +256,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 }
             }
 
-            $pc    = \round($price * ($discount / 100));
+            $pc    = round($price * ($discount / 100));
             $price = $price + $pc;
         }
 
@@ -284,7 +286,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         try {
             $ShippingType = $this->getShippingType();
 
-            if (\method_exists($ShippingType, 'canUsedBy')) {
+            if (method_exists($ShippingType, 'canUsedBy')) {
                 return $ShippingType->canUsedBy($User, $this, $Order);
             }
         } catch (QUI\Exception $Exception) {
@@ -312,7 +314,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         try {
             $ShippingType = $this->getShippingType();
 
-            if (\method_exists($ShippingType, 'canUsedInOrder')) {
+            if (method_exists($ShippingType, 'canUsedInOrder')) {
                 return $ShippingType->canUsedInOrder($Order, $this);
             }
         } catch (QUI\Exception $Exception) {

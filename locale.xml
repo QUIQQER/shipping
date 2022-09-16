@@ -918,6 +918,15 @@
             to send a notification.]]></en>
         </locale>
 
+        <locale name="add.shipping.priceFactor">
+            <de><![CDATA[Versandart hinzufügen]]></de>
+            <en><![CDATA[Add shipping type]]></en>
+        </locale>
+        <locale name="shipping.window.title">
+            <de><![CDATA[Versandarten]]></de>
+            <en><![CDATA[Shipping type]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/order">

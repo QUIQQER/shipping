@@ -105,6 +105,14 @@ class EventHandler
     }
 
     /**
+     * event : on admin load footer
+     */
+    public static function onAdminLoadFooter()
+    {
+        echo '<script src="' . URL_OPT_DIR . 'quiqqer/shipping/bin/backend/load.js"></script>';
+    }
+
+    /**
      * event - on price factor init
      *
      * @param $Basket
