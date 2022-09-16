@@ -1,5 +1,3 @@
-console.log('load shipping');
-
 require(['qui/QUI'], function (QUI) {
     "use strict";
 
@@ -39,7 +37,7 @@ require(['qui/QUI'], function (QUI) {
                                 events: {
                                     onSubmit: function (Instance, value) {
                                         PriceFactorWindow.Loader.show();
-                                        
+
                                         const currency = ArticleList.getAttribute('currency');
                                         const vat = 19;
                                         let shippingData;

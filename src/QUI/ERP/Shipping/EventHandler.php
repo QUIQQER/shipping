@@ -500,4 +500,31 @@ class EventHandler
 
         $Collector->append($html);
     }
+
+    /**
+     * @param \QUI\ERP\Order\AbstractOrder $Order
+     * @return void
+     *
+     * @throws \QUI\Exception
+     */
+    public static function onQuiqqerOrderShippingOnEmpty(QUI\ERP\Order\AbstractOrder $Order)
+    {
+        if (!QUI::isBackend()) {
+            return;
+        }
+
+        $Config  = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $default = $Config->getValue('shipping', 'defaultShipping');
+        $add     = $Config->getValue('shipping', 'addDefaultShipping');
+
+        if (empty($add)) {
+            return;
+        }
+
+        try {
+            $Shipping = Shipping::getInstance()->getShippingEntry($default);
+            $Order->setShipping($Shipping);
+        } catch (QUI\Exception $Exception) {
+        }
+    }
 }

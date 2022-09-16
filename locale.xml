@@ -293,6 +293,35 @@
                         <p class="content-message-information">Please note: The delivery times only allow an estimated time of arrival after shipping!</p>]]>
             </en>
         </locale>
+
+        <locale name="shipping.defaultShipping.settings.title">
+            <de><![CDATA[Standard Versand]]></de>
+            <en><![CDATA[Default shipping]]></en>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShipping">
+            <de><![CDATA[Standard Versand]]></de>
+            <en><![CDATA[Default shipping]]></en>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShipping.desc">
+            <de><![CDATA[Lege fest welcher Versand als Standard Versand verwendet werden soll.]]></de>
+            <en><![CDATA[Specify which shipping should be used as default shipping.]]></en>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.addDefaultShipping">
+            <de><![CDATA[Standard Versand automatisch hinzufügen]]></de>
+            <en><![CDATA[Add standard shipping automatically]]></en>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.addDefaultShipping.desc">
+            <de><![CDATA[
+            Der Standard Versand wird einer Bestellung hinzugefügt falls diese Bestellung noch keinen Versand hat.
+            Diese Einstellung hat nur Auswirkung im Backend und nicht auf Frontend Aktionen.
+            Wenn ein Nutzer eine Bestellung ausführt, wird dieser Versand nicht beachtet.
+            ]]></de>
+            <en><![CDATA[
+            The default shipping will be added to an order if this order has no shipping yet.
+            This setting has effect only in backend and not on frontend actions.
+            When a user executes an order, this shipping is ignored.
+            ]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">

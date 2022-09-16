@@ -24,6 +24,14 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>0</defaultvalue>
                 </conf>
+
+                <conf name="defaultShipping">
+                    <type><![CDATA[integer]]></type>
+                </conf>
+                <conf name="addDefaultShipping">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
 
             <section name="no_rules">
@@ -103,10 +111,12 @@
 
                         <input type="checkbox" conf="shipping.showShippingInfoAfterPrice">
                             <text>
-                                <locale group="quiqqer/shipping" var="shipping.settings.showShippingInfoAfterPrice.enable"/>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.showShippingInfoAfterPrice.enable"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/shipping" var="shipping.settings.showShippingInfoAfterPrice.enable.description"/>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.settings.showShippingInfoAfterPrice.enable.description"/>
                             </description>
                         </input>
 
@@ -141,6 +151,39 @@
                             </description>
                         </input>
                     </settings>
+
+                    <settings title="defaultShipping" name="defaultShipping">
+                        <title>
+                            <locale group="quiqqer/shipping" var="shipping.defaultShipping.settings.title"/>
+                        </title>
+
+                        <input conf="shipping.defaultShipping"
+                               data-qui="package/quiqqer/shipping/bin/backend/controls/ShippingSelect"
+                               data-qui-options-multiple="0"
+                               data-qui-options-max="1"
+                        >
+                            <text>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.defaultShipping.settings.defaultShipping"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.defaultShipping.settings.defaultShipping.desc"/>
+                            </description>
+                        </input>
+                        
+                        <input conf="shipping.addDefaultShipping" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.defaultShipping.settings.addDefaultShipping"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/shipping"
+                                        var="shipping.defaultShipping.settings.addDefaultShipping.desc"/>
+                            </description>
+                        </input>
+                    </settings>
+
 
                     <settings title="mail" name="mail">
                         <title>
