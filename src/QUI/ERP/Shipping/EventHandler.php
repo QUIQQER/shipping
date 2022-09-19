@@ -15,6 +15,7 @@ use function array_merge;
 use function explode;
 use function json_decode;
 use function method_exists;
+use function strpos;
 
 /**
  * Class EventHandler
@@ -513,18 +514,44 @@ class EventHandler
             return;
         }
 
-        $Config  = QUI::getPackage('quiqqer/shipping')->getConfig();
-        $default = $Config->getValue('shipping', 'defaultShipping');
-        $add     = $Config->getValue('shipping', 'addDefaultShipping');
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $add    = $Config->getValue('shipping', 'addDefaultShipping');
 
         if (empty($add)) {
             return;
         }
 
         try {
-            $Shipping = Shipping::getInstance()->getShippingEntry($default);
-            $Order->setShipping($Shipping);
+            $Articles     = $Order->getArticles();
+            $PriceFactors = $Articles->getPriceFactors();
+
+            // check if shipping factor exist
+            $shippingFactor = null;
+            $factors        = $PriceFactors->toArray();
+
+            foreach ($factors as $factor) {
+                if (strpos($factor['identifier'], 'shipping-pricefactor-default') !== false) {
+                    $shippingFactor = $factor;
+                    break;
+                }
+            }
+
+            if (!$shippingFactor) {
+                $PriceFactor = Shipping::getInstance()->getDefaultPriceFactor();
+                $Articles->addPriceFactor($PriceFactor);
+            }
         } catch (QUI\Exception $Exception) {
         }
+    }
+
+    /**
+     * @param \QUI\ERP\Order\AbstractOrder $Order
+     *
+     * @return void
+     * @throws \QUI\Exception
+     */
+    public static function onQuiqqerOrderInit(QUI\ERP\Order\AbstractOrder $Order)
+    {
+        self::onQuiqqerOrderShippingOnEmpty($Order);
     }
 }

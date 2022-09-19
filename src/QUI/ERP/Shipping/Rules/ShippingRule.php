@@ -23,6 +23,7 @@ use function array_flip;
 use function array_map;
 use function array_merge;
 use function array_unique;
+use function count;
 use function explode;
 use function floatval;
 use function is_array;
@@ -31,6 +32,7 @@ use function is_string;
 use function json_decode;
 use function json_encode;
 use function round;
+use function strpos;
 use function strtotime;
 use function time;
 use function trim;
@@ -484,7 +486,7 @@ class ShippingRule extends QUI\CRUD\Child
             }
         }
 
-        if ($articleFound && $articleOnly && \count($articleList) !== 1) {
+        if ($articleFound && $articleOnly && count($articleList) !== 1) {
             QUI\ERP\Shipping\Debug::addLog(
                 "{$this->getTitle()} :: is not a single article"
             );
@@ -653,7 +655,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             /* @var $Factor QUI\ERP\Products\Interfaces\PriceFactorInterface */
             foreach ($PriceFactors as $Factor) {
-                if ($Factor->getIdentifier() === 'shipping-pricefactor') {
+                if (strpos($Factor->getIdentifier(), 'shipping-pricefactor') !== false) {
                     $ShippingFactor = $Factor;
                     break;
                 }

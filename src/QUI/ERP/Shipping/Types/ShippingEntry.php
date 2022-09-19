@@ -15,11 +15,7 @@ use QUI\ERP\Shipping\Rules\ShippingRule;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
-use function array_keys;
-use function count;
 use function json_encode;
-use function key;
-use function max;
 use function method_exists;
 use function round;
 
@@ -760,7 +756,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
-            'identifier'  => 'shipping-pricefactor',
+            'identifier'  => 'shipping-pricefactor-' . $this->getId(),
             'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
                 'shipping' => $this->getTitle($Locale)
             ]),
@@ -781,31 +777,9 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             return $PriceFactor;
         }
 
-        /* @var $Article QUI\ERP\Accounting\Article */
-
-        $Articles = $Order->getArticles();
-        $vats     = [];
-
-        foreach ($Articles as $Article) {
-            $vat   = $Article->getVat();
-            $price = $Article->getPrice()->getValue();
-
-            if (!isset($vats[(string)$vat])) {
-                $vats[(string)$vat] = 0;
-            }
-
-            $vats[(string)$vat] = $vats[(string)$vat] + $price;
-        }
-
-        // look at vat, which vat should be used
-        if (count($vats) === 1) {
-            $PriceFactor->setVat(key($vats));
-        } else {
-            // get max, use the max VAT if multiple exists
-            // @todo implement VAT setting for shipping
-            $maxVat = max(array_keys($vats));
-            $PriceFactor->setVat($maxVat);
-        }
+        $PriceFactor->setVat(
+            QUI\ERP\Shipping\Shipping::getInstance()->getOrderVat($Order)
+        );
 
         return $PriceFactor;
     }

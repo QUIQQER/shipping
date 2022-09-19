@@ -8,8 +8,14 @@ namespace QUI\ERP\Shipping;
 
 use QUI;
 use QUI\ERP\Order\AbstractOrder;
-use QUI\ERP\Shipping\Types\Factory;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
+use QUI\ERP\Shipping\Types\Factory;
+
+use function array_keys;
+use function count;
+use function key;
+use function max;
+use function strpos;
 
 /**
  * Shipping
@@ -291,7 +297,7 @@ class Shipping extends QUI\Utils\Singleton
 
         foreach ($PriceFactors as $PriceFactor) {
             /* @var $PriceFactor QUI\ERP\Products\Utils\PriceFactor */
-            if ($PriceFactor->getIdentifier() === 'shipping-pricefactor') {
+            if (strpos($PriceFactor->getIdentifier(), 'shipping-pricefactor') !== false) {
                 return $PriceFactor;
             }
         }
@@ -414,6 +420,88 @@ class Shipping extends QUI\Utils\Singleton
         return $this->getShippingByObject($Order);
     }
 
+    /**
+     * @return \QUI\ERP\Products\Utils\PriceFactor
+     * @throws \QUI\Exception
+     */
+    public function getDefaultPriceFactor(): QUI\ERP\Products\Utils\PriceFactor
+    {
+        $price = QUI::getPackage('quiqqer/shipping')
+            ->getConfig()
+            ->getValue('shipping', 'defaultShippingPrice');
+
+        $price = QUI\ERP\Money\Price::validatePrice($price);
+
+        $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
+            'identifier'  => 'shipping-pricefactor-default',
+            'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.default.pricefactor'),
+            'description' => '',
+            'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
+            'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value'       => $price,
+            'visible'     => true,
+            'currency'    => QUI\ERP\Defaults::getCurrency()->getCode()
+        ]);
+
+        //$PriceFactor->setSum($price);
+        $PriceFactor->setNettoSum($price);
+
+        return $PriceFactor;
+    }
+
+    /**
+     * Returns the var of an order
+     *
+     * @param $Order
+     * @return float|int|mixed|string|null
+     * @throws \QUI\Exception
+     */
+    public function getOrderVat($Order)
+    {
+        /* @var $Article QUI\ERP\Accounting\Article */
+
+        $Articles = $Order->getArticles();
+        $vats     = [];
+
+        foreach ($Articles as $Article) {
+            $vat   = $Article->getVat();
+            $price = $Article->getPrice()->getValue();
+
+            if (!isset($vats[(string)$vat])) {
+                $vats[(string)$vat] = 0;
+            }
+
+            $vats[(string)$vat] = $vats[(string)$vat] + $price;
+        }
+
+        // @todo implement VAT setting for shipping
+        // look at vat, which vat should be used
+        if (!count($vats) && !$Order->getCustomer()) {
+            // use default vat
+            $Area     = QUI\ERP\Defaults::getArea();
+            $TaxType  = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
+            $TaxEntry = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
+
+            return $TaxEntry->getValue();
+        }
+
+        if (!count($vats) && $Order->getCustomer()) {
+            $Tax = QUI\ERP\Tax\Utils::getTaxByUser($Order->getCustomer());
+            return $Tax->getValue();
+        }
+
+        if (count($vats) === 1) {
+            // use article vat
+            return key($vats);
+        }
+
+        if (count($vats)) {
+            // get max, use the max VAT if multiple exists
+            return max(array_keys($vats));
+        }
+
+        return 0;
+    }
 
     /**
      * Notify customer about an Order status change (via e-mail)
@@ -435,8 +523,8 @@ class Shipping extends QUI\Utils\Singleton
 
         if (empty($customerEmail)) {
             QUI\System\Log::addWarning(
-                'Status change notification for order #'.$Order->getPrefixedId().' cannot be sent'
-                .' because customer #'.$Customer->getId().' has no e-mail address.'
+                'Status change notification for order #' . $Order->getPrefixedId() . ' cannot be sent'
+                . ' because customer #' . $Customer->getId() . ' has no e-mail address.'
             );
 
             return;

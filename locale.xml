@@ -298,13 +298,13 @@
             <de><![CDATA[Standard Versand]]></de>
             <en><![CDATA[Default shipping]]></en>
         </locale>
-        <locale name="shipping.defaultShipping.settings.defaultShipping">
-            <de><![CDATA[Standard Versand]]></de>
-            <en><![CDATA[Default shipping]]></en>
+        <locale name="shipping.defaultShipping.settings.defaultShippingPrice">
+            <de><![CDATA[Standardversand Preis]]></de>
+            <en><![CDATA[Default shipping price]]></en>
         </locale>
-        <locale name="shipping.defaultShipping.settings.defaultShipping.desc">
-            <de><![CDATA[Lege fest welcher Versand als Standard Versand verwendet werden soll.]]></de>
-            <en><![CDATA[Specify which shipping should be used as default shipping.]]></en>
+        <locale name="shipping.defaultShipping.settings.defaultShippingPrice.desc">
+            <de><![CDATA[Lege fest welcher Preis als Standardversand verwendet werden soll.]]></de>
+            <en><![CDATA[Specify which price should be used as default shipping.]]></en>
         </locale>
         <locale name="shipping.defaultShipping.settings.addDefaultShipping">
             <de><![CDATA[Standard Versand automatisch hinzufügen]]></de>
@@ -312,16 +312,27 @@
         </locale>
         <locale name="shipping.defaultShipping.settings.addDefaultShipping.desc">
             <de><![CDATA[
-            Der Standard Versand wird einer Bestellung hinzugefügt falls diese Bestellung noch keinen Versand hat.
-            Diese Einstellung hat nur Auswirkung im Backend und nicht auf Frontend Aktionen.
-            Wenn ein Nutzer eine Bestellung ausführt, wird dieser Versand nicht beachtet.
+            Der Standard Versand wird einer Artikelliste hinzugefügt, wenn diese noch keinen Versand zugeordnet hat.
+            Diese Einstellung hat nur Auswirkung in der Verwaltung und nicht im Frontend des Shops.
             ]]></de>
             <en><![CDATA[
-            The default shipping will be added to an order if this order has no shipping yet.
-            This setting has effect only in backend and not on frontend actions.
-            When a user executes an order, this shipping is ignored.
+            The default shipping is added to an item list if it does not have a shipping assigned yet.
+            This setting has effect only in the administration and not in the frontend of the store.
             ]]></en>
         </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShippingTitle">
+            <de><![CDATA[Titel des Standard Versand]]></de>
+            <en><![CDATA[Title of standard shipping]]></en>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShippingTitle.desc">
+            <de><![CDATA[Dieser Text wird als Titel des Versands in der Artikelliste verwendet.]]></de>
+            <en><![CDATA[This text will be used as the title of the shipment in the item list.]]></en>
+        </locale>
+        <locale name="shipping.default.pricefactor">
+            <de><![CDATA[Versand]]></de>
+            <en><![CDATA[Shipping]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/shipping" datatype="php">
