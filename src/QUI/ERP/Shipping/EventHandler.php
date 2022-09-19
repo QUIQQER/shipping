@@ -530,7 +530,7 @@ class EventHandler
             $factors        = $PriceFactors->toArray();
 
             foreach ($factors as $factor) {
-                if (strpos($factor['identifier'], 'shipping-pricefactor-default') !== false) {
+                if (strpos($factor['identifier'], 'shipping-pricefactor-') !== false) {
                     $shippingFactor = $factor;
                     break;
                 }
