@@ -15,6 +15,7 @@ use function array_merge;
 use function explode;
 use function json_decode;
 use function method_exists;
+use function str_replace;
 use function strpos;
 
 /**
@@ -553,5 +554,56 @@ class EventHandler
     public static function onQuiqqerOrderInit(QUI\ERP\Order\AbstractOrder $Order)
     {
         self::onQuiqqerOrderShippingOnEmpty($Order);
+    }
+
+    /**
+     * @param \QUI\ERP\Order\AbstractOrder $Order
+     * @return void
+     */
+    public static function onQuiqqerOrderUpdateBegin(
+        QUI\ERP\Order\AbstractOrder $Order,
+        &$data = []
+    ) {
+        $Articles     = $Order->getArticles();
+        $PriceFactors = $Articles->getPriceFactors();
+
+        if (!$PriceFactors->count()) {
+            return;
+        }
+
+        // check if shipping factor exist
+        $shippingFactor = null;
+        $factors        = $PriceFactors->toArray();
+        $Shipping       = $Order->getShipping();
+
+        if (!$Shipping) {
+            return;
+        }
+
+        foreach ($factors as $index => $factor) {
+            if (strpos($factor['identifier'], 'shipping-pricefactor-') !== false) {
+                $shippingFactor = $factor;
+                break;
+            }
+        }
+
+        $identifier = $shippingFactor['identifier'];
+        $identifier = str_replace($identifier, 'shipping-pricefactor-', '');
+        $id         = (int)$identifier;
+
+        if ($id !== $Shipping->getId() && isset($index)) {
+            $Factor = $PriceFactors->getFactor($index);
+            $factor = $Factor->toArray();
+
+            $factor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
+            $factor['title']      = $Shipping->getTitle();
+
+            $PriceFactors->setFactor(
+                $index,
+                new QUI\ERP\Accounting\PriceFactors\Factor($factor)
+            );
+
+            $data['articles'] = $Articles->toJSON();
+        }
     }
 }

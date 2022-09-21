@@ -5,6 +5,9 @@
     <event on="onQuiqqerOrderBasketToOrderEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderBasketToOrderEnd"
     />
+    <event on="onQuiqqerOrderUpdateBegin"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderUpdateBegin"
+    />
     <event on="onPackageSetup"
            fire="\QUI\ERP\Shipping\EventHandler::onPackageSetup"
     />
@@ -41,14 +44,12 @@
     <event on="onHeaderLoaded"
            fire="\QUI\ERP\Shipping\EventHandler::onTemplateGetHeader"
     />
-
     <event on="onQuiqqer::frontend-users::user-address-top"
            fire="\QUI\ERP\Shipping\EventHandler::onFrontendUsersAddressTop"
     />
     <event on="onQuiqqer::order::orderProcessCustomerDataEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onOrderProcessCustomerDataEnd"
     />
-
     <event on="onQuiqqer::products::price::end"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerProductsPriceEnd"
     />
