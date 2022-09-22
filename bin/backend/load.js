@@ -39,7 +39,7 @@ require(['qui/QUI'], function (QUI) {
                                         PriceFactorWindow.Loader.show();
 
                                         const currency = ArticleList.getAttribute('currency');
-                                        const vat = 19;
+                                        const vat = ArticleList.getVat();
                                         let shippingData;
 
                                         getShippingPrice(value[0].id).then(function (result) {
@@ -47,7 +47,7 @@ require(['qui/QUI'], function (QUI) {
 
                                             return PriceFactorWindow.getPriceFactorData(
                                                 result.price,
-                                                vat,
+                                                vat,  // @todo find out vat
                                                 currency
                                             );
                                         }).then((data) => {
