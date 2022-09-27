@@ -2,6 +2,17 @@
 <events>
     <event on="onAdminLoadFooter" fire="\QUI\ERP\Shipping\EventHandler::onAdminLoadFooter"/>
 
+    <event on="onQuiqqerOrderFactoryCreate"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderFactoryCreate"
+    />
+    <event on="onQuiqqerOffersCreated"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOffersCreated"
+    />
+    <event on="onQuiqqerSalesOrdersCreated"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerSalesOrdersCreated"
+    />
+
+
     <event on="onQuiqqerOrderBasketToOrderEnd"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderBasketToOrderEnd"
     />
@@ -28,12 +39,6 @@
     />
     <event on="onQuiqqerOrderOrderProcessCheckoutOutputBefore"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderOrderProcessCheckoutOutputBefore"
-    />
-    <event on="onQuiqqerOrderShippingOnEmpty"
-           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderShippingOnEmpty"
-    />
-    <event on="onQuiqqerOrderInit"
-           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderInit"
     />
     <event on="onUserSaveBegin"
            fire="\QUI\ERP\Shipping\EventHandler::onUserSaveBegin"

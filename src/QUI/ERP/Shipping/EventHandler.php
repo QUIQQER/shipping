@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
+use QUI\ERP\Accounting\ArticleList;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
 use Quiqqer\Engine\Collector;
@@ -503,13 +504,64 @@ class EventHandler
         $Collector->append($html);
     }
 
+    //region default shipping
+
     /**
+     * event: add default shipping at onQuiqqerOrderFactoryCreate
+     *
      * @param \QUI\ERP\Order\AbstractOrder $Order
      * @return void
+     */
+    public static function onQuiqqerOrderFactoryCreate(QUI\ERP\Order\AbstractOrder $Order)
+    {
+        try {
+            self::addDefaultShipping($Order->getArticles());
+            $Order->update(QUI::getUsers()->getSystemUser());
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+        }
+    }
+
+    /**
+     * event: add default shipping at onQuiqqerOffersCreated
      *
+     * @param \QUI\ERP\Accounting\Offers\AbstractOffer $Offer
+     * @return void
+     */
+    public static function onQuiqqerOffersCreated(QUI\ERP\Accounting\Offers\AbstractOffer $Offer)
+    {
+        try {
+            self::addDefaultShipping($Offer->getArticles());
+            $Offer->update(QUI::getUsers()->getSystemUser());
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+        }
+    }
+
+    /**
+     * event: add default shipping at onQuiqqerSalesOrdersCreated
+     *
+     * @param \QUI\ERP\SalesOrders\SalesOrder $Sales
+     * @return void
+     */
+    public static function onQuiqqerSalesOrdersCreated(QUI\ERP\SalesOrders\SalesOrder $Sales)
+    {
+        try {
+            self::addDefaultShipping($Sales->getArticles());
+            $Sales->update();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+        }
+    }
+
+    /**
+     * event: addDefaultShipping
+     *
+     * @param \QUI\ERP\Accounting\ArticleList $Articles
+     * @return void
      * @throws \QUI\Exception
      */
-    public static function onQuiqqerOrderShippingOnEmpty(QUI\ERP\Order\AbstractOrder $Order)
+    protected static function addDefaultShipping(ArticleList $Articles)
     {
         if (!QUI::isBackend()) {
             return;
@@ -523,7 +575,6 @@ class EventHandler
         }
 
         try {
-            $Articles     = $Order->getArticles();
             $PriceFactors = $Articles->getPriceFactors();
 
             // check if shipping factor exist
@@ -545,16 +596,7 @@ class EventHandler
         }
     }
 
-    /**
-     * @param \QUI\ERP\Order\AbstractOrder $Order
-     *
-     * @return void
-     * @throws \QUI\Exception
-     */
-    public static function onQuiqqerOrderInit(QUI\ERP\Order\AbstractOrder $Order)
-    {
-        self::onQuiqqerOrderShippingOnEmpty($Order);
-    }
+    //endregion
 
     /**
      * @param \QUI\ERP\Order\AbstractOrder $Order
