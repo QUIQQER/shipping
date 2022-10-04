@@ -11,6 +11,9 @@
     <event on="onQuiqqerSalesOrdersCreated"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerSalesOrdersCreated"
     />
+    <event on="onQuiqqerInvoiceTemporaryInvoiceCreated"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerInvoiceTemporaryInvoiceCreated"
+    />
 
 
     <event on="onQuiqqerOrderBasketToOrderEnd"

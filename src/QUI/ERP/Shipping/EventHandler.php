@@ -523,6 +523,23 @@ class EventHandler
     }
 
     /**
+     * event: add default shipping at onQuiqqerInvoiceTemporaryInvoiceCreated
+     *
+     * @param \QUI\ERP\Accounting\Invoice\InvoiceTemporary $TemporaryInvoice
+     * @return void
+     */
+    public static function onQuiqqerInvoiceTemporaryInvoiceCreated(
+        QUI\ERP\Accounting\Invoice\InvoiceTemporary $TemporaryInvoice
+    ) {
+        try {
+            self::addDefaultShipping($TemporaryInvoice->getArticles());
+            $TemporaryInvoice->update(QUI::getUsers()->getSystemUser());
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+        }
+    }
+
+    /**
      * event: add default shipping at onQuiqqerOffersCreated
      *
      * @param \QUI\ERP\Accounting\Offers\AbstractOffer $Offer
