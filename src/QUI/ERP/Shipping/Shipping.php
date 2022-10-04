@@ -443,8 +443,13 @@ class Shipping extends QUI\Utils\Singleton
             'currency'    => QUI\ERP\Defaults::getCurrency()->getCode()
         ]);
 
-        //$PriceFactor->setSum($price);
         $PriceFactor->setNettoSum($price);
+
+        // set default vat
+        $Area     = QUI\ERP\Defaults::getArea();
+        $TaxType  = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
+        $TaxEntry = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
+        $PriceFactor->setVat($TaxEntry->getValue());
 
         return $PriceFactor;
     }

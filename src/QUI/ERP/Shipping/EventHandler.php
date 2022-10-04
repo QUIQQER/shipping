@@ -591,6 +591,7 @@ class EventHandler
             if (!$shippingFactor) {
                 $PriceFactor = Shipping::getInstance()->getDefaultPriceFactor();
                 $Articles->addPriceFactor($PriceFactor);
+                $Articles->recalculate();
             }
         } catch (QUI\Exception $Exception) {
         }
