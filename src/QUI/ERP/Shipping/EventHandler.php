@@ -18,6 +18,7 @@ use function json_decode;
 use function method_exists;
 use function str_replace;
 use function strpos;
+use function time;
 
 /**
  * Class EventHandler
@@ -26,6 +27,8 @@ use function strpos;
  */
 class EventHandler
 {
+    const DEFAULT_SHIPPING_TIME_KEY = 'add-default-shipping';
+
     /**
      * event for on package setup
      *
@@ -514,8 +517,14 @@ class EventHandler
      */
     public static function onQuiqqerOrderFactoryCreate(QUI\ERP\Order\AbstractOrder $Order)
     {
+        //if ($Order->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
+        //    return;
+        //}
+
         try {
             self::addDefaultShipping($Order->getArticles());
+
+            //$Order->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $Order->update(QUI::getUsers()->getSystemUser());
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
@@ -531,8 +540,13 @@ class EventHandler
     public static function onQuiqqerInvoiceTemporaryInvoiceCreated(
         QUI\ERP\Accounting\Invoice\InvoiceTemporary $TemporaryInvoice
     ) {
+        if ($TemporaryInvoice->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
+            return;
+        }
+
         try {
             self::addDefaultShipping($TemporaryInvoice->getArticles());
+            $TemporaryInvoice->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $TemporaryInvoice->update(QUI::getUsers()->getSystemUser());
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
@@ -547,8 +561,13 @@ class EventHandler
      */
     public static function onQuiqqerOffersCreated(QUI\ERP\Accounting\Offers\AbstractOffer $Offer)
     {
+        if ($Offer->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
+            return;
+        }
+
         try {
             self::addDefaultShipping($Offer->getArticles());
+            $Offer->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $Offer->update(QUI::getUsers()->getSystemUser());
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
@@ -563,8 +582,13 @@ class EventHandler
      */
     public static function onQuiqqerSalesOrdersCreated(QUI\ERP\SalesOrders\SalesOrder $Sales)
     {
+        //if ($Sales->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
+        //    return;
+        //}
+
         try {
             self::addDefaultShipping($Sales->getArticles());
+            //$Sales->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $Sales->update();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
