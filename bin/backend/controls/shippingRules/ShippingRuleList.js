@@ -136,6 +136,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                     width    : 200,
                     sortable : false
                 }, {
+                    header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                    dataIndex: 'workingTitle',
+                    dataType : 'string',
+                    width    : 200,
+                    sortable : false
+                }, {
                     header   : QUILocale.get(lg, 'shipping.edit.template.discount'),
                     dataIndex: 'discount',
                     dataType : 'number',
