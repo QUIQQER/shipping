@@ -336,6 +336,13 @@ class EventHandler
             $User = QUI::getUserBySession();
         }
 
+        // same address like the invoice address
+        if ((int)$_REQUEST['shipping-address'] === -1) {
+            $Order->setDeliveryAddress($Order->getInvoiceAddress());
+            $Order->save();
+            return;
+        }
+
         try {
             $Address = $User->getAddress($_REQUEST['shipping-address']);
         } catch (QUI\Exception $Exception) {
