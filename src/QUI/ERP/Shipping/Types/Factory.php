@@ -67,16 +67,17 @@ class Factory extends QUI\CRUD\Factory
         $NewChild = parent::createChild($data);
 
         $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.title',
+            'shipping.' . $NewChild->getId() . '.title',
             $NewChild->getShippingType()->getTitle()
         );
 
         $this->createShippingLocale(
-            'shipping.'.$NewChild->getId().'.workingTitle',
-            $NewChild->getShippingType()->getTitle().' - '.$NewChild->getId()
+            'shipping.' . $NewChild->getId() . '.workingTitle',
+            $NewChild->getShippingType()->getTitle() . ' - ' . $NewChild->getId()
         );
 
-        $this->createShippingLocale('shipping.'.$NewChild->getId().'.decription', '');
+        // description
+        $this->createShippingLocale('shipping.' . $NewChild->getId() . '.description', '&nbsp;');
 
         try {
             QUI\Translator::publish('quiqqer/shipping');
@@ -148,19 +149,22 @@ class Factory extends QUI\CRUD\Factory
      */
     protected function createShippingLocale($var, $title)
     {
-        $current = QUI::getLocale()->getCurrent();
-
         if (QUI::getLocale()->isLocaleString($title)) {
             $parts = QUI::getLocale()->getPartsOfLocaleString($title);
             $title = QUI::getLocale()->get($parts[0], $parts[1]);
         }
 
+        $data = [];
+
+        foreach (QUI::availableLanguages() as $language) {
+            $data[$language]           = $title;
+            $data[$language . '_edit'] = $title;
+        }
+
+
         try {
-            QUI\Translator::addUserVar('quiqqer/shipping', $var, [
-                $current   => $title,
-                'datatype' => 'php,js',
-                'package'  => 'quiqqer/shipping'
-            ]);
+            QUI\Translator::add('quiqqer/shipping', $var, 'quiqqer/shipping', 'php,js');
+            QUI\Translator::update('quiqqer/shipping', $var, 'quiqqer/shipping', $data);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }
