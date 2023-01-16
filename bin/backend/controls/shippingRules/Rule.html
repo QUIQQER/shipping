@@ -44,11 +44,9 @@
                     <span class="field-container-item" title="{{discountDescription}}">
                         {{discountTitle}}
                     </span>
-                    <span class="field-container-field field-container-field-no-padding"
-                          style="display: flex;"
-                    >
+                    <span class="field-container-field field-container-field-no-padding">
                         <select name="discount_type" class="field-container-field"
-                                style="width: 40%"
+                                style="width: 100%"
                         >
                             <option value="0">
                                 {{discountAbsolute}}
@@ -60,14 +58,13 @@
                                 {{discountPercentageOrder}}
                             </option>
                         </select>
-                        <input type="number"
-                               step="0.01"
-                               name="discount"
-                               class="field-container-field"
-                        />
-                        <button disabled name="calc" class="qui-button" style="width: 50px;">
-                            <span class="fa fa-calculator"></span>
-                        </button>
+                        <div style="border-top: 1px solid rgba(147, 128, 108, 0.25)">
+                            <input type="number"
+                                   step="0.01"
+                                   name="discount"
+                                   data-qui="package/quiqqer/erp/bin/backend/controls/elements/PriceCalcInput"
+                            />
+                        </div>
                     </span>
                 </label>
             </td>
