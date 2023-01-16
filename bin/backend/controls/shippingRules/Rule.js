@@ -212,6 +212,14 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 self.$DataTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
                 self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-workingTitle'));
 
+                self.$PurchaseFrom = QUI.Controls.getById(
+                    self.$Elm.getElement('[name="purchase_value_from"]').get('data-quiid')
+                );
+
+                self.$PurchaseUntil = QUI.Controls.getById(
+                    self.$Elm.getElement('[name="purchase_value_until"]').get('data-quiid')
+                );
+
                 self.$UserGroups = QUI.Controls.getById(
                     self.$Elm
                         .getElement('[name="user_groups"]')
@@ -253,6 +261,14 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                             self.$UserGroups.importValue(rule.user_groups);
                             self.$Articles.importValue(rule.articles);
                             self.$Categories.importValue(rule.categories);
+                            
+                            if (rule.purchase_value_from) {
+                                self.$PurchaseFrom.setNetto(rule.purchase_value_from);
+                            }
+
+                            if (rule.purchase_value_until) {
+                                self.$PurchaseUntil.setNetto(rule.purchase_value_until);
+                            }
 
                             new QUISwitch({
                                 status: parseInt(rule.active),
