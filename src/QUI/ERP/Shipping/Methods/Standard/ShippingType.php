@@ -12,6 +12,12 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\DigitalProduct;
 use QUI\ERP\Shipping\Debug;
 
+use function array_filter;
+use function array_map;
+use function explode;
+use function in_array;
+use function trim;
+
 /**
  * Class ShippingType
  * - This class is a placeholder / helper class for the standard shipping
@@ -38,9 +44,9 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
      */
     public function getIcon()
     {
-        return QUI\ERP\Shipping\Shipping::getInstance()->getHost().
-               URL_OPT_DIR
-               .'quiqqer/shipping/bin/images/shipping/default.png';
+        return QUI\ERP\Shipping\Shipping::getInstance()->getHost() .
+            URL_OPT_DIR
+            . 'quiqqer/shipping/bin/images/shipping/default.png';
     }
 
     /**
@@ -103,13 +109,13 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         };
 
         if (!empty($articles)) {
-            $articles = \array_map($toInt, \explode(',', $articles));
+            $articles = array_map($toInt, explode(',', $articles));
         } else {
             $articles = [];
         }
 
         if (!empty($categories)) {
-            $categories = \array_map($toInt, \explode(',', $categories));
+            $categories = array_map($toInt, explode(',', $categories));
         } else {
             $categories = [];
         }
@@ -128,13 +134,15 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             try {
                 $productId = $Article->getId();
 
-                if (!empty($articles) && \in_array($productId, $articles)) {
-                    Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]");
+                if (!empty($articles) && in_array($productId, $articles)) {
+                    Debug::addLog(
+                        "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]"
+                    );
 
                     return true;
                 }
 
-                if (\is_array($categories)) {
+                if (is_array($categories)) {
                     $Product           = QUI\ERP\Products\Handler\Products::getProduct($productId);
                     $articleCategories = $Product->getCategories();
 
@@ -142,8 +150,10 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                     foreach ($articleCategories as $Category) {
                         $categoryId = $Category->getId();
 
-                        if (\in_array($categoryId, $categories)) {
-                            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]");
+                        if (in_array($categoryId, $categories)) {
+                            Debug::addLog(
+                                "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]"
+                            );
 
                             return true;
                         }
@@ -196,10 +206,10 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         $Address = $Order->getDeliveryAddress();
 
-        $areasValue = \trim($areasValue);
-        $areasValue = \trim($areasValue, ',');
-        $areasValue = \explode(',', $areasValue);
-        $areasValue = \array_filter($areasValue);
+        $areasValue = trim($areasValue);
+        $areasValue = trim($areasValue, ',');
+        $areasValue = explode(',', $areasValue);
+        $areasValue = array_filter($areasValue);
 
         // not in area
         if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
