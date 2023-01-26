@@ -12,6 +12,7 @@ use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 use QUI\ERP\Shipping\Types\Factory;
 
 use function array_keys;
+use function class_exists;
 use function count;
 use function key;
 use function max;
@@ -99,7 +100,7 @@ class Shipping extends QUI\Utils\Singleton
         $result = [];
 
         foreach ($providers as $provider) {
-            if (!\class_exists($provider)) {
+            if (!class_exists($provider)) {
                 continue;
             }
 
@@ -128,7 +129,7 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             $Config                 = QUI::getPackage('quiqqer/shipping')->getConfig();
-            $this->shippingDisabled = !!$Config->getValue('shipping', 'disabled');
+            $this->shippingDisabled = !!$Config->getValue('shipping', 'deactivated');
         } catch (QUI\Exception $Exception) {
             $this->shippingDisabled = false;
         }
@@ -171,7 +172,7 @@ class Shipping extends QUI\Utils\Singleton
             $types = $Provider->getShippingTypes();
 
             foreach ($types as $type) {
-                if (!\class_exists($type)) {
+                if (!class_exists($type)) {
                     continue;
                 }
 
