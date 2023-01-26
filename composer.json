@@ -1,6 +1,7 @@
 {
     "name": "quiqqer\/shipping",
     "type": "quiqqer-plugin",
+    "version": "1.2.0",
     "description": "Provided the shipping management for QUIQQER. Can manage shipping methods",
     "license": [
         "GPL-3.0+",
