@@ -87,6 +87,15 @@ class Tracking
             'title'  => 'DPD',
             'image'  => 'quiqqer/shipping/bin/images/tracking/dpd.svg',
             'url'    => 'https://track.dpdnl.nl/?parcelnumber='
+        ],
+
+        // DEUTSCHE POST
+        [
+            'active' => '1',
+            'type'   => 'deutschePost',
+            'title'  => 'Deutsche Post',
+            'image'  => 'quiqqer/shipping/bin/images/tracking/DeutschePost.svg',
+            'url'    => 'https://www.deutschepost.de/de/s/sendungsverfolgung/verfolgen.html?lang=de&cid=brief&piececode='
         ]
     ];
 
