@@ -15,6 +15,7 @@ use QUI\ERP\Shipping\Rules\ShippingRule;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
+use function is_array;
 use function json_encode;
 use function method_exists;
 use function round;
@@ -585,7 +586,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $shippingRules = $this->getAttribute('shipping_rules');
         $shippingRules = \json_decode($shippingRules, true);
 
-        if (!\is_array($shippingRules)) {
+        if (!is_array($shippingRules)) {
             return [];
         }
 
@@ -709,7 +710,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $shippingRules = $this->getAttribute('shipping_rules');
         $shippingRules = \json_decode($shippingRules, true);
 
-        if (!\is_array($shippingRules)) {
+        if (!is_array($shippingRules)) {
             Debug::addLog("{$this->getTitle()} :: has no rules [OK]");
 
             return true;
