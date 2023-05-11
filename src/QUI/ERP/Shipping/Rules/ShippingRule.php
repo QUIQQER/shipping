@@ -26,6 +26,7 @@ use function array_unique;
 use function count;
 use function explode;
 use function floatval;
+use function in_array;
 use function is_array;
 use function is_numeric;
 use function is_string;
@@ -391,9 +392,13 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         $articles    = $this->getAttribute('articles');
-        $categories  = $this->getAttribute('categories');
         $articleOnly = (int)$this->getAttribute('articles_only');
         $unitTerms   = $this->getUnitTerms();
+
+        $categories = $this->getAttribute('categories');
+        $categories = trim($categories, ',');
+        $categories = explode(',', $categories);
+        $categories = array_map('intval', $categories);
 
         $quantityFrom  = $this->getAttribute('purchase_quantity_from');     // Einkaufsmenge ab
         $quantityUntil = $this->getAttribute('purchase_quantity_until');    // Einkaufsmenge bis
@@ -426,6 +431,16 @@ class ShippingRule extends QUI\CRUD\Child
 
         $categoryIdsInOrder = [];
 
+        $checkCategoryIds = function (array $catIds) use ($categories) {
+            foreach ($catIds as $categoryId) {
+                if (in_array($categoryId, $categories)) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         foreach ($articleList as $Article) {
             $aid             = $Article->getId();
             $articleQuantity = $Article->getQuantity();
@@ -439,7 +454,13 @@ class ShippingRule extends QUI\CRUD\Child
                     return $Category->getId();
                 }, $productCategories);
 
+                // check categories
+                if ($checkCategoryIds($categoryIds) === false) {
+                    return false;
+                }
+
                 $categoryIdsInOrder = array_merge($categoryIdsInOrder, $categoryIds);
+
 
                 foreach ($unitIds as $unitId) {
                     $Weight = $Product->getField($unitId);
@@ -504,10 +525,6 @@ class ShippingRule extends QUI\CRUD\Child
 
         // category check
         $categoryIdsInOrder = array_unique($categoryIdsInOrder);
-
-        $categories = trim($categories, ',');
-        $categories = explode(',', $categories);
-        $categories = array_map('intval', $categories);
 
         if (!empty($categoryIdsInOrder)
             && !empty($categories)
