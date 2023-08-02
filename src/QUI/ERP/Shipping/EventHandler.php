@@ -41,14 +41,14 @@ class EventHandler
         }
 
         // Translations
-        $languages     = QUI\Translator::getAvailableLanguages();
+        $languages = QUI\Translator::getAvailableLanguages();
         $StatusFactory = QUI\ERP\Shipping\ShippingStatus\Factory::getInstance();
 
         // create locale
-        $var    = 'message.no.rule.found.order.continue';
+        $var = 'message.no.rule.found.order.continue';
         $params = [
             'datatype' => 'php,js',
-            'package'  => 'quiqqer/shipping'
+            'package' => 'quiqqer/shipping'
         ];
 
         foreach ($languages as $language) {
@@ -66,10 +66,10 @@ class EventHandler
         }
 
         // create locale
-        $var    = 'message.no.rule.found.order.cancel';
+        $var = 'message.no.rule.found.order.cancel';
         $params = [
             'datatype' => 'php,js',
-            'package'  => 'quiqqer/shipping'
+            'package' => 'quiqqer/shipping'
         ];
 
         foreach ($languages as $language) {
@@ -98,7 +98,7 @@ class EventHandler
         };
 
         $Handler = QUI\ERP\Shipping\ShippingStatus\Handler::getInstance();
-        $list    = $Handler->getList();
+        $list = $Handler->getList();
 
         if (empty($list)) {
             $StatusFactory->createShippingStatus(1, '#dbb50c', $getLocaleTranslations('processing.status.default.1'));
@@ -222,7 +222,7 @@ class EventHandler
         }
 
         $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
-            'User'  => $User,
+            'User' => $User,
             'Order' => $Order
         ]);
 
@@ -247,7 +247,7 @@ class EventHandler
         }
 
         $SessionUser = QUI::getUserBySession();
-        $Customer    = $Order->getCustomer();
+        $Customer = $Order->getCustomer();
 
         if ($SessionUser->getId() !== $Customer->getId()) {
             return;
@@ -288,13 +288,13 @@ class EventHandler
 
         if ($DeliveryAddress->getId() === 0) {
             $customerId = $Order->getCustomer()->getId();
-            $Customer   = QUI::getUsers()->get($customerId);
+            $Customer = QUI::getUsers()->get($customerId);
 
             $deliveryAddressId = $Customer->getAttribute('quiqqer.delivery.address');
 
             if (!empty($deliveryAddressId)) {
                 try {
-                    $DeliveryAddress    = $Customer->getAddress($deliveryAddressId);
+                    $DeliveryAddress = $Customer->getAddress($deliveryAddressId);
                     $ErpDeliveryAddress = new QUI\ERP\Address(
                         json_decode($DeliveryAddress->toJSON(), true),
                         $Order->getCustomer()
@@ -327,7 +327,7 @@ class EventHandler
         }
 
         // save shipping address
-        $Order    = $CustomerData->getOrder();
+        $Order = $CustomerData->getOrder();
         $Customer = $Order->getCustomer();
 
         try {
@@ -390,10 +390,11 @@ class EventHandler
 
         $Request = QUI::getRequest()->request;
 
-        $submit  = $Request->get('submit-shipping');
+        $submit = $Request->get('submit-shipping');
         $address = (int)$Request->get('shipping-address');
 
-        if (isset($_REQUEST['step'])
+        if (
+            isset($_REQUEST['step'])
             && $_REQUEST['step'] === 'Customer'
             && !empty($_REQUEST['shipping-address'])
         ) {
@@ -422,7 +423,7 @@ class EventHandler
      */
     public static function onTemplateGetHeader()
     {
-        $User      = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
         $addressId = $User->getAttribute('quiqqer.delivery.address');
 
         if (!$addressId) {
@@ -448,12 +449,12 @@ class EventHandler
     {
         $fields = [
             Shipping::PRODUCT_FIELD_SHIPPING_TIME => [
-                'title'    => [
+                'title' => [
                     'de' => 'Lieferzeit',
                     'en' => 'Delivery time'
                 ],
-                'type'     => Shipping::PRODUCT_FIELD_TYPE_SHIPPING_TIME,
-                'public'   => true,
+                'type' => Shipping::PRODUCT_FIELD_TYPE_SHIPPING_TIME,
+                'public' => true,
                 'standard' => true
             ]
         ];
@@ -470,14 +471,14 @@ class EventHandler
 
             try {
                 ProductFields::createField([
-                    'id'            => $fieldId,
-                    'type'          => $field['type'],
-                    'titles'        => $field['title'],
+                    'id' => $fieldId,
+                    'type' => $field['type'],
+                    'titles' => $field['title'],
                     'workingtitles' => $field['title'],
-                    'systemField'   => 0,
+                    'systemField' => 0,
                     'standardField' => !empty($field['standard']) ? 1 : 0,
-                    'publicField'   => !empty($field['public']) ? 1 : 0,
-                    'options'       => !empty($field['options']) ? $field['options'] : null
+                    'publicField' => !empty($field['public']) ? 1 : 0,
+                    'options' => !empty($field['options']) ? $field['options'] : null
                 ]);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -501,7 +502,7 @@ class EventHandler
      */
     public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price)
     {
-        $Config             = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
         $enableShippingInfo = !!$Config->getValue('shipping', 'showShippingInfoAfterPrice');
 
         if (!$enableShippingInfo || !$Price->getAttribute('withVatText')) {
@@ -509,7 +510,7 @@ class EventHandler
         }
 
         $Engine = QUI::getTemplateManager()->getEngine();
-        $html   = $Engine->fetch(dirname(__FILE__) . '/templates/shippingInformation.html');
+        $html = $Engine->fetch(dirname(__FILE__) . '/templates/shippingInformation.html');
 
         $Collector->append($html);
     }
@@ -616,7 +617,7 @@ class EventHandler
         }
 
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
-        $add    = $Config->getValue('shipping', 'addDefaultShipping');
+        $add = $Config->getValue('shipping', 'addDefaultShipping');
 
         if (empty($add)) {
             return;
@@ -627,7 +628,7 @@ class EventHandler
 
             // check if shipping factor exist
             $shippingFactor = null;
-            $factors        = $PriceFactors->toArray();
+            $factors = $PriceFactors->toArray();
 
             foreach ($factors as $factor) {
                 if (strpos($factor['identifier'], 'shipping-pricefactor-') !== false) {
@@ -655,7 +656,7 @@ class EventHandler
         QUI\ERP\Order\AbstractOrder $Order,
         &$data = []
     ) {
-        $Articles     = $Order->getArticles();
+        $Articles = $Order->getArticles();
         $PriceFactors = $Articles->getPriceFactors();
 
         if (!$PriceFactors->count()) {
@@ -664,8 +665,8 @@ class EventHandler
 
         // check if shipping factor exist
         $shippingFactor = null;
-        $factors        = $PriceFactors->toArray();
-        $Shipping       = $Order->getShipping();
+        $factors = $PriceFactors->toArray();
+        $Shipping = $Order->getShipping();
 
         if (!$Shipping) {
             return;
@@ -684,14 +685,14 @@ class EventHandler
 
         $identifier = $shippingFactor['identifier'];
         $identifier = str_replace($identifier, 'shipping-pricefactor-', '');
-        $id         = (int)$identifier;
+        $id = (int)$identifier;
 
         if ($id !== $Shipping->getId() && isset($index)) {
             $Factor = $PriceFactors->getFactor($index);
             $factor = $Factor->toArray();
 
             $factor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
-            $factor['title']      = $Shipping->getTitle();
+            $factor['title'] = $Shipping->getTitle();
 
             $PriceFactors->setFactor(
                 $index,

@@ -12,13 +12,13 @@ use QUI\ERP\Products\Field\Types\TimePeriod;
  */
 class ShippingTimePeriod extends TimePeriod
 {
-    const OPTION_TIMEPERIOD            = 'timeperiod';
-    const OPTION_UNAVAILABLE           = 'unavailable';
+    const OPTION_TIMEPERIOD = 'timeperiod';
+    const OPTION_UNAVAILABLE = 'unavailable';
     const OPTION_IMMEDIATELY_AVAILABLE = 'immediately_available';
-    const OPTION_ON_REQUEST            = 'on_request';
-    const OPTION_AVAILABLE_SOON        = 'available_soon';
-    const OPTION_CUSTOM_TEXT           = 'custom_text';
-    const OPTION_USE_DEFAULT           = 'use_default';
+    const OPTION_ON_REQUEST = 'on_request';
+    const OPTION_AVAILABLE_SOON = 'available_soon';
+    const OPTION_CUSTOM_TEXT = 'custom_text';
+    const OPTION_USE_DEFAULT = 'use_default';
 
     /**
      * Check the value
@@ -49,9 +49,9 @@ class ShippingTimePeriod extends TimePeriod
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }
@@ -85,7 +85,7 @@ class ShippingTimePeriod extends TimePeriod
         }
 
         $value['from'] = (int)$value['from'];
-        $value['to']   = (int)$value['to'];
+        $value['to'] = (int)$value['to'];
 
         switch ($value['option']) {
             case self::OPTION_TIMEPERIOD:

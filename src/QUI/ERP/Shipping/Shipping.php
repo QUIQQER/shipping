@@ -128,7 +128,7 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         try {
-            $Config                 = QUI::getPackage('quiqqer/shipping')->getConfig();
+            $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
             $this->shippingDisabled = !!$Config->getValue('shipping', 'deactivated');
         } catch (QUI\Exception $Exception) {
             $this->shippingDisabled = false;
@@ -149,7 +149,7 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         try {
-            $Config          = QUI::getPackage('quiqqer/shipping')->getConfig();
+            $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
             $this->debugging = !!$Config->getValue('shipping', 'debug');
         } catch (QUI\Exception $Exception) {
             $this->debugging = false;
@@ -165,7 +165,7 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getShippingTypes()
     {
-        $shipping  = [];
+        $shipping = [];
         $providers = $this->getShippingProviders();
 
         foreach ($providers as $Provider) {
@@ -322,9 +322,11 @@ class Shipping extends QUI\Utils\Singleton
         foreach ($userShipping as $ShippingEntry) {
             $ShippingEntry->setOrder($Order);
 
-            if ($ShippingEntry->isValid()
+            if (
+                $ShippingEntry->isValid()
                 && $ShippingEntry->canUsedInOrder($Order)
-                && $ShippingEntry->canUsedBy($User, $Order)) {
+                && $ShippingEntry->canUsedBy($User, $Order)
+            ) {
                 $shippingList[] = $ShippingEntry;
             }
         }
@@ -388,7 +390,8 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getShippingByObject($Object)
     {
-        if (!($Object instanceof QUI\ERP\Order\Order) &&
+        if (
+            !($Object instanceof QUI\ERP\Order\Order) &&
             !($Object instanceof QUI\ERP\Order\OrderInProcess) &&
             !($Object instanceof QUI\ERP\Accounting\Invoice\Invoice) &&
             !($Object instanceof QUI\ERP\Accounting\Invoice\InvoiceTemporary)
@@ -434,21 +437,21 @@ class Shipping extends QUI\Utils\Singleton
         $price = QUI\ERP\Money\Price::validatePrice($price);
 
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
-            'identifier'  => 'shipping-pricefactor-default',
-            'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.default.pricefactor'),
+            'identifier' => 'shipping-pricefactor-default',
+            'title' => QUI::getLocale()->get('quiqqer/shipping', 'shipping.default.pricefactor'),
             'description' => '',
             'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
-            'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
-            'value'       => $price,
-            'visible'     => true,
-            'currency'    => QUI\ERP\Defaults::getCurrency()->getCode()
+            'basis' => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value' => $price,
+            'visible' => true,
+            'currency' => QUI\ERP\Defaults::getCurrency()->getCode()
         ]);
 
         $PriceFactor->setNettoSum($price);
 
         // set default vat
-        $Area     = QUI\ERP\Defaults::getArea();
-        $TaxType  = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
+        $Area = QUI\ERP\Defaults::getArea();
+        $TaxType = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
         $TaxEntry = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
         $PriceFactor->setVat($TaxEntry->getValue());
 
@@ -467,10 +470,10 @@ class Shipping extends QUI\Utils\Singleton
         /* @var $Article QUI\ERP\Accounting\Article */
 
         $Articles = $Order->getArticles();
-        $vats     = [];
+        $vats = [];
 
         foreach ($Articles as $Article) {
-            $vat   = $Article->getVat();
+            $vat = $Article->getVat();
             $price = $Article->getPrice()->getValue();
 
             if (!isset($vats[(string)$vat])) {
@@ -484,8 +487,8 @@ class Shipping extends QUI\Utils\Singleton
         // look at vat, which vat should be used
         if (!count($vats) && !$Order->getCustomer()) {
             // use default vat
-            $Area     = QUI\ERP\Defaults::getArea();
-            $TaxType  = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
+            $Area = QUI\ERP\Defaults::getArea();
+            $TaxType = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
             $TaxEntry = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
 
             return $TaxEntry->getValue();
@@ -524,7 +527,7 @@ class Shipping extends QUI\Utils\Singleton
         $statusId,
         $message = null
     ) {
-        $Customer      = $Order->getCustomer();
+        $Customer = $Order->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
 
         if (empty($customerEmail)) {
@@ -537,7 +540,7 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         if (empty($message)) {
-            $Status  = ShippingStatus\Handler::getInstance()->getShippingStatus($statusId);
+            $Status = ShippingStatus\Handler::getInstance()->getShippingStatus($statusId);
             $message = $Status->getStatusChangeNotificationText($Order);
         }
 

@@ -105,7 +105,7 @@ class ShippingUnique implements ShippingInterface
             QUI\ERP\Defaults::getCurrency()
         );
 
-        return '+'.$Price->getDisplayPrice();
+        return '+' . $Price->getDisplayPrice();
     }
 
     /**

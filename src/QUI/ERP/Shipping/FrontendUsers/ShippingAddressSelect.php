@@ -25,7 +25,7 @@ class ShippingAddressSelect extends QUI\Control
         parent::__construct($attributes);
 
         $this->setAttribute('nodeName', 'section');
-        $this->addCSSFile(\dirname(__FILE__).'/ShippingAddressSelect.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ShippingAddressSelect.css');
         $this->addCSSClass('quiqqer-shipping-user-address');
     }
 
@@ -41,20 +41,20 @@ class ShippingAddressSelect extends QUI\Control
         }
 
         $addresses = [];
-        $current   = '';
-        $User      = $this->getAttribute('User');
+        $current = '';
+        $User = $this->getAttribute('User');
 
         if ($User) {
             /* @var $User QUI\Users\User */
             $addresses = $User->getAddressList();
-            $current   = (int)$User->getAttribute('quiqqer.delivery.address');
+            $current = (int)$User->getAttribute('quiqqer.delivery.address');
         }
 
         $Engine->assign([
             'addresses' => $addresses,
-            'current'   => $current
+            'current' => $current
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ShippingAddressSelect.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ShippingAddressSelect.html');
     }
 }

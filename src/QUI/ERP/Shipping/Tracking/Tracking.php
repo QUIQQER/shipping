@@ -1,6 +1,5 @@
 <?php
 
-
 namespace QUI\ERP\Shipping\Tracking;
 
 use QUI\Countries\Country;
@@ -25,55 +24,55 @@ class Tracking
         //UPS - UNITED PARCEL SERVICE
         [
             'active' => '1',
-            'type'   => 'ups',
-            'title'  => 'UPS',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/ups.svg',
-            'url'    => 'https://wwwapps.ups.com/WebTracking/processInputRequest?TypeOfInquiryNumber=T&InquiryNumber1='
+            'type' => 'ups',
+            'title' => 'UPS',
+            'image' => 'quiqqer/shipping/bin/images/tracking/ups.svg',
+            'url' => 'https://wwwapps.ups.com/WebTracking/processInputRequest?TypeOfInquiryNumber=T&InquiryNumber1='
         ],
 
         //USPS - UNITED STATES POSTAL SERVICE
         [
             'active' => '1',
-            'type'   => 'usps',
-            'title'  => 'USPS',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/usps.png',
-            'url'    => 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1='
+            'type' => 'usps',
+            'title' => 'USPS',
+            'image' => 'quiqqer/shipping/bin/images/tracking/usps.png',
+            'url' => 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1='
         ],
 
         //FEDEX - FEDERAL EXPRESS
         [
             'active' => '1',
-            'type'   => 'fedex',
-            'title'  => 'FedEx',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/fedex.svg',
-            'url'    => 'https://www.fedex.com/fedextrack/?trknbr='
+            'type' => 'fedex',
+            'title' => 'FedEx',
+            'image' => 'quiqqer/shipping/bin/images/tracking/fedex.svg',
+            'url' => 'https://www.fedex.com/fedextrack/?trknbr='
         ],
 
         //LaserShip
         [
             'active' => '1',
-            'type'   => 'laser_ship',
-            'title'  => 'LaserShip',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/lasership.png',
-            'url'    => 'https://www.fedex.com/fedextrack/?trknbr='
+            'type' => 'laser_ship',
+            'title' => 'LaserShip',
+            'image' => 'quiqqer/shipping/bin/images/tracking/lasership.png',
+            'url' => 'https://www.fedex.com/fedextrack/?trknbr='
         ],
 
         //ONTRAC
         [
             'active' => '1',
-            'type'   => 'ontrac',
-            'title'  => 'OnTrac',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/ontrac.svg',
-            'url'    => 'https://www.ontrac.com/trackres.asp?tracking_number='
+            'type' => 'ontrac',
+            'title' => 'OnTrac',
+            'image' => 'quiqqer/shipping/bin/images/tracking/ontrac.svg',
+            'url' => 'https://www.ontrac.com/trackres.asp?tracking_number='
         ],
 
         //DHL
         [
-            'active'  => '1',
-            'type'    => 'dhl',
-            'title'   => 'DHL',
-            'image'   => 'quiqqer/shipping/bin/images/tracking/dhl.svg',
-            'url'     => 'https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=',
+            'active' => '1',
+            'type' => 'dhl',
+            'title' => 'DHL',
+            'image' => 'quiqqer/shipping/bin/images/tracking/dhl.svg',
+            'url' => 'https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=',
             'country' => [
                 'en' => 'https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=',
                 'de' => 'https://www.dhl.com/de-de/home/tracking/tracking-parcel.html?submit=1&tracking-id='
@@ -83,19 +82,19 @@ class Tracking
         //DPD
         [
             'active' => '1',
-            'type'   => 'dpd',
-            'title'  => 'DPD',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/dpd.svg',
-            'url'    => 'https://track.dpdnl.nl/?parcelnumber='
+            'type' => 'dpd',
+            'title' => 'DPD',
+            'image' => 'quiqqer/shipping/bin/images/tracking/dpd.svg',
+            'url' => 'https://track.dpdnl.nl/?parcelnumber='
         ],
 
         // DEUTSCHE POST
         [
             'active' => '1',
-            'type'   => 'deutschePost',
-            'title'  => 'Deutsche Post',
-            'image'  => 'quiqqer/shipping/bin/images/tracking/DeutschePost.svg',
-            'url'    => 'https://www.deutschepost.de/de/s/sendungsverfolgung/verfolgen.html?lang=de&cid=brief&piececode='
+            'type' => 'deutschePost',
+            'title' => 'Deutsche Post',
+            'image' => 'quiqqer/shipping/bin/images/tracking/DeutschePost.svg',
+            'url' => 'https://www.deutschepost.de/de/s/sendungsverfolgung/verfolgen.html?lang=de&cid=brief&piececode='
         ]
     ];
 
@@ -146,7 +145,7 @@ class Tracking
     public static function getUrl($trackingId, string $carrier, ?Country $Country): string
     {
         $carriers = self::getActiveCarriers();
-        $country  = false;
+        $country = false;
 
         if ($Country) {
             $country = $Country->getCode();

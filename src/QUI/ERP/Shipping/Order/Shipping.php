@@ -55,24 +55,24 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     public function getBody()
     {
         $Engine = QUI::getTemplateManager()->getEngine();
-        $User   = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
 
         $Order = $this->getOrder();
         $Order->recalculate();
 
         $SelectedShipping = $Order->getShipping();
 
-        $Customer     = $Order->getCustomer();
-        $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
+        $Customer = $Order->getCustomer();
+        $Shipping = QUI\ERP\Shipping\Shipping::getInstance();
         $shippingList = $this->getValidShipping();
 
         // debugging logger
         if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
             QUI\ERP\Shipping\Debug::clearLogStock();
 
-            $debugStack    = [];
+            $debugStack = [];
             $debugShipping = $Shipping->getShippingList();
-            $Logger        = QUI\ERP\Shipping\Debug::getLoggerWithoutFormatter();
+            $Logger = QUI\ERP\Shipping\Debug::getLoggerWithoutFormatter();
 
             foreach ($debugShipping as $DebugShippingEntry) {
                 $DebugShippingEntry->setOrder($Order);
@@ -86,7 +86,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
                     $DebugShippingEntry->canUsedBy($User, $Order);
                 }
 
-                $debugStack   = \array_merge($debugStack, QUI\ERP\Shipping\Debug::getLogStack());
+                $debugStack = \array_merge($debugStack, QUI\ERP\Shipping\Debug::getLogStack());
                 $debugStack[] = "";
 
                 QUI\ERP\Shipping\Debug::clearLogStock();
@@ -103,7 +103,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             QUI\ERP\Shipping\Debug::sendAdminInfoMailAboutEmptyShipping($Order);
 
             $Package = QUI::getPackage('quiqqer/shipping');
-            $Conf    = $Package->getConfig();
+            $Conf = $Package->getConfig();
 
             if ((int)$Conf->getValue('no_rules', 'behavior') === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
                 $message = QUI::getLocale()->get(
@@ -124,10 +124,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
         $Engine->assign([
-            'User'             => $User,
-            'Customer'         => $Customer,
+            'User' => $User,
+            'Customer' => $Customer,
             'SelectedShipping' => $SelectedShipping,
-            'shippingList'     => $shippingList
+            'shippingList' => $shippingList
         ]);
 
         return $Engine->fetch(\dirname(__FILE__) . '/Shipping.html');
@@ -141,14 +141,14 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $Order = $this->getOrder();
 
         $Shipping = $Order->getShipping();
-        $User     = $Order->getCustomer();
+        $User = $Order->getCustomer();
 
         // setting rule behavior
         $behavior = ShippingHandler::NO_RULE_FOUND_ORDER_CONTINUE;
 
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
-            $Conf    = $Package->getConfig();
+            $Conf = $Package->getConfig();
 
             $behavior = (int)$Conf->getValue('no_rules', 'behavior');
         } catch (QUI\Exception $Exception) {
@@ -180,8 +180,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         // if no shipping exists, BUT order can be continued
         // and if really no shipping is selectable
-        if ($Shipping === null
-            && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
+        if (
+            $Shipping === null
+            && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL
+        ) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/shipping',
                 'exception.missing.shipping.order.canceled'
@@ -189,8 +191,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         }
 
         // if no shipping exists, BUT order can be continued
-        if ($Shipping === null
-            && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CONTINUE) {
+        if (
+            $Shipping === null
+            && $behavior === ShippingHandler::NO_RULE_FOUND_ORDER_CONTINUE
+        ) {
             return;
         }
 
@@ -235,11 +239,11 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $shipping = $this->getAttribute('shipping');
         }
 
-        $User  = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
         $Order = $this->getOrder();
 
         try {
-            $Shipping      = QUI\ERP\Shipping\Shipping::getInstance();
+            $Shipping = QUI\ERP\Shipping\Shipping::getInstance();
             $ShippingEntry = $Shipping->getShippingEntry($shipping);
             $ShippingEntry->setOrder($Order);
 
