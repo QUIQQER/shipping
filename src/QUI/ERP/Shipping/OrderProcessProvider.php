@@ -6,14 +6,12 @@
 
 namespace QUI\ERP\Shipping;
 
-use QUI;
-
-use QUI\ERP\Shipping\Api\AbstractShippingEntry;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Order\AbstractOrderProcessProvider;
 use QUI\ERP\Order\Controls\AbstractOrderingStep;
 use QUI\ERP\Order\OrderProcess;
 use QUI\ERP\Order\Utils\OrderProcessSteps;
+use QUI\ERP\Shipping\Api\AbstractShippingEntry;
 
 /**
  * Class OrderProcessProvider
@@ -41,17 +39,17 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
         }
 
         $orderId = null;
-        $Order   = null;
+        $Order = null;
 
         if ($Process->getOrder()) {
-            $Order   = $Process->getOrder();
+            $Order = $Process->getOrder();
             $orderId = $Order->getId();
         }
 
         $OrderProcessSteps->append(
             new Order\Shipping([
-                'orderId'  => $orderId,
-                'Order'    => $Order,
+                'orderId' => $orderId,
+                'Order' => $Order,
                 'priority' => 25
             ])
         );

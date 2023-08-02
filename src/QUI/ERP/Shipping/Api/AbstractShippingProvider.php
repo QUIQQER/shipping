@@ -6,8 +6,6 @@
 
 namespace QUI\ERP\Shipping\Api;
 
-use QUI;
-
 /**
  * Shipping provider
  *

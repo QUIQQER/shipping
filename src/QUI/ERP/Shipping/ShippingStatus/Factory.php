@@ -31,7 +31,7 @@ class Factory extends QUI\Utils\Singleton
     public function createShippingStatus($id, $color, array $title)
     {
         $list = Handler::getInstance()->getList();
-        $id   = (int)$id;
+        $id = (int)$id;
         $data = [];
 
         if (isset($list[$id])) {
@@ -43,7 +43,7 @@ class Factory extends QUI\Utils\Singleton
 
         // config
         $Package = QUI::getPackage('quiqqer/shipping');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
         $Config->setValue('shipping_status', $id, $color);
         $Config->save();
@@ -60,13 +60,13 @@ class Factory extends QUI\Utils\Singleton
         }
 
         // ShippingStatus title
-        $data['package']  = 'quiqqer/shipping';
+        $data['package'] = 'quiqqer/shipping';
         $data['datatype'] = 'php,js';
-        $data['html']     = 1;
+        $data['html'] = 1;
 
         QUI\Translator::addUserVar(
             'quiqqer/shipping',
-            'shipping.status.'.$id,
+            'shipping.status.' . $id,
             $data
         );
 

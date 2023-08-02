@@ -69,7 +69,7 @@ class ShippingRule extends QUI\CRUD\Child
         $this->Events->addEvent('onSaveBegin', function () {
             Permission::checkPermission('quiqqer.shipping.edit');
 
-            $id         = $this->getId();
+            $id = $this->getId();
             $attributes = $this->getAttributes();
 
             if (is_array($attributes['title'])) {
@@ -100,12 +100,15 @@ class ShippingRule extends QUI\CRUD\Child
                 $attributes['discount_type'] = (int)$attributes['discount_type'];
             }
 
-            if ($attributes['discount_type'] === RuleFactory::DISCOUNT_TYPE_PERCENTAGE ||
+            if (
+                $attributes['discount_type'] === RuleFactory::DISCOUNT_TYPE_PERCENTAGE ||
                 $attributes['discount_type'] === 'PERCENTAGE'
             ) {
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_PERCENTAGE;
-            } elseif ($attributes['discount_type'] === RuleFactory::DISCOUNT_TYPE_PC_ORDER ||
-                $attributes['discount_type'] === 'PERCENTAGE_ORDER') {
+            } elseif (
+                $attributes['discount_type'] === RuleFactory::DISCOUNT_TYPE_PC_ORDER ||
+                $attributes['discount_type'] === 'PERCENTAGE_ORDER'
+            ) {
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_PC_ORDER;
             } else {
                 $attributes['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
@@ -158,7 +161,7 @@ class ShippingRule extends QUI\CRUD\Child
         $id = $this->getId();
 
         $attributes = $this->getAttributes();
-        $Locale     = QUI::getLocale();
+        $Locale = QUI::getLocale();
 
         $availableLanguages = QUI\Translator::getAvailableLanguages();
 
@@ -194,7 +197,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         $language = $Locale->getCurrent();
-        $id       = $this->getId();
+        $id = $this->getId();
 
         return $Locale->getByLang(
             $language,
@@ -256,9 +259,9 @@ class ShippingRule extends QUI\CRUD\Child
 
 
         // usage definitions / limits
-        $dateFrom  = $this->getAttribute('date_from');
+        $dateFrom = $this->getAttribute('date_from');
         $dateUntil = $this->getAttribute('date_until');
-        $now       = time();
+        $now = time();
 
         if ($dateFrom && strtotime($dateFrom) > $now) {
             Debug::addLog("{$this->getTitle()} :: date from is not valid {$dateFrom} > {$now}");
@@ -274,7 +277,7 @@ class ShippingRule extends QUI\CRUD\Child
 
         // assignment
         $userGroupValue = $this->getAttribute('user_groups');
-        $areasValue     = $this->getAttribute('areas');
+        $areasValue = $this->getAttribute('areas');
 
         // if groups and areas are empty, everybody is allowed
         if (empty($userGroupValue) && empty($areasValue)) {
@@ -291,7 +294,7 @@ class ShippingRule extends QUI\CRUD\Child
             $this->getAttribute('user_groups')
         );
 
-        $discountUsers  = $userGroups['users'];
+        $discountUsers = $userGroups['users'];
         $discountGroups = $userGroups['groups'];
 
         if (empty($discountUsers) && empty($discountGroups)) {
@@ -384,33 +387,33 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         /* @var $Order QUI\ERP\Order\Order */
-        $Articles    = $Order->getArticles();
+        $Articles = $Order->getArticles();
         $articleList = $Articles->getArticles();
 
         if (!$Articles->count()) {
             return false;
         }
 
-        $articles    = $this->getAttribute('articles');
+        $articles = $this->getAttribute('articles');
         $articleOnly = (int)$this->getAttribute('articles_only');
-        $unitTerms   = $this->getUnitTerms();
+        $unitTerms = $this->getUnitTerms();
 
         $categories = $this->getAttribute('categories');
         $categories = trim($categories, ',');
         $categories = explode(',', $categories);
         $categories = array_map('intval', $categories);
 
-        $quantityFrom  = $this->getAttribute('purchase_quantity_from');     // Einkaufsmenge ab
+        $quantityFrom = $this->getAttribute('purchase_quantity_from');     // Einkaufsmenge ab
         $quantityUntil = $this->getAttribute('purchase_quantity_until');    // Einkaufsmenge bis
-        $purchaseFrom  = $this->getAttribute('purchase_value_from');        // Einkaufswert ab
+        $purchaseFrom = $this->getAttribute('purchase_value_from');        // Einkaufswert ab
         $purchaseUntil = $this->getAttribute('purchase_value_until');       // Einkaufswert bis
 
         // article checks
-        $Shipping     = QUI\ERP\Shipping\Shipping::getInstance();
-        $unitIds      = $Shipping->getShippingRuleUnitFieldIds();
+        $Shipping = QUI\ERP\Shipping\Shipping::getInstance();
+        $unitIds = $Shipping->getShippingRuleUnitFieldIds();
         $articleFound = true;
         $articleUnits = [];
-        $debugUnits   = [];
+        $debugUnits = [];
 
         if (!empty($articles)) {
             $articleFound = false;
@@ -442,12 +445,12 @@ class ShippingRule extends QUI\CRUD\Child
         };
 
         foreach ($articleList as $Article) {
-            $aid             = $Article->getId();
+            $aid = $Article->getId();
             $articleQuantity = $Article->getQuantity();
 
             // get product because of units
             try {
-                $Product           = Products::getProduct($aid);
+                $Product = Products::getProduct($aid);
                 $productCategories = $Product->getCategories();
 
                 $categoryIds = array_map(function ($Category) {
@@ -481,7 +484,7 @@ class ShippingRule extends QUI\CRUD\Child
                     $articleUnits[$unitId] = $articleUnits[$unitId] + ($weight * $articleQuantity);
 
                     $debugUnits[$unitId] = [
-                        'field'  => $Weight->getTitle(),
+                        'field' => $Weight->getTitle(),
                         'amount' => $articleUnits[$unitId]
                     ];
                 }
@@ -526,7 +529,8 @@ class ShippingRule extends QUI\CRUD\Child
         // category check
         $categoryIdsInOrder = array_unique($categoryIdsInOrder);
 
-        if (!empty($categoryIdsInOrder)
+        if (
+            !empty($categoryIdsInOrder)
             && !empty($categories)
             && (count($categories) === 1 && $categories[0] !== 0)
         ) {
@@ -571,11 +575,11 @@ class ShippingRule extends QUI\CRUD\Child
                     $unitTerm['term2'] = 'gt';
                 }
 
-                $id    = (int)$unitTerm['id'];
-                $unit  = $unitTerm['unit'];
+                $id = (int)$unitTerm['id'];
+                $unit = $unitTerm['unit'];
                 $value = floatval($unitTerm['value']);
 
-                $term  = $unitTerm['term'];
+                $term = $unitTerm['term'];
                 $hTerm = FieldUtils::termToHuman($term);
 
                 if (!isset($articleUnits[$id])) {
@@ -584,7 +588,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                 if ($id === Fields::FIELD_WEIGHT) {
                     $unitValue = FieldUtils::weightToKilogram($value, $unit);
-                    $compare   = FieldUtils::compare($articleUnits[$id], $unitValue, $term);
+                    $compare = FieldUtils::compare($articleUnits[$id], $unitValue, $term);
 
                     if ($compare === false) {
                         QUI\ERP\Shipping\Debug::addLog(
@@ -597,11 +601,11 @@ class ShippingRule extends QUI\CRUD\Child
                     // term 2
                     if (!empty($unitTerm['value2'])) {
                         $value2 = floatval($unitTerm['value2']);
-                        $term2  = $unitTerm['term2'];
+                        $term2 = $unitTerm['term2'];
                         $hTerm2 = FieldUtils::termToHuman($term2);
 
                         $unitValue = FieldUtils::weightToKilogram($value2, $unit);
-                        $compare2  = FieldUtils::compare($articleUnits[$id], $unitValue, $term2);
+                        $compare2 = FieldUtils::compare($articleUnits[$id], $unitValue, $term2);
 
                         if ($compare2 === false) {
                             QUI\ERP\Shipping\Debug::addLog(
@@ -627,9 +631,9 @@ class ShippingRule extends QUI\CRUD\Child
 
                 // term 2
                 if (!empty($unitTerm['value2'])) {
-                    $value2   = floatval($unitTerm['value2']);
-                    $term2    = $unitTerm['term2'];
-                    $hTerm2   = FieldUtils::termToHuman($term2);
+                    $value2 = floatval($unitTerm['value2']);
+                    $term2 = $unitTerm['term2'];
+                    $hTerm2 = FieldUtils::termToHuman($term2);
                     $compare2 = FieldUtils::compare($articleUnits[$id], $value2, $term2);
 
                     if ($compare2 === false) {
@@ -665,9 +669,9 @@ class ShippingRule extends QUI\CRUD\Child
 
         // purchase
         try {
-            $Calculation    = $Order->getPriceCalculation();
-            $Currency       = $Order->getCurrency();
-            $PriceFactors   = $Order->getArticles()->getPriceFactors();
+            $Calculation = $Order->getPriceCalculation();
+            $Currency = $Order->getCurrency();
+            $PriceFactors = $Order->getArticles()->getPriceFactors();
             $ShippingFactor = null;
 
             /* @var $Factor QUI\ERP\Products\Interfaces\PriceFactorInterface */
@@ -764,9 +768,9 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         // check date
-        $usageFrom  = $this->getAttribute('date_from');
+        $usageFrom = $this->getAttribute('date_from');
         $usageUntil = $this->getAttribute('date_until');
-        $time       = time();
+        $time = time();
 
         if (!empty($usageFrom)) {
             $usageFrom = strtotime($usageFrom);
@@ -907,7 +911,7 @@ class ShippingRule extends QUI\CRUD\Child
     {
         $data = [
             'datatype' => 'php,js',
-            'package'  => 'quiqqer/shipping'
+            'package' => 'quiqqer/shipping'
         ];
 
         $languages = QUI::availableLanguages();
@@ -917,7 +921,7 @@ class ShippingRule extends QUI\CRUD\Child
                 continue;
             }
 
-            $data[$language]           = $title[$language];
+            $data[$language] = $title[$language];
             $data[$language . '_edit'] = $title[$language];
         }
 

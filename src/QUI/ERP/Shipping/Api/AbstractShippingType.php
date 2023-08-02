@@ -36,7 +36,7 @@ abstract class AbstractShippingType extends QUI\QDOM implements QUI\ERP\Shipping
 
         return [
             'title' => $this->getTitle($Locale),
-            'type'  => $this->getType()
+            'type' => $this->getType()
         ];
     }
 

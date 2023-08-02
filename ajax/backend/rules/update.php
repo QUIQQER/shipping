@@ -4,7 +4,7 @@
  * This file contains package_quiqqer_shipping_ajax_backend_rules_update
  */
 
-use \QUI\ERP\Shipping\Rules\Factory;
+use QUI\ERP\Shipping\Rules\Factory;
 
 /**
  * Update a shipping method
@@ -14,7 +14,7 @@ use \QUI\ERP\Shipping\Rules\Factory;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_update',
     function ($ruleId, $data) {
-        $data    = \json_decode($data, true);
+        $data = json_decode($data, true);
         $Factory = new Factory();
 
         /* @var $Rule QUI\ERP\Shipping\Rules\ShippingRule */

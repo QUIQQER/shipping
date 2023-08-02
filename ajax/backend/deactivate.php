@@ -4,7 +4,7 @@
  * This file contains package_quiqqer_shipping_ajax_backend_deactivate
  */
 
-use \QUI\ERP\Shipping\Types\Factory;
+use QUI\ERP\Shipping\Types\Factory;
 
 /**
  * Deactivate a shipping
@@ -15,7 +15,7 @@ use \QUI\ERP\Shipping\Types\Factory;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_deactivate',
     function ($shippingId) {
-        $factory  = new Factory();
+        $factory = new Factory();
         $Shipping = $factory->getChild($shippingId);
         $Shipping->deactivate();
 

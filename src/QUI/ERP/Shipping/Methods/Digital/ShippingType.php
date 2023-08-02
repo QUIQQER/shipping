@@ -5,8 +5,8 @@ namespace QUI\ERP\Shipping\Methods\Digital;
 use QUI;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Products\Product\Types\DigitalProduct;
+use QUI\ERP\Shipping\Debug;
 
 /**
  * Class DigitalType
@@ -33,9 +33,9 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
      */
     public function getIcon()
     {
-        return QUI\ERP\Shipping\Shipping::getInstance()->getHost().
-               URL_OPT_DIR
-               .'quiqqer/shipping/bin/images/shipping/download.png';
+        return QUI\ERP\Shipping\Shipping::getInstance()->getHost() .
+            URL_OPT_DIR
+            . 'quiqqer/shipping/bin/images/shipping/download.png';
     }
 
     /**
@@ -72,7 +72,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                 if (!($Product instanceof DigitalProduct)) {
                     Debug::addLog(
                         "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: contains at least one NON-DIGITAL"
-                        ." product that must be shipped physically."
+                        . " product that must be shipped physically."
                     );
 
                     return false;
@@ -83,7 +83,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         }
 
         // Check restriction to certain products / product categories
-        $articles   = $ShippingEntry->getAttribute('articles');
+        $articles = $ShippingEntry->getAttribute('articles');
         $categories = $ShippingEntry->getAttribute('categories');
 
         $toInt = function ($article) {
@@ -109,7 +109,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $ArticleList   = $Order->getArticles();
+        $ArticleList = $Order->getArticles();
         $orderArticles = $ArticleList->getArticles();
 
         foreach ($orderArticles as $Article) {
@@ -117,13 +117,15 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                 $productId = $Article->getId();
 
                 if (!empty($articles) && \in_array($productId, $articles)) {
-                    Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]");
+                    Debug::addLog(
+                        "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]"
+                    );
 
                     return true;
                 }
 
                 if (\is_array($categories)) {
-                    $Product           = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                    $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
                     $articleCategories = $Product->getCategories();
 
                     /* @var $Category QUI\ERP\Products\Category\Category */
@@ -131,7 +133,9 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                         $categoryId = $Category->getId();
 
                         if (\in_array($categoryId, $categories)) {
-                            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]");
+                            Debug::addLog(
+                                "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]"
+                            );
 
                             return true;
                         }
@@ -173,7 +177,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // assignment
         $userGroupValue = $ShippingEntry->getAttribute('user_groups');
-        $areasValue     = $ShippingEntry->getAttribute('areas');
+        $areasValue = $ShippingEntry->getAttribute('areas');
 
         // if groups and areas are empty, everybody is allowed
         if (empty($userGroupValue) && empty($areasValue)) {
@@ -202,7 +206,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             $ShippingEntry->getAttribute('user_groups')
         );
 
-        $discountUsers  = $userGroups['users'];
+        $discountUsers = $userGroups['users'];
         $discountGroups = $userGroups['groups'];
 
         if (empty($discountUsers) && empty($discountGroups)) {

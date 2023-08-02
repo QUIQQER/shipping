@@ -14,16 +14,16 @@ use QUI\ERP\Shipping\ShippingStatus\Handler;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_list',
     function () {
-        $Grid    = new QUI\Utils\Grid();
+        $Grid = new QUI\Utils\Grid();
         $Handler = Handler::getInstance();
 
-        $list   = $Handler->getShippingStatusList();
+        $list = $Handler->getShippingStatusList();
         $result = \array_map(function ($Status) {
             /* @var $Status \QUI\ERP\Shipping\ShippingStatus\Status */
             return $Status->toArray(QUI::getLocale());
         }, $list);
 
-        \usort($result, function ($a, $b) {
+        usort($result, function ($a, $b) {
             if ($a['id'] == $b['id']) {
                 return 0;
             }

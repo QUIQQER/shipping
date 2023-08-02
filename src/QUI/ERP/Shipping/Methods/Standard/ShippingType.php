@@ -101,7 +101,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         }
 
         // assignment
-        $articles   = $ShippingEntry->getAttribute('articles');
+        $articles = $ShippingEntry->getAttribute('articles');
         $categories = $ShippingEntry->getAttribute('categories');
 
         $toInt = function ($article) {
@@ -127,7 +127,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $ArticleList   = $Order->getArticles();
+        $ArticleList = $Order->getArticles();
         $orderArticles = $ArticleList->getArticles();
 
         foreach ($orderArticles as $Article) {
@@ -143,7 +143,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
                 }
 
                 if (is_array($categories)) {
-                    $Product           = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                    $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
                     $articleCategories = $Product->getCategories();
 
                     /* @var $Category QUI\ERP\Products\Category\Category */
@@ -195,7 +195,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // assignment
         $userGroupValue = $ShippingEntry->getAttribute('user_groups');
-        $areasValue     = $ShippingEntry->getAttribute('areas');
+        $areasValue = $ShippingEntry->getAttribute('areas');
 
         // if groups and areas are empty, everybody is allowed
         if (empty($userGroupValue) && empty($areasValue)) {
@@ -224,7 +224,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             $ShippingEntry->getAttribute('user_groups')
         );
 
-        $discountUsers  = $userGroups['users'];
+        $discountUsers = $userGroups['users'];
         $discountGroups = $userGroups['groups'];
 
         if (empty($discountUsers) && empty($discountGroups)) {

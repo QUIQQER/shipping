@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_shipping_ajax_backend_create
  */
 
-use \QUI\ERP\Shipping\Types\Factory;
-use \QUI\ERP\Shipping\Shipping;
+use QUI\ERP\Shipping\Shipping;
+use QUI\ERP\Shipping\Types\Factory;
 
 /**
  * Create a new shipping method
@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
     function ($shippingType) {
         $Type = Shipping::getInstance()->getShippingType($shippingType);
 
-        $Factory  = new Factory();
+        $Factory = new Factory();
         $Shipping = $Factory->createChild([
             'shipping_type' => $Type->getType()
         ]);
