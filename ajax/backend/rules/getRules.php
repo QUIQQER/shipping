@@ -12,12 +12,12 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_getRules',
     function ($ruleIds) {
-        $ruleIds = \json_decode($ruleIds, true);
-        $Rules   = QUI\ERP\Shipping\Rules\Factory::getInstance();
+        $ruleIds = json_decode($ruleIds, true);
+        $Rules = QUI\ERP\Shipping\Rules\Factory::getInstance();
 
         $result = [];
 
-        if (!\is_array($ruleIds)) {
+        if (!is_array($ruleIds)) {
             $ruleIds = [];
         }
 
@@ -30,7 +30,7 @@ QUI::$Ajax->registerFunction(
         }
 
         // sort by priority
-        \usort($result, function ($a, $b) {
+        usort($result, function ($a, $b) {
             if (!isset($a['priority'])) {
                 $a['priority'] = 0;
             }

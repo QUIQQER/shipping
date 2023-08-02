@@ -4,7 +4,7 @@
  * This file contains package_quiqqer_shipping_ajax_backend_create
  */
 
-use \QUI\ERP\Shipping\Rules\Factory;
+use QUI\ERP\Shipping\Rules\Factory;
 
 
 /**
@@ -15,9 +15,9 @@ use \QUI\ERP\Shipping\Rules\Factory;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_create',
     function ($rules) {
-        $rules   = \json_decode($rules, true);
+        $rules = json_decode($rules, true);
         $Factory = new Factory();
-        $Rule    = $Factory->createChild($rules);
+        $Rule = $Factory->createChild($rules);
 
         return $Rule->getId();
     },

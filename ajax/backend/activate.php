@@ -12,10 +12,11 @@ use QUI\ERP\Shipping\Types\Factory;
  * @param integer $shippingId
  * @return array
  */
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_activate',
     function ($shippingId) {
-        $Shipping      = new Factory();
+        $Shipping = new Factory();
         $ShippingEntry = $Shipping->getChild($shippingId);
         $ShippingEntry->activate();
 

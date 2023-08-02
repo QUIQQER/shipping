@@ -18,7 +18,7 @@ use QUI\Utils\Security\Orthos;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_update',
     function ($id, $color, $title, $notification) {
-        $id      = (int)$id;
+        $id = (int)$id;
         $Handler = Handler::getInstance();
 
         $Handler->updateShippingStatus(

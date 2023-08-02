@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_shipping_ajax_backend_shippingStatus_getNotificationText
  */
 
-use QUI\ERP\Shipping\ShippingStatus\Handler;
 use QUI\ERP\Order\Handler as OrderHandler;
+use QUI\ERP\Shipping\ShippingStatus\Handler;
 
 /**
  * Get status change notification text for a specific order
