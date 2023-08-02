@@ -50,8 +50,8 @@ class Handler extends QUI\Utils\Singleton
 
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
-            $Config  = $Package->getConfig();
-            $result  = $Config->getSection('shipping_status');
+            $Config = $Package->getConfig();
+            $result = $Config->getSection('shipping_status');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -88,7 +88,7 @@ class Handler extends QUI\Utils\Singleton
      */
     public function getShippingStatusList()
     {
-        $list   = $this->getList();
+        $list = $this->getList();
         $result = [];
 
         foreach ($list as $entry => $color) {
@@ -135,14 +135,14 @@ class Handler extends QUI\Utils\Singleton
         // remove translation
         QUI\Translator::delete(
             'quiqqer/shipping',
-            'shipping.status.'.$Status->getId()
+            'shipping.status.' . $Status->getId()
         );
 
         QUI\Translator::publish('quiqqer/shipping');
 
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
         $Config->del('shipping_status', $Status->getId());
         $Config->save();
@@ -164,7 +164,7 @@ class Handler extends QUI\Utils\Singleton
 
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
         $Config->setValue('shipping_status_notification', $Status->getId(), $notify ? "1" : "0");
         $Config->save();
@@ -189,21 +189,21 @@ class Handler extends QUI\Utils\Singleton
         $languages = QUI::availableLanguages();
 
         $data = [
-            'package'  => 'quiqqer/shipping',
+            'package' => 'quiqqer/shipping',
             'datatype' => 'php,js',
-            'html'     => 1
+            'html' => 1
         ];
 
         foreach ($languages as $language) {
             if (isset($title[$language])) {
-                $data[$language]         = $title[$language];
-                $data[$language.'_edit'] = $title[$language];
+                $data[$language] = $title[$language];
+                $data[$language . '_edit'] = $title[$language];
             }
         }
 
         QUI\Translator::edit(
             'quiqqer/shipping',
-            'shipping.status.'.$Status->getId(),
+            'shipping.status.' . $Status->getId(),
             'quiqqer/shipping',
             $data
         );
@@ -212,7 +212,7 @@ class Handler extends QUI\Utils\Singleton
 
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
-        $Config  = $Package->getConfig();
+        $Config = $Package->getConfig();
 
         $Config->setValue('shipping_status', $Status->getId(), $color);
         $Config->save();
@@ -227,13 +227,13 @@ class Handler extends QUI\Utils\Singleton
     public function createNotificationTranslations($id)
     {
         $data = [
-            'package'  => 'quiqqer/shipping',
+            'package' => 'quiqqer/shipping',
             'datatype' => 'php,js',
-            'html'     => 1
+            'html' => 1
         ];
 
         // translations
-        $L         = new QUI\Locale();
+        $L = new QUI\Locale();
         $languages = QUI::availableLanguages();
 
         foreach ($languages as $language) {
@@ -243,7 +243,7 @@ class Handler extends QUI\Utils\Singleton
 
         try {
             // Check if translation already exists
-            $translation = QUI\Translator::get('quiqqer/shipping', 'shipping.status.notification.'.$id);
+            $translation = QUI\Translator::get('quiqqer/shipping', 'shipping.status.notification.' . $id);
 
             if (!empty($translation)) {
                 return;
@@ -252,7 +252,7 @@ class Handler extends QUI\Utils\Singleton
             // ShippingStatus notification messages
             QUI\Translator::addUserVar(
                 'quiqqer/shipping',
-                'shipping.status.notification.'.$id,
+                'shipping.status.notification.' . $id,
                 $data
             );
 
@@ -274,20 +274,20 @@ class Handler extends QUI\Utils\Singleton
      */
     public function sendStatusChangeNotification(AbstractOrder $Order, $statusId, $message = null)
     {
-        $Customer      = $Order->getCustomer();
+        $Customer = $Order->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
 
         if (empty($customerEmail)) {
             QUI\System\Log::addWarning(
-                'Status change notification for order #'.$Order->getPrefixedId().' cannot be sent'
-                .' because customer #'.$Customer->getId().' has no e-mail address.'
+                'Status change notification for order #' . $Order->getPrefixedId() . ' cannot be sent'
+                . ' because customer #' . $Customer->getId() . ' has no e-mail address.'
             );
 
             return;
         }
 
         if (empty($message)) {
-            $Status  = $this->getShippingStatus($statusId);
+            $Status = $this->getShippingStatus($statusId);
             $message = $Status->getStatusChangeNotificationText($Order);
         }
 

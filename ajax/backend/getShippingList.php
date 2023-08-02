@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_getShippingList',
     function () {
         $shippingEntries = Shipping::getInstance()->getShippingList();
-        $result          = [];
+        $result = [];
 
         foreach ($shippingEntries as $ShippingEntry) {
             /* @var $ShippingEntry ShippingEntry */
@@ -25,7 +25,7 @@ QUI::$Ajax->registerFunction(
 
         $current = QUI::getLocale()->getCurrent();
 
-        \usort($result, function ($a, $b) use ($current) {
+        usort($result, function ($a, $b) use ($current) {
             $aTitle = $a['title'][$current];
             $bTitle = $b['title'][$current];
 

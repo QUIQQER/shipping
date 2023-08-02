@@ -14,7 +14,7 @@ use QUI\Utils\Grid;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_getList',
     function ($options) {
-        $options = \json_decode($options, true);
+        $options = json_decode($options, true);
 
         if (!is_array($options)) {
             $options = [];
@@ -44,8 +44,8 @@ QUI::$Ajax->registerFunction(
         }
 
         $Factory = QUI\ERP\Shipping\Rules\Factory::getInstance();
-        $Grid    = new Grid();
-        $query   = $Grid->parseDBParams($options);
+        $Grid = new Grid();
+        $query = $Grid->parseDBParams($options);
 
         if (!isset($query['order'])) {
             $query['order'] = 'priority DESC';
@@ -68,8 +68,8 @@ QUI::$Ajax->registerFunction(
         $count = $Factory->countChildren($query);
 
         return [
-            'data'  => $result,
-            'page'  => (int)$options['page'],
+            'data' => $result,
+            'page' => (int)$options['page'],
             'total' => $count
         ];
     },

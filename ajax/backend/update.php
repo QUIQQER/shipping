@@ -15,7 +15,7 @@ use QUI\ERP\Shipping\Types\Factory;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_update',
     function ($shippingId, $data) {
-        $Factory       = new Factory();
+        $Factory = new Factory();
         $ShippingEntry = $Factory->getChild($shippingId);
 
         $data = \json_decode($data, true);

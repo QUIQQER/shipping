@@ -164,8 +164,8 @@ class Factory extends QUI\CRUD\Factory
         /* @var $NewChild ShippingRule */
         $NewChild = parent::createChild($data);
 
-        $localeTitle  = 'shipping.'.$NewChild->getId().'.rule.title';
-        $localeWTitle = 'shipping.'.$NewChild->getId().'.rule.workingTitle';
+        $localeTitle = 'shipping.' . $NewChild->getId() . '.rule.title';
+        $localeWTitle = 'shipping.' . $NewChild->getId() . '.rule.workingTitle';
 
         $this->createShippingLocale(
             $localeTitle,
@@ -305,9 +305,9 @@ class Factory extends QUI\CRUD\Factory
 
         try {
             QUI\Translator::addUserVar('quiqqer/shipping', $var, [
-                $current   => $title,
+                $current => $title,
                 'datatype' => 'php,js',
-                'package'  => 'quiqqer/shipping'
+                'package' => 'quiqqer/shipping'
             ]);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());

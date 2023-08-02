@@ -24,7 +24,7 @@ class ShippingAddress extends QUI\Control
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(\dirname(__FILE__).'/ShippingAddress.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ShippingAddress.css');
         $this->addCSSClass('quiqqer-shipping-address');
     }
 
@@ -54,7 +54,7 @@ class ShippingAddress extends QUI\Control
 
         try {
             $Project = QUI::getRewrite()->getProject();
-            $sites   = $Project->getSites([
+            $sites = $Project->getSites([
                 'where' => [
                     'type' => 'quiqqer/frontend-users:types/profile'
                 ],
@@ -63,7 +63,7 @@ class ShippingAddress extends QUI\Control
 
             if (isset($sites[0])) {
                 /* @var $Profile QUI\Projects\Site */
-                $Profile     = $sites[0];
+                $Profile = $sites[0];
                 $profileLink = $Profile->getUrlRewritten();
                 $profileLink .= '/user/address';
             }
@@ -72,9 +72,9 @@ class ShippingAddress extends QUI\Control
         }
 
         // current address
-        $currentAddress  = '';
+        $currentAddress = '';
         $ShippingAddress = null;
-        
+
         $Shipping = QUI\ERP\Shipping\Shipping::getInstance()->getShippingByObject($Order);
 
         if ($Shipping) {
@@ -88,11 +88,11 @@ class ShippingAddress extends QUI\Control
         }
 
         $Engine->assign([
-            'addressList'    => $addressList,
-            'profileLink'    => $profileLink,
+            'addressList' => $addressList,
+            'profileLink' => $profileLink,
             'currentAddress' => $currentAddress
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ShippingAddress.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ShippingAddress.html');
     }
 }

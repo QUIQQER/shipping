@@ -24,8 +24,8 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $Engine = QUI::getTemplateManager()->getEngine();
-        $L      = QUI::getLocale();
-        $lg     = 'quiqqer/shipping';
+        $L = QUI::getLocale();
+        $lg = 'quiqqer/shipping';
 
         /** @var ShippingTimePeriod $Field */
         $value = $this->getValue();
@@ -39,8 +39,8 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             case ShippingTimePeriod::OPTION_ON_REQUEST:
             case ShippingTimePeriod::OPTION_IMMEDIATELY_AVAILABLE:
             case ShippingTimePeriod::OPTION_AVAILABLE_SOON:
-                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.'.$value['option']);
-                $cssClass  = $value['option'];
+                $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.' . $value['option']);
+                $cssClass = $value['option'];
                 break;
 
             case ShippingTimePeriod::OPTION_CUSTOM_TEXT:
@@ -56,14 +56,14 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                 break;
 
             default:
-                $from     = $value['from'];
-                $to       = $value['to'];
-                $unit     = $value['unit'];
+                $from = $value['from'];
+                $to = $value['to'];
+                $unit = $value['unit'];
                 $cssClass = 'timeperiod';
 
                 if (empty($to) && empty($from)) {
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.unavailable');
-                    $cssClass  = 'unavailable';
+                    $cssClass = 'unavailable';
                     break;
                 }
 
@@ -84,26 +84,26 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                 } else {
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.from_to', [
                         'from' => $from,
-                        'to'   => $to
+                        'to' => $to
                     ]);
 
                     $singleTime = false;
                 }
 
                 if ($singleTime) {
-                    $valueText .= ' '.$L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_single.'.$unit);
+                    $valueText .= ' ' . $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_single.' . $unit);
                 } else {
-                    $valueText .= ' '.$L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_multi.'.$unit);
+                    $valueText .= ' ' . $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.unit_multi.' . $unit);
                 }
         }
 
         $Engine->assign([
-            'title'     => $this->getTitle(),
+            'title' => $this->getTitle(),
             'valueText' => $valueText,
-            'cssClass'  => $cssClass
+            'cssClass' => $cssClass
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ShippingTimePeriodFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ShippingTimePeriodFrontendView.html');
     }
 
     /**

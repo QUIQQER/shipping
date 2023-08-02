@@ -102,9 +102,9 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      */
     public function getIcon()
     {
-        return QUI\ERP\Shipping\Shipping::getInstance()->getHost().
-               URL_OPT_DIR
-               .'quiqqer/shipping/bin/images/shipping/default.png';
+        return QUI\ERP\Shipping\Shipping::getInstance()->getHost() .
+            URL_OPT_DIR
+            . 'quiqqer/shipping/bin/images/shipping/default.png';
     }
 
     /**
@@ -115,8 +115,8 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
     public function toArray()
     {
         return [
-            'name'        => $this->getName(),
-            'title'       => $this->getTitle(),
+            'name' => $this->getName(),
+            'title' => $this->getTitle(),
             'description' => $this->getDescription()
         ];
     }

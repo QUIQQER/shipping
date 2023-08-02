@@ -5,7 +5,6 @@
  */
 
 use QUI\ERP\Shipping\Rules\Factory;
-use QUI\ExceptionStack;
 
 /**
  * Delete the shipping rule(s)
@@ -15,10 +14,10 @@ use QUI\ExceptionStack;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_delete',
     function ($ruleIds) {
-        $ruleIds = \json_decode($ruleIds, true);
+        $ruleIds = json_decode($ruleIds, true);
         $Factory = new Factory();
 
-        if (!\is_array($ruleIds)) {
+        if (!is_array($ruleIds)) {
             $ruleIds = [$ruleIds];
         }
 

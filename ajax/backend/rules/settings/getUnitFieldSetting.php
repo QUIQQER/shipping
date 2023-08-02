@@ -14,9 +14,9 @@ use QUI\ERP\Products\Handler\Fields;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_settings_getUnitFieldSetting',
     function () {
-        $result   = [];
+        $result = [];
         $Shipping = \QUI\ERP\Shipping\Shipping::getInstance();
-        $ids      = $Shipping->getShippingRuleUnitFieldIds();
+        $ids = $Shipping->getShippingRuleUnitFieldIds();
 
         foreach ($ids as $id) {
             try {
@@ -26,7 +26,7 @@ QUI::$Ajax->registerFunction(
                     $result[] = $Field->getAttributes();
                 }
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeDebugException($Exception);;
+                QUI\System\Log::writeDebugException($Exception);
             }
         }
 
