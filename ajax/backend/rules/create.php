@@ -6,7 +6,6 @@
 
 use QUI\ERP\Shipping\Rules\Factory;
 
-
 /**
  * Create a new shipping method
  *

@@ -26,7 +26,7 @@ QUI::$Ajax->registerFunction(
                     $result[] = $Field->getAttributes();
                 }
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeDebugException($Exception);;
+                QUI\System\Log::writeDebugException($Exception);
             }
         }
 
