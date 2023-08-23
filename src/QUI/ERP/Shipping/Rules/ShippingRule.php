@@ -357,7 +357,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * is the shipping allowed in the order?
      *
-     * @param QUI\ERP\Order\OrderInterface $Order
+     * @param QUI\ERP\Order\OrderInterface|null $Order
      * @return bool
      */
     public function canUsedInOrder($Order)
