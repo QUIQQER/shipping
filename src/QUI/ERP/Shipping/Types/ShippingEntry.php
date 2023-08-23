@@ -12,13 +12,18 @@ use QUI\ERP\Shipping\Api;
 use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 use QUI\ERP\Shipping\Rules\ShippingRule;
+use QUI\Exception;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
+use function class_exists;
+use function in_array;
 use function is_array;
+use function json_decode;
 use function json_encode;
 use function method_exists;
 use function round;
+use function usort;
 
 /**
  * Class ShippingEntry
@@ -60,7 +65,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
             try {
                 QUI\Translator::publish('quiqqer/shipping');
-            } catch (QUI\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
         });
@@ -75,13 +80,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $lg = 'quiqqer/shipping';
         $id = $this->getId();
 
-        $attributes  = $this->getAttributes();
-        $Locale      = QUI::getLocale();
+        $attributes = $this->getAttributes();
+        $Locale = QUI::getLocale();
         $currentLang = $Locale->getCurrent();
 
         $availableLanguages = QUI\Translator::getAvailableLanguages();
@@ -106,8 +111,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             );
 
             if ($language === $currentLang) {
-                $attributes['currentTitle']        = $attributes['title'][$language];
-                $attributes['currentDescription']  = $attributes['description'][$language];
+                $attributes['currentTitle'] = $attributes['title'][$language];
+                $attributes['currentDescription'] = $attributes['description'][$language];
                 $attributes['currentWorkingTitle'] = $attributes['workingTitle'][$language];
             }
         }
@@ -122,13 +127,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         // icon
-        $attributes['icon']      = '';
+        $attributes['icon'] = '';
         $attributes['icon_path'] = '';
 
         try {
-            $attributes['icon']      = $this->getIcon();
+            $attributes['icon'] = $this->getIcon();
             $attributes['icon_path'] = $this->getAttribute('icon');
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
 
@@ -138,11 +143,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     }
 
     /**
-     * Return the shipping as an json array
+     * Return the shipping as a json array
      *
      * @return string
      */
-    public function toJSON()
+    public function toJSON(): string
     {
         return json_encode($this->toArray());
     }
@@ -153,11 +158,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @return Api\ShippingTypeInterface
      * @throws QUI\ERP\Shipping\Exception
      */
-    public function getShippingType()
+    public function getShippingType(): Api\ShippingTypeInterface
     {
         $type = $this->getAttribute('shipping_type');
 
-        if (!\class_exists($type)) {
+        if (!class_exists($type)) {
             throw new QUI\ERP\Shipping\Exception([
                 'quiqqer/shipping',
                 'exception.shipping.type.not.found',
@@ -183,31 +188,42 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return string
      */
-    public function getPriceDisplay()
+    public function getPriceDisplay(): string
     {
         $PriceFactor = $this->toPriceFactor();
 
-        $Order   = $this->Order;
+        $Order = $this->Order;
         $isNetto = false;
 
         /* @var $Order QUI\ERP\Order\Order */
         if ($Order) {
             $Customer = $Order->getCustomer();
-            $isNetto  = $Customer->isNetto();
+            $isNetto = $Customer->isNetto();
         }
 
         // display is incl vat
-        $vat   = $PriceFactor->getVat();
+        $vat = $PriceFactor->getVat();
         $price = $this->getPrice();
 
         if (!$isNetto && $vat) {
             $price = $price + ($price * ($vat / 100));
         }
 
-        $Price = new QUI\ERP\Money\Price(
-            $price,
-            QUI\ERP\Defaults::getCurrency()
-        );
+
+        // if user currency is different to the default, we have to convert the price
+        $DefaultCurrency = QUI\ERP\Defaults::getCurrency();
+        $UserCurrency = QUI\ERP\Defaults::getUserCurrency();
+
+        if ($DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
+            try {
+                $price = $DefaultCurrency->convert($price, $UserCurrency);
+                $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
+            } catch (Exception $exception) {
+                $Price = new QUI\ERP\Money\Price($price, $DefaultCurrency);
+            }
+        } else {
+            $Price = new QUI\ERP\Money\Price($price, $DefaultCurrency);
+        }
 
         return '+' . $Price->getDisplayPrice();
     }
@@ -226,7 +242,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         foreach ($rules as $Rule) {
             $discount = $Rule->getAttribute('discount');
-            $type     = $Rule->getDiscountType();
+            $type = $Rule->getDiscountType();
 
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_ABS) {
                 $price = $price + $discount;
@@ -236,24 +252,24 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $Order) {
                 try {
                     /* @var $Order QUI\ERP\Order\Order */
-                    $Order       = $this->Order;
+                    $Order = $this->Order;
                     $Calculation = $Order->getPriceCalculation();
-                    $nettoSum    = $Calculation->getNettoSum()->get();
+                    $nettoSum = $Calculation->getNettoSum()->get();
 
                     if (!$nettoSum) {
                         continue;
                     }
 
-                    $pc    = round($nettoSum * ($discount / 100));
+                    $pc = round($nettoSum * ($discount / 100));
                     $price = $price + $pc;
 
                     continue;
-                } catch (QUI\Exception $Exception) {
+                } catch (Exception $Exception) {
                     QUI\System\Log::addDebug($Exception->getMessage());
                 }
             }
 
-            $pc    = round($price * ($discount / 100));
+            $pc = round($price * ($discount / 100));
             $price = $price + $pc;
         }
 
@@ -275,7 +291,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     public function canUsedBy(
         QUI\Interfaces\Users\User $User,
         QUI\ERP\Order\AbstractOrder $Order
-    ) {
+    ): bool {
         if ($this->isActive() === false) {
             return false;
         }
@@ -286,7 +302,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if (method_exists($ShippingType, 'canUsedBy')) {
                 return $ShippingType->canUsedBy($User, $this, $Order);
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             return false;
         }
 
@@ -300,7 +316,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return bool
      */
-    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order)
+    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order): bool
     {
         if ($this->isActive() === false) {
             Debug::addLog($this->getTitle() . ' is not active');
@@ -314,7 +330,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if (method_exists($ShippingType, 'canUsedInOrder')) {
                 return $ShippingType->canUsedInOrder($Order, $this);
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             return false;
         }
 
@@ -324,7 +340,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Activate the shipping type
      *
-     * @throws QUI\ExceptionStack|QUI\Exception
+     * @throws QUI\ExceptionStack|Exception
      */
     public function activate()
     {
@@ -338,7 +354,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return !!$this->getAttribute('active');
     }
@@ -346,7 +362,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Deactivate the shipping type
      *
-     * @throws QUI\ExceptionStack|QUI\Exception
+     * @throws QUI\ExceptionStack|Exception
      */
     public function deactivate()
     {
@@ -417,7 +433,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @return string - image url
      * @throws QUI\ERP\Shipping\Exception
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         if (!QUI\Projects\Media\Utils::isMediaUrl($this->getAttribute('icon'))) {
             return $this->getShippingType()->getIcon();
@@ -429,7 +445,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             );
 
             return $Image->getSizeCacheUrl();
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
 
@@ -482,7 +498,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @param string $icon - image.php?
      */
-    public function setIcon($icon)
+    public function setIcon(string $icon)
     {
         if (QUI\Projects\Media\Utils::isMediaUrl($icon)) {
             $this->setAttribute('icon', $icon);
@@ -503,11 +519,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param string $var
      * @param array $title
      */
-    protected function setShippingLocale($var, $title)
+    protected function setShippingLocale(string $var, array $title)
     {
         $data = [
             'datatype' => 'php,js',
-            'package'  => 'quiqqer/shipping'
+            'package' => 'quiqqer/shipping'
         ];
 
         $languages = QUI::availableLanguages();
@@ -517,7 +533,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 continue;
             }
 
-            $data[$language]           = $title[$language];
+            $data[$language] = $title[$language];
             $data[$language . '_edit'] = $title[$language];
         }
 
@@ -529,13 +545,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             } else {
                 Translator::edit('quiqqer/shipping', $var, 'quiqqer/shipping', $data);
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());
         }
 
         try {
             Translator::publish('quiqqer/shipping');
-        } catch (QUi\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
     }
@@ -550,13 +566,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     public function addShippingRule(ShippingRule $Rule)
     {
         $shippingRules = $this->getAttribute('shipping_rules');
-        $shippingRules = \json_decode($shippingRules, true);
+        $shippingRules = json_decode($shippingRules, true);
 
         if (!is_array($shippingRules)) {
             $shippingRules = [];
         }
 
-        if (!\in_array($Rule->getId(), $shippingRules)) {
+        if (!in_array($Rule->getId(), $shippingRules)) {
             $shippingRules[] = $Rule->getId();
         }
 
@@ -567,9 +583,9 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Add a shipping rule by its id
      *
      * @param integer $shippingRuleId
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    public function addShippingRuleId($shippingRuleId)
+    public function addShippingRuleId(int $shippingRuleId)
     {
         /* @var $Rule ShippingRule */
         $Rule = RuleFactory::getInstance()->getChild($shippingRuleId);
@@ -581,16 +597,16 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return ShippingRule[]
      */
-    public function getShippingRules()
+    public function getShippingRules(): array
     {
         $shippingRules = $this->getAttribute('shipping_rules');
-        $shippingRules = \json_decode($shippingRules, true);
+        $shippingRules = json_decode($shippingRules, true);
 
         if (!is_array($shippingRules)) {
             return [];
         }
 
-        $debugging    = QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled();
+        $debugging = QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled();
         $debuggingLog = [];
 
         // get rules
@@ -600,17 +616,17 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         foreach ($shippingRules as $shippingRule) {
             try {
                 $rules[] = $Rules->getChild($shippingRule);
-            } catch (QUI\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::addDebug($Exception);
             }
         }
 
         // sort by priority
-        \usort($rules, function ($ShippingRuleA, $ShippingRuleB) {
+        usort($rules, function ($ShippingRuleA, $ShippingRuleB) {
             /* @var $ShippingRuleA ShippingRule */
             /* @var $ShippingRuleB ShippingRule */
-            $priorityA = (int)$ShippingRuleA->getPriority();
-            $priorityB = (int)$ShippingRuleB->getPriority();
+            $priorityA = $ShippingRuleA->getPriority();
+            $priorityB = $ShippingRuleB->getPriority();
 
             if ($priorityA === $priorityB) {
                 return 0;
@@ -631,10 +647,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                     Debug::addLog("### {$Rule->getTitle()} is not valid");
 
                     $debuggingLog[] = [
-                        'id'     => $Rule->getId(),
-                        'title'  => $Rule->getTitle(),
+                        'id' => $Rule->getId(),
+                        'title' => $Rule->getTitle(),
                         'reason' => 'is not valid',
-                        'valid'  => false
+                        'valid' => false
                     ];
                 }
                 continue;
@@ -649,10 +665,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                     Debug::addLog("### {$Rule->getTitle()} can not used in order");
 
                     $debuggingLog[] = [
-                        'id'     => $Rule->getId(),
-                        'title'  => $Rule->getTitle(),
+                        'id' => $Rule->getId(),
+                        'title' => $Rule->getTitle(),
                         'reason' => 'is not valid for order',
-                        'valid'  => false
+                        'valid' => false
                     ];
                 }
 
@@ -667,10 +683,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
             if ($debugging) {
                 $debuggingLog[] = [
-                    'id'     => $Rule->getId(),
-                    'title'  => $Rule->getTitle(),
+                    'id' => $Rule->getId(),
+                    'title' => $Rule->getTitle(),
                     'reason' => 'is valid',
-                    'valid'  => true
+                    'valid' => true
                 ];
             }
 
@@ -699,7 +715,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         if (!$this->isActive()) {
             Debug::addLog("{$this->getTitle()} :: is not active");
@@ -708,7 +724,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         $shippingRules = $this->getAttribute('shipping_rules');
-        $shippingRules = \json_decode($shippingRules, true);
+        $shippingRules = json_decode($shippingRules, true);
 
         if (!is_array($shippingRules)) {
             Debug::addLog("{$this->getTitle()} :: has no rules [OK]");
@@ -751,23 +767,37 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     public function toPriceFactor(
         $Locale = null,
         QUI\ERP\Order\AbstractOrder $Order = null
-    ) {
+    ): QUI\ERP\Products\Utils\PriceFactor {
         if ($Order === null) {
             $Order = $this->Order;
         }
 
+        $price = $this->getPrice();
+
+
+        // if order currency is different to the default, we have to convert the price
+        $OrderCurrency = $Order->getCurrency();
+        $DefaultCurrency = QUI\ERP\Defaults::getCurrency();
+
+        if ($DefaultCurrency->getCode() !== $OrderCurrency->getCode()) {
+            try {
+                $price = $DefaultCurrency->convert($price, $OrderCurrency);
+            } catch (Exception $exception) {
+            }
+        }
+
         $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
-            'identifier'  => 'shipping-pricefactor-' . $this->getId(),
-            'title'       => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
+            'identifier' => 'shipping-pricefactor-' . $this->getId(),
+            'title' => QUI::getLocale()->get('quiqqer/shipping', 'shipping.order.title', [
                 'shipping' => $this->getTitle($Locale)
             ]),
             'description' => '',
-            'priority'    => 1,
+            'priority' => 1,
             'calculation' => QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT,
-            'basis'       => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
-            'value'       => $this->getPrice(),
-            'visible'     => true,
-            'currency'    => $Order->getCurrency()->getCode()
+            'basis' => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
+            'value' => $price,
+            'visible' => true,
+            'currency' => $OrderCurrency->getCode()
         ]);
 
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser(
@@ -778,9 +808,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             return $PriceFactor;
         }
 
-        $PriceFactor->setVat(
-            QUI\ERP\Shipping\Shipping::getInstance()->getOrderVat($Order)
-        );
+        try {
+            $PriceFactor->setVat(
+                QUI\ERP\Shipping\Shipping::getInstance()->getOrderVat($Order)
+            );
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+        }
 
         return $PriceFactor;
     }
