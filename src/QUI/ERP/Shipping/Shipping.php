@@ -298,7 +298,8 @@ class Shipping extends QUI\Utils\Singleton
      * @param QUI\ERP\ErpEntityInterface $Entity
      * @return QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
-    public function getShippingPriceFactor(QUI\ERP\ErpEntityInterface $Entity
+    public function getShippingPriceFactor(
+        QUI\ERP\ErpEntityInterface $Entity
     ): ?QUI\ERP\Products\Interfaces\PriceFactorInterface {
         $PriceFactors = $Entity->getArticles()->getPriceFactors();
 
