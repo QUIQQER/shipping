@@ -61,4 +61,9 @@
     <event on="onQuiqqer::products::price::end"
            fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerProductsPriceEnd"
     />
+
+    <!-- customer change -->
+    <event on="onQuiqqerOrderCustomerChange"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderCustomerChange"
+    />
 </events>

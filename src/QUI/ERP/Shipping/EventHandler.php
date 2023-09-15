@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Accounting\ArticleList;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
+use QUI\ERP\Shipping\Shipping as ShippingHandler;
 use Quiqqer\Engine\Collector;
 
 use function array_merge;
@@ -19,6 +20,7 @@ use function method_exists;
 use function str_replace;
 use function strpos;
 use function time;
+use function usort;
 
 /**
  * Class EventHandler
@@ -700,6 +702,50 @@ class EventHandler
             );
 
             $data['articles'] = $Articles->toJSON();
+        }
+    }
+
+    public static function onQuiqqerOrderCustomerChange(QUI\ERP\ErpEntityInterface $ErpEntity)
+    {
+        try {
+            if (!QUI::getPackage('quiqqer/shipping')->getConfig()->get('shipping', 'considerCustomerCountry')) {
+                return;
+            }
+        } catch (\Exception $exception) {
+            return;
+        }
+
+        $Articles = $ErpEntity->getArticles();
+        $PriceFactors = $Articles->getPriceFactors();
+        $shippingEntries = ShippingHandler::getInstance()->getValidShippingEntries($ErpEntity);
+
+        if (empty($shippingEntries)) {
+            return;
+        }
+
+        // sort by price
+        usort($shippingEntries, function ($ShippingEntryA, $ShippingEntryB) {
+            $priorityA = $ShippingEntryA->getAttribute('priority');
+            $priorityB = $ShippingEntryB->getAttribute('priority');
+
+            if ($priorityA === $priorityB) {
+                return 0;
+            }
+
+            return $priorityA < $priorityB ? -1 : 1;
+        });
+
+
+        /* @var $PriceFactor QUI\ERP\Accounting\PriceFactors\Factor */
+        foreach ($PriceFactors as $index => $PriceFactor) {
+            if (strpos($PriceFactor->getIdentifier(), 'shipping-pricefactor-') === false) {
+                continue;
+            }
+
+            $ShippingEntry = $shippingEntries[0];
+            $PriceFactor = $ShippingEntry->toPriceFactor(QUI::getLocale(), $ErpEntity);
+            $PriceFactors->setFactor($index, $PriceFactor->toErpPriceFactor());
+            return;
         }
     }
 }

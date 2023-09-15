@@ -8,15 +8,22 @@ namespace QUI\ERP\Shipping;
 
 use QUI;
 use QUI\ERP\Order\AbstractOrder;
+use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 use QUI\ERP\Shipping\Types\Factory;
+use QUI\Interfaces\Users\User;
 
+use function array_filter;
 use function array_keys;
+use function array_map;
 use function class_exists;
 use function count;
+use function explode;
 use function key;
 use function max;
+use function method_exists;
 use function strpos;
+use function trim;
 
 /**
  * Shipping
@@ -48,31 +55,31 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * @var array
      */
-    protected $shipping = [];
+    protected array $shipping = [];
 
     /**
      * @var bool
      */
-    protected $debugging = null;
+    protected ?bool $debugging = null;
 
     /**
      * @var null
      */
-    protected $shippingDisabled = null;
+    protected ?bool $shippingDisabled = null;
 
     /**
      * Return all available shipping provider
      *
      * @return array
      */
-    public function getShippingProviders()
+    public function getShippingProviders(): array
     {
         $cacheProvider = 'package/quiqqer/shipping/provider';
 
         try {
             $providers = QUI\Cache\Manager::get($cacheProvider);
         } catch (QUI\Cache\Exception $Exception) {
-            $packages = \array_map(function ($package) {
+            $packages = array_map(function ($package) {
                 return $package['name'];
             }, QUI::getPackageManager()->getInstalled());
 
@@ -121,7 +128,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @return bool
      */
-    public function shippingDisabled()
+    public function shippingDisabled(): bool
     {
         if ($this->shippingDisabled !== null) {
             return $this->shippingDisabled;
@@ -142,7 +149,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @return bool
      */
-    public function debuggingEnabled()
+    public function debuggingEnabled(): bool
     {
         if ($this->debugging !== null) {
             return $this->debugging;
@@ -163,7 +170,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @return array
      */
-    public function getShippingTypes()
+    public function getShippingTypes(): array
     {
         $shipping = [];
         $providers = $this->getShippingProviders();
@@ -194,7 +201,7 @@ class Shipping extends QUI\Utils\Singleton
      * @return QUI\ERP\Shipping\Api\ShippingTypeInterface
      * @throws Exception
      */
-    public function getShippingType($shippingType)
+    public function getShippingType(string $shippingType): Api\ShippingTypeInterface
     {
         if (empty($shippingType)) {
             throw new Exception([
@@ -228,7 +235,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @throws Exception
      */
-    public function getShippingEntry($shippingId)
+    public function getShippingEntry($shippingId): Types\ShippingEntry
     {
         try {
             return Factory::getInstance()->getChild($shippingId);
@@ -246,7 +253,7 @@ class Shipping extends QUI\Utils\Singleton
      * @param array $queryParams
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    public function getShippingList($queryParams = [])
+    public function getShippingList(array $queryParams = []): array
     {
         if (!isset($queryParams['order'])) {
             $queryParams['order'] = 'priority ASC';
@@ -262,42 +269,40 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all shipping entries for the user
      *
-     * @param \QUI\Interfaces\Users\User|null $User - optional
-     * @param QUI\ERP\Order\AbstractOrder $Order - optional
+     * @param User|null $User - optional
+     * @param QUI\ERP\ErpEntityInterface|null $Entity - optional
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    public function getUserShipping($User = null, $Order = null)
+    public function getUserShipping(User $User = null, QUI\ERP\ErpEntityInterface $Entity = null): array
     {
         if ($User === null) {
             $User = QUI::getUserBySession();
         }
 
-        if ($Order === null) {
+        if ($Entity === null) {
             return [];
         }
 
-        return \array_filter($this->getShippingList(), function ($Shipping) use ($User, $Order) {
-            /* @var $Shipping QUI\ERP\Shipping\Types\ShippingEntry */
+        return array_filter($this->getShippingList(), function ($Shipping) use ($User, $Entity) {
             if ($Shipping->isActive() === false) {
                 return false;
             }
 
-            return $Shipping->canUsedBy($User, $Order);
+            return $Shipping->canUsedBy($User, $Entity);
         });
     }
 
     /**
-     * Return the shipping price factor of an order
+     * Return the shipping price factor of an erp entity
      *
-     * @param AbstractOrder $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      * @return QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
-    public function getShippingPriceFactorByOrder(AbstractOrder $Order)
-    {
-        $PriceFactors = $Order->getArticles()->getPriceFactors();
+    public function getShippingPriceFactor(QUI\ERP\ErpEntityInterface $Entity
+    ): ?QUI\ERP\Products\Interfaces\PriceFactorInterface {
+        $PriceFactors = $Entity->getArticles()->getPriceFactors();
 
         foreach ($PriceFactors as $PriceFactor) {
-            /* @var $PriceFactor QUI\ERP\Products\Utils\PriceFactor */
             if (strpos($PriceFactor->getIdentifier(), 'shipping-pricefactor') !== false) {
                 return $PriceFactor;
             }
@@ -307,25 +312,27 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
-     * Get all valid shipping entries for an order
+     * Get all valid shipping entries for an erp entity
      *
-     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    public function getValidShippingEntriesByOrder(AbstractOrder $Order)
+    public function getValidShippingEntries(QUI\ERP\ErpEntityInterface $Entity): array
     {
-        $User = $Order->getCustomer();
+        $User = $Entity->getCustomer();
 
-        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Order);
+        $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Entity);
         $shippingList = [];
 
         foreach ($userShipping as $ShippingEntry) {
-            $ShippingEntry->setOrder($Order);
+            if ($Entity instanceof QUI\ERP\ErpEntityInterface) {
+                $ShippingEntry->setErpEntity($Entity);
+            }
 
             if (
                 $ShippingEntry->isValid()
-                && $ShippingEntry->canUsedInOrder($Order)
-                && $ShippingEntry->canUsedBy($User, $Order)
+                && $ShippingEntry->canUsedInErpEntity($Entity)
+                && $ShippingEntry->canUsedBy($User, $Entity)
             ) {
                 $shippingList[] = $ShippingEntry;
             }
@@ -339,7 +346,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @return array
      */
-    public function getShippingRuleUnitFieldIds()
+    public function getShippingRuleUnitFieldIds(): array
     {
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
@@ -353,13 +360,13 @@ class Shipping extends QUI\Utils\Singleton
             return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
         }
 
-        return \explode(',', $ids);
+        return explode(',', $ids);
     }
 
     /**
-     * @return bool|string
+     * @return string
      */
-    public function getHost()
+    public function getHost(): string
     {
         try {
             $Project = QUI::getRewrite()->getProject();
@@ -373,34 +380,25 @@ class Shipping extends QUI\Utils\Singleton
             }
         }
 
-        $host = $Project->getVHost(true, true);
-        $host = \trim($host, '/');
-
-        return $host;
+        return trim(
+            $Project->getVHost(true, true),
+            '/'
+        );
     }
 
     /**
-     * @param QUI\ERP\Order\Order|
-     *      QUI\ERP\Order\OrderInProcess|
-     *      QUI\ERP\Accounting\Invoice\Invoice|
-     *      QUI\ERP\Accounting\Invoice\InvoiceTemporary
-     * $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      *
      * @return QUI\ERP\Shipping\Types\ShippingEntry|QUI\ERP\Shipping\Types\ShippingUnique
      */
-    public function getShippingByObject($Object)
+    public function getShippingByObject(QUI\ERP\ErpEntityInterface $Entity)
     {
-        if (
-            !($Object instanceof QUI\ERP\Order\Order) &&
-            !($Object instanceof QUI\ERP\Order\OrderInProcess) &&
-            !($Object instanceof QUI\ERP\Accounting\Invoice\Invoice) &&
-            !($Object instanceof QUI\ERP\Accounting\Invoice\InvoiceTemporary)
-        ) {
-            return null;
-        }
+        $Shipping = null;
+        $Delivery = $Entity->getDeliveryAddress();
 
-        $Shipping = $Object->getShipping();
-        $Delivery = $Object->getDeliveryAddress();
+        if (method_exists($Shipping, 'getShipping')) {
+            $Shipping = $Entity->getShipping();
+        }
 
         if ($Delivery && $Shipping) {
             $Shipping->setAddress($Delivery);
@@ -425,10 +423,10 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
-     * @return \QUI\ERP\Products\Utils\PriceFactor
+     * @return PriceFactor
      * @throws \QUI\Exception
      */
-    public function getDefaultPriceFactor(): QUI\ERP\Products\Utils\PriceFactor
+    public function getDefaultPriceFactor(): PriceFactor
     {
         $price = QUI::getPackage('quiqqer/shipping')
             ->getConfig()
@@ -436,7 +434,7 @@ class Shipping extends QUI\Utils\Singleton
 
         $price = QUI\ERP\Money\Price::validatePrice($price);
 
-        $PriceFactor = new QUI\ERP\Products\Utils\PriceFactor([
+        $PriceFactor = new PriceFactor([
             'identifier' => 'shipping-pricefactor-default',
             'title' => QUI::getLocale()->get('quiqqer/shipping', 'shipping.default.pricefactor'),
             'description' => '',
@@ -461,15 +459,15 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Returns the var of an order
      *
-     * @param $Order
+     * @param QUI\ERP\ErpEntityInterface $ErpEntity
      * @return float|int|mixed|string|null
      * @throws \QUI\Exception
      */
-    public function getOrderVat($Order)
+    public function getVat(QUI\ERP\ErpEntityInterface $ErpEntity)
     {
         /* @var $Article QUI\ERP\Accounting\Article */
 
-        $Articles = $Order->getArticles();
+        $Articles = $ErpEntity->getArticles();
         $vats = [];
 
         foreach ($Articles as $Article) {
@@ -485,7 +483,7 @@ class Shipping extends QUI\Utils\Singleton
 
         // @todo implement VAT setting for shipping
         // look at vat, which vat should be used
-        if (!count($vats) && !$Order->getCustomer()) {
+        if (!count($vats) && !$ErpEntity->getCustomer()) {
             // use default vat
             $Area = QUI\ERP\Defaults::getArea();
             $TaxType = QUI\ERP\Tax\Utils::getTaxTypeByArea($Area);
@@ -494,8 +492,8 @@ class Shipping extends QUI\Utils\Singleton
             return $TaxEntry->getValue();
         }
 
-        if (!count($vats) && $Order->getCustomer()) {
-            $Tax = QUI\ERP\Tax\Utils::getTaxByUser($Order->getCustomer());
+        if (!count($vats) && $ErpEntity->getCustomer()) {
+            $Tax = QUI\ERP\Tax\Utils::getTaxByUser($ErpEntity->getCustomer());
             return $Tax->getValue();
         }
 
@@ -517,15 +515,15 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @param QUI\ERP\Order\AbstractOrder $Order
      * @param int $statusId
-     * @param string $message (optional) - Custom notification message [default: default status change message]
+     * @param string|null $message (optional) - Custom notification message [default: default status change message]
      * @return void
      *
      * @throws QUI\Exception
      */
     public function sendStatusChangeNotification(
         AbstractOrder $Order,
-        $statusId,
-        $message = null
+        int $statusId,
+        string $message = null
     ) {
         $Customer = $Order->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
@@ -545,7 +543,6 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         $Mailer = new QUI\Mail\Mailer();
-        /** @var QUI\Locale $Locale */
         $Locale = $Order->getCustomer()->getLocale();
 
         $Mailer->setSubject(
