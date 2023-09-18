@@ -64,6 +64,6 @@
 
     <!-- customer change -->
     <event on="onQuiqqerOrderCustomerChange"
-           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerOrderCustomerChange"
+           fire="\QUI\ERP\Shipping\EventHandler::onQuiqqerCustomerChange"
     />
 </events>

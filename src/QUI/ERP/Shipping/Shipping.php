@@ -397,7 +397,7 @@ class Shipping extends QUI\Utils\Singleton
         $Shipping = null;
         $Delivery = $Entity->getDeliveryAddress();
 
-        if (method_exists($Shipping, 'getShipping')) {
+        if (method_exists($Entity, 'getShipping')) {
             $Shipping = $Entity->getShipping();
         }
 
