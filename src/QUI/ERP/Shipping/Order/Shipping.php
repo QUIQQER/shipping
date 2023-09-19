@@ -75,14 +75,14 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $Logger = QUI\ERP\Shipping\Debug::getLoggerWithoutFormatter();
 
             foreach ($debugShipping as $DebugShippingEntry) {
-                $DebugShippingEntry->setOrder($Order);
+                $DebugShippingEntry->setErpEntity($Order);
 
                 QUI\ERP\Shipping\Debug::enable();
                 QUI\ERP\Shipping\Debug::addLog('# ' . $DebugShippingEntry->getTitle());
 
                 if ($DebugShippingEntry->canUsedBy($User, $Order)) {
                     $DebugShippingEntry->isValid();
-                    $DebugShippingEntry->canUsedInOrder($Order);
+                    $DebugShippingEntry->canUsedInErpEntity($Order);
                     $DebugShippingEntry->canUsedBy($User, $Order);
                 }
 
@@ -205,7 +205,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             ]);
         }
 
-        if (!$Shipping->canUsedInOrder($Order)) {
+        if (!$Shipping->canUsedInErpEntity($Order)) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/shipping',
                 'exception.shipping.is.not.allowed'
@@ -218,7 +218,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     protected function getValidShipping()
     {
-        return ShippingHandler::getInstance()->getValidShippingEntriesByOrder($this->getOrder());
+        return ShippingHandler::getInstance()->getValidShippingEntries($this->getOrder());
     }
 
     /**
@@ -245,13 +245,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Shipping = QUI\ERP\Shipping\Shipping::getInstance();
             $ShippingEntry = $Shipping->getShippingEntry($shipping);
-            $ShippingEntry->setOrder($Order);
+            $ShippingEntry->setErpEntity($Order);
 
             if (!$ShippingEntry->canUsedBy($User, $Order)) {
                 return;
             }
 
-            if (!$ShippingEntry->canUsedInOrder($Order)) {
+            if (!$ShippingEntry->canUsedInErpEntity($Order)) {
                 return;
             }
         } catch (QUI\ERP\Shipping\Exception $Exception) {

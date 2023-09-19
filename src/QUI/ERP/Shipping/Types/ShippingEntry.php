@@ -34,9 +34,9 @@ use function usort;
 class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 {
     /**
-     * @var null
+     * @var QUI\ERP\ErpEntityInterface|null
      */
-    protected $Order = null;
+    protected ?QUI\ERP\ErpEntityInterface $ErpEntity = null;
 
     /**
      * @var null|QUI\ERP\Address|QUI\Users\Address
@@ -192,12 +192,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     {
         $PriceFactor = $this->toPriceFactor();
 
-        $Order = $this->Order;
+        $ErpEntity = $this->ErpEntity;
         $isNetto = false;
 
-        /* @var $Order QUI\ERP\Order\Order */
-        if ($Order) {
-            $Customer = $Order->getCustomer();
+        if ($ErpEntity) {
+            $Customer = $ErpEntity->getCustomer();
             $isNetto = $Customer->isNetto();
         }
 
@@ -238,7 +237,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $rules = $this->getShippingRules();
         $price = 0;
 
-        $Order = $this->Order;
+        $ErpEntity = $this->ErpEntity;
 
         foreach ($rules as $Rule) {
             $discount = $Rule->getAttribute('discount');
@@ -249,11 +248,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 continue;
             }
 
-            if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $Order) {
+            if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $ErpEntity) {
                 try {
-                    /* @var $Order QUI\ERP\Order\Order */
-                    $Order = $this->Order;
-                    $Calculation = $Order->getPriceCalculation();
+                    $ErpEntity = $this->ErpEntity;
+                    $Calculation = $ErpEntity->getPriceCalculation();
                     $nettoSum = $Calculation->getNettoSum()->get();
 
                     if (!$nettoSum) {
@@ -284,13 +282,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * is the user allowed to use this shipping
      *
      * @param QUI\Interfaces\Users\User $User
-     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      *
      * @return boolean
      */
     public function canUsedBy(
         QUI\Interfaces\Users\User $User,
-        QUI\ERP\Order\AbstractOrder $Order
+        QUI\ERP\ErpEntityInterface $Entity
     ): bool {
         if ($this->isActive() === false) {
             return false;
@@ -300,7 +298,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             $ShippingType = $this->getShippingType();
 
             if (method_exists($ShippingType, 'canUsedBy')) {
-                return $ShippingType->canUsedBy($User, $this, $Order);
+                return $ShippingType->canUsedBy($User, $this, $Entity);
             }
         } catch (Exception $Exception) {
             return false;
@@ -310,13 +308,13 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     }
 
     /**
-     * is the shipping allowed in the order?
+     * is the shipping allowed in this erp entity?
      *
-     * @param QUI\ERP\Order\OrderInterface $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      *
      * @return bool
      */
-    public function canUsedInOrder(QUI\ERP\Order\OrderInterface $Order): bool
+    public function canUsedInErpEntity(QUI\ERP\ErpEntityInterface $Entity): bool
     {
         if ($this->isActive() === false) {
             Debug::addLog($this->getTitle() . ' is not active');
@@ -327,8 +325,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         try {
             $ShippingType = $this->getShippingType();
 
-            if (method_exists($ShippingType, 'canUsedInOrder')) {
-                return $ShippingType->canUsedInOrder($Order, $this);
+            if (method_exists($ShippingType, 'canUsedIn')) {
+                return $ShippingType->canUsedIn($Entity, $this);
             }
         } catch (Exception $Exception) {
             return false;
@@ -660,9 +658,9 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
                 Debug::addLog("### {$Rule->getTitle()} is valid");
             }
 
-            if (!$Rule->canUsedInOrder($this->Order)) {
+            if (!$Rule->canUsedIn($this->ErpEntity)) {
                 if ($debugging) {
-                    Debug::addLog("### {$Rule->getTitle()} can not used in order");
+                    Debug::addLog("### {$Rule->getTitle()} can not used in this entity");
 
                     $debuggingLog[] = [
                         'id' => $Rule->getId(),
@@ -676,7 +674,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
 
             if ($debugging) {
-                Debug::addLog("### {$Rule->getTitle()} can used in order");
+                Debug::addLog("### {$Rule->getTitle()} can used in this entity");
             }
 
             $result[] = $Rule;
@@ -734,6 +732,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         $rules = $this->getShippingRules();
 
+        // @todo ist das so gewollt?
+        // wenn keine rules zugewiesen sind, das der shipping entry nie nutzbar ist?
         if (empty($rules)) {
             Debug::addLog("{$this->getTitle()} :: has no active rules");
 
@@ -747,41 +747,50 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
     //endregion
 
+
     /**
-     * Set an order to the shipping entry
-     * this order is then assigned to the shipping and the validation considers this order
+     * Set an erp entity to the shipping entry
+     * this erp entity is then assigned to the shipping and the validation considers this erp entity
      *
-     * @param QUI\ERP\Order\OrderInterface $Order
+     * @param QUI\ERP\ErpEntityInterface $ErpEntity
      */
-    public function setOrder(QUI\ERP\Order\OrderInterface $Order)
+    public function setErpEntity(QUI\ERP\ErpEntityInterface $ErpEntity)
     {
-        $this->Order = $Order;
+        $this->ErpEntity = $ErpEntity;
+    }
+
+    /**
+     * @deprecated use setErpEntity()
+     */
+    public function setOrder(QUI\ERP\ErpEntityInterface $ErpEntity)
+    {
+        $this->setErpEntity($ErpEntity);
     }
 
     /**
      * @param null $Locale
-     * @param QUI\ERP\Order\AbstractOrder|null $Order
+     * @param QUI\ERP\ErpEntityInterface|null $ErpEntity
      *
      * @return QUI\ERP\Products\Utils\PriceFactor
      */
     public function toPriceFactor(
         $Locale = null,
-        QUI\ERP\Order\AbstractOrder $Order = null
+        QUI\ERP\ErpEntityInterface $ErpEntity = null
     ): QUI\ERP\Products\Utils\PriceFactor {
-        if ($Order === null) {
-            $Order = $this->Order;
+        if ($ErpEntity === null) {
+            $ErpEntity = $this->ErpEntity;
         }
 
         $price = $this->getPrice();
 
 
-        // if order currency is different to the default, we have to convert the price
-        $OrderCurrency = $Order->getCurrency();
+        // if erp entity currency is different to the default, we have to convert the price
+        $EntityCurrency = $ErpEntity->getCurrency();
         $DefaultCurrency = QUI\ERP\Defaults::getCurrency();
 
-        if ($DefaultCurrency->getCode() !== $OrderCurrency->getCode()) {
+        if ($DefaultCurrency->getCode() !== $EntityCurrency->getCode()) {
             try {
-                $price = $DefaultCurrency->convert($price, $OrderCurrency);
+                $price = $DefaultCurrency->convert($price, $EntityCurrency);
             } catch (Exception $exception) {
             }
         }
@@ -797,11 +806,11 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             'basis' => QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE,
             'value' => $price,
             'visible' => true,
-            'currency' => $OrderCurrency->getCode()
+            'currency' => $EntityCurrency->getCode()
         ]);
 
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser(
-            $Order->getCustomer()
+            $ErpEntity->getCustomer()
         );
 
         if ($isEuVatUser) {
@@ -810,7 +819,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         try {
             $PriceFactor->setVat(
-                QUI\ERP\Shipping\Shipping::getInstance()->getOrderVat($Order)
+                QUI\ERP\Shipping\Shipping::getInstance()->getVat($ErpEntity)
             );
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
