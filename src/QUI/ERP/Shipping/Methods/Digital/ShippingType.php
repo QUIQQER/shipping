@@ -39,12 +39,12 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     }
 
     /**
-     * @param QUI\ERP\Order\OrderInterface $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      * @param QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
      * @return bool
      */
     public function canUsedInOrder(
-        QUI\ERP\Order\OrderInterface $Order,
+        QUI\ERP\ErpEntityInterface $Entity,
         QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
     ) {
         if ($ShippingEntry->isActive() === false) {
@@ -59,7 +59,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // Check if order contains NON-digital products
         /** @var QUI\ERP\Accounting\Article $Article */
-        foreach ($Order->getArticles() as $Article) {
+        foreach ($Entity->getArticles() as $Article) {
             try {
                 // Do not parse coupon codes / discounts
                 if (empty($Article->getId()) || !\is_numeric($Article->getId())) {
@@ -109,10 +109,10 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $ArticleList = $Order->getArticles();
-        $orderArticles = $ArticleList->getArticles();
+        $ArticleList = $Entity->getArticles();
+        $entityArticles = $ArticleList->getArticles();
 
-        foreach ($orderArticles as $Article) {
+        foreach ($entityArticles as $Article) {
             try {
                 $productId = $Article->getId();
 
@@ -154,13 +154,13 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     /**
      * @param QUI\Interfaces\Users\User $User
      * @param QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
-     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      * @return bool
      */
     public function canUsedBy(
         QUI\Interfaces\Users\User $User,
         QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry,
-        QUI\ERP\Order\AbstractOrder $Order
+        QUI\ERP\ErpEntityInterface $Entity
     ) {
         if ($ShippingEntry->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
@@ -186,7 +186,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $Address = $Order->getDeliveryAddress();
+        $Address = $Entity->getDeliveryAddress();
 
         $areasValue = \trim($areasValue);
         $areasValue = \trim($areasValue, ',');

@@ -18,7 +18,7 @@ QUI::$Ajax->registerFunction(
         $Factory = new Factory();
         $ShippingEntry = $Factory->getChild($shippingId);
 
-        $data = \json_decode($data, true);
+        $data = json_decode($data, true);
 
         $ShippingEntry->setAttributes($data);
 
@@ -42,9 +42,9 @@ QUI::$Ajax->registerFunction(
         }
 
         if (isset($data['shipping_rules'])) {
-            $shipping = \json_decode($data['shipping_rules'], true);
+            $shipping = json_decode($data['shipping_rules'], true);
 
-            if (!\is_array($shipping)) {
+            if (!is_array($shipping)) {
                 $shipping = [];
             }
 

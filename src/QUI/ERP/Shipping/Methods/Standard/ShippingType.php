@@ -16,6 +16,8 @@ use function array_filter;
 use function array_map;
 use function explode;
 use function in_array;
+use function is_numeric;
+use function method_exists;
 use function trim;
 
 /**
@@ -50,12 +52,12 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     }
 
     /**
-     * @param QUI\ERP\Order\OrderInterface $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      * @param QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
      * @return bool
      */
     public function canUsedInOrder(
-        QUI\ERP\Order\OrderInterface $Order,
+        QUI\ERP\ErpEntityInterface $Entity,
         QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
     ) {
         if ($ShippingEntry->isActive() === false) {
@@ -68,14 +70,20 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return false;
         }
 
+        try {
+            $ArticleList = $Entity->getArticles();
+        } catch (\Exception $exception) {
+            return false;
+        }
+
         // Check if order contains only digital products
         $digitalProductsOnly = true;
 
         /** @var QUI\ERP\Accounting\Article $Article */
-        foreach ($Order->getArticles() as $Article) {
+        foreach ($ArticleList as $Article) {
             try {
                 // Do not parse coupon codes / discounts
-                if (empty($Article->getId()) || !\is_numeric($Article->getId())) {
+                if (empty($Article->getId()) || !is_numeric($Article->getId())) {
                     continue;
                 }
 
@@ -127,10 +135,9 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $ArticleList = $Order->getArticles();
-        $orderArticles = $ArticleList->getArticles();
+        $entityArticles = $ArticleList->getArticles();
 
-        foreach ($orderArticles as $Article) {
+        foreach ($entityArticles as $Article) {
             try {
                 $productId = $Article->getId();
 
@@ -172,13 +179,13 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     /**
      * @param QUI\Interfaces\Users\User $User
      * @param QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry
-     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param QUI\ERP\ErpEntityInterface $Entity
      * @return bool
      */
     public function canUsedBy(
         QUI\Interfaces\Users\User $User,
         QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry,
-        QUI\ERP\Order\AbstractOrder $Order
+        QUI\ERP\ErpEntityInterface $Entity
     ) {
         if ($ShippingEntry->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
@@ -204,18 +211,20 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        $Address = $Order->getDeliveryAddress();
+        if (method_exists($Entity, 'getDeliveryAddress')) {
+            $Address = $Entity->getDeliveryAddress();
 
-        $areasValue = trim($areasValue);
-        $areasValue = trim($areasValue, ',');
-        $areasValue = explode(',', $areasValue);
-        $areasValue = array_filter($areasValue);
+            $areasValue = trim($areasValue);
+            $areasValue = trim($areasValue, ',');
+            $areasValue = explode(',', $areasValue);
+            $areasValue = array_filter($areasValue);
 
-        // not in area
-        if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
-            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
+            // not in area
+            if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
+                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
 
-            return false;
+                return false;
+            }
         }
 
         Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is in areas");

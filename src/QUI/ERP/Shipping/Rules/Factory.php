@@ -10,6 +10,14 @@ use QUI;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 use QUI\Permissions\Permission;
 
+use function array_filter;
+use function array_flip;
+use function is_array;
+use function is_numeric;
+use function json_encode;
+
+use const ARRAY_FILTER_USE_KEY;
+
 /**
  * Class Factory
  *
@@ -61,7 +69,7 @@ class Factory extends QUI\CRUD\Factory
     public function createChild($data = [])
     {
         // filter
-        $allowed = \array_flip([
+        $allowed = array_flip([
             'title',
             'workingTitle',
             'date_from',
@@ -81,9 +89,9 @@ class Factory extends QUI\CRUD\Factory
             'no_rule_after'
         ]);
 
-        $data = \array_filter($data, function ($k) use ($allowed) {
+        $data = array_filter($data, function ($k) use ($allowed) {
             return isset($allowed[$k]);
-        }, \ARRAY_FILTER_USE_KEY);
+        }, ARRAY_FILTER_USE_KEY);
 
 
         if (!isset($data['active']) || !\is_integer($data['active'])) {
@@ -98,38 +106,40 @@ class Factory extends QUI\CRUD\Factory
             $data['purchase_quantity_until'] = 0;
         }
 
-        if (!isset($data['priority']) || !\is_numeric($data['priority'])) {
+        if (!isset($data['priority']) || !is_numeric($data['priority'])) {
             $data['priority'] = 0;
-        } elseif (isset($data['priority']) && !\is_int($data['priority'])) {
+        } elseif (!\is_int($data['priority'])) {
             $data['priority'] = (int)$data['priority'];
         }
 
-        if (!isset($data['discount']) || empty($data['discount'])) {
+        if (empty($data['discount'])) {
             $data['discount'] = 0;
+        } else {
+            $data['discount'] = QUI\ERP\Money\Price::validatePrice($data['discount']);
         }
 
-        if (isset($data['unit_terms']) && \is_array($data['unit_terms'])) {
-            $data['unit_terms'] = \json_encode($data['unit_terms']);
+        if (isset($data['unit_terms']) && is_array($data['unit_terms'])) {
+            $data['unit_terms'] = json_encode($data['unit_terms']);
         }
 
         if (!isset($data['unit_terms'])) {
             $data['unit_terms'] = '';
         }
 
-        if (!isset($data['articles_only']) || empty($data['articles_only'])) {
+        if (empty($data['articles_only'])) {
             $data['articles_only'] = 0;
         } else {
             $data['articles_only'] = (int)$data['articles_only'];
         }
 
-        if (!isset($data['no_rule_after']) || empty($data['no_rule_after'])) {
+        if (empty($data['no_rule_after'])) {
             $data['no_rule_after'] = 0;
         } else {
             $data['no_rule_after'] = (int)$data['no_rule_after'];
         }
 
         // discount
-        if (\is_numeric($data['discount_type'])) {
+        if (is_numeric($data['discount_type'])) {
             $data['discount_type'] = (int)$data['discount_type'];
         }
 
@@ -178,7 +188,7 @@ class Factory extends QUI\CRUD\Factory
         );
 
         // set translations
-        if (isset($data['title']) && !empty($data['title']) && \is_array($data['title'])) {
+        if (isset($data['title']) && !empty($data['title']) && is_array($data['title'])) {
             $title = [];
 
             foreach ($data['title'] as $lang => $v) {
@@ -195,7 +205,7 @@ class Factory extends QUI\CRUD\Factory
             );
         }
 
-        if (isset($data['workingTitle']) && !empty($data['workingTitle']) && \is_array($data['workingTitle'])) {
+        if (isset($data['workingTitle']) && !empty($data['workingTitle']) && is_array($data['workingTitle'])) {
             $title = [];
 
             foreach ($data['workingTitle'] as $lang => $v) {
