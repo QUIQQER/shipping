@@ -306,6 +306,21 @@
             <de><![CDATA[Lege fest welcher Preis als Standardversand verwendet werden soll.]]></de>
             <en><![CDATA[Specify which price should be used as default shipping.]]></en>
         </locale>
+        <locale name="shipping.defaultShipping.settings.considerCustomerCountry">
+            <de><![CDATA[Land des Kunden beachten]]></de>
+            <en><![CDATA[Consider the country of the customer]]></en>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.considerCustomerCountry.desc">
+            <de><![CDATA[
+            Wenn sich der Benutzer einer Entität (zum Beispiel einer Rechnung oder Bestellung) ändert,
+            der zuvor der Standardversand zugewiesen war, wird versucht, den Versand basierend auf dem Land des Benutzers anzupassen.
+            ]]></de>
+            <en><![CDATA[
+            When the user of an entity (for example, an invoice or an order) changes,
+            that was previously assigned the default shipping, an attempt is made to adjust the shipping based on the user's country.
+            ]]></en>
+        </locale>
+
         <locale name="shipping.defaultShipping.settings.addDefaultShipping">
             <de><![CDATA[Standard Versand automatisch hinzufügen]]></de>
             <en><![CDATA[Add standard shipping automatically]]></en>

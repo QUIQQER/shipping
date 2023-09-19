@@ -8,17 +8,19 @@ namespace QUI\ERP\Shipping;
 
 use QUI;
 use QUI\ERP\Accounting\ArticleList;
+use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
+use QUI\ERP\Shipping\Shipping as ShippingHandler;
 use Quiqqer\Engine\Collector;
 
 use function array_merge;
 use function explode;
 use function json_decode;
 use function method_exists;
-use function str_replace;
 use function strpos;
 use function time;
+use function usort;
 
 /**
  * Class EventHandler
@@ -122,12 +124,12 @@ class EventHandler
      * event - on price factor init
      *
      * @param $Basket
-     * @param QUI\ERP\Order\AbstractOrder $Order
+     * @param AbstractOrder $Order
      * @param QUI\ERP\Products\Product\ProductList $Products
      */
     public static function onQuiqqerOrderBasketToOrderEnd(
         $Basket,
-        QUI\ERP\Order\AbstractOrder $Order,
+        AbstractOrder $Order,
         QUI\ERP\Products\Product\ProductList $Products
     ) {
         if (Shipping::getInstance()->shippingDisabled()) {
@@ -520,10 +522,10 @@ class EventHandler
     /**
      * event: add default shipping at onQuiqqerOrderFactoryCreate
      *
-     * @param \QUI\ERP\Order\AbstractOrder $Order
+     * @param AbstractOrder $Order
      * @return void
      */
-    public static function onQuiqqerOrderFactoryCreate(QUI\ERP\Order\AbstractOrder $Order)
+    public static function onQuiqqerOrderFactoryCreate(AbstractOrder $Order)
     {
         //if ($Order->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
         //    return;
@@ -649,11 +651,11 @@ class EventHandler
     //endregion
 
     /**
-     * @param \QUI\ERP\Order\AbstractOrder $Order
+     * @param AbstractOrder $Order
      * @return void
      */
     public static function onQuiqqerOrderUpdateBegin(
-        QUI\ERP\Order\AbstractOrder $Order,
+        AbstractOrder $Order,
         &$data = []
     ) {
         $Articles = $Order->getArticles();
@@ -668,10 +670,6 @@ class EventHandler
         $factors = $PriceFactors->toArray();
         $Shipping = $Order->getShipping();
 
-        if (!$Shipping) {
-            return;
-        }
-
         foreach ($factors as $index => $factor) {
             if (strpos($factor['identifier'], 'shipping-pricefactor-') !== false) {
                 $shippingFactor = $factor;
@@ -679,15 +677,29 @@ class EventHandler
             }
         }
 
-        if (!$shippingFactor) {
+        if (!$shippingFactor && !$Shipping) {
             return;
         }
 
         $identifier = $shippingFactor['identifier'];
-        $identifier = str_replace($identifier, 'shipping-pricefactor-', '');
-        $id = (int)$identifier;
+        $identifier = str_replace('shipping-pricefactor-', '', $identifier);
+        $id = $identifier;
+        $id = (int)$id;
 
-        if ($id !== $Shipping->getId() && isset($index)) {
+        if ($Order->getAttribute('__SHIPPING__')) {
+            $Shipping = $Order->getAttribute('__SHIPPING__');
+            $Order->setShipping($Shipping);
+
+            if ($Shipping->getId() === $id) {
+                return;
+            }
+        }
+
+        if (!$Shipping && isset($index) && $identifier !== 'default') {
+            // kill shipping factor
+            $PriceFactors->removeFactor($index);
+        } elseif ($Shipping && $id !== $Shipping->getId() && isset($index)) {
+            // replace shipping
             $Factor = $PriceFactors->getFactor($index);
             $factor = $Factor->toArray();
 
@@ -700,6 +712,73 @@ class EventHandler
             );
 
             $data['articles'] = $Articles->toJSON();
+        } elseif ($Shipping && !isset($index)) {
+            $PriceFactors->addFactor($Shipping->toPriceFactor()->toErpPriceFactor());
+        } elseif (!$Shipping && isset($index) && $identifier === 'default') {
+            self::onQuiqqerCustomerChange($Order);
+        }
+    }
+
+    public static function onQuiqqerCustomerChange(QUI\ERP\ErpEntityInterface $ErpEntity)
+    {
+        try {
+            if (!QUI::getPackage('quiqqer/shipping')->getConfig()->get('shipping', 'considerCustomerCountry')) {
+                return;
+            }
+        } catch (\Exception $exception) {
+            return;
+        }
+
+        $Articles = $ErpEntity->getArticles();
+        $PriceFactors = $Articles->getPriceFactors();
+        $shippingEntries = ShippingHandler::getInstance()->getValidShippingEntries($ErpEntity);
+
+        if (empty($shippingEntries)) {
+            return;
+        }
+
+        // sort by price
+        usort($shippingEntries, function ($ShippingEntryA, $ShippingEntryB) {
+            $priorityA = $ShippingEntryA->getAttribute('priority');
+            $priorityB = $ShippingEntryB->getAttribute('priority');
+
+            if ($priorityA === $priorityB) {
+                return 0;
+            }
+
+            return $priorityA < $priorityB ? -1 : 1;
+        });
+
+
+        /* @var $PriceFactor QUI\ERP\Accounting\PriceFactors\Factor */
+        foreach ($PriceFactors as $index => $PriceFactor) {
+            if (strpos($PriceFactor->getIdentifier(), 'shipping-pricefactor-') === false) {
+                continue;
+            }
+
+            $ShippingEntry = null;
+
+            // set the shipping for the order
+            if ($ErpEntity instanceof AbstractOrder) {
+                foreach ($shippingEntries as $Entry) {
+                    try {
+                        $ErpEntity->setShipping($Entry);
+                        $ErpEntity->setAttribute('__SHIPPING__', $Entry);
+                        $ShippingEntry = $Entry;
+                        break;
+                    } catch (QUI\Exception $exception) {
+                    }
+                }
+            } else {
+                $ShippingEntry = $shippingEntries[0];
+            }
+
+            if ($ShippingEntry) {
+                $PriceFactor = $ShippingEntry->toPriceFactor(QUI::getLocale(), $ErpEntity);
+                $PriceFactors->setFactor($index, $PriceFactor->toErpPriceFactor());
+            }
+
+            return;
         }
     }
 }
