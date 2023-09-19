@@ -287,7 +287,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         // not in area
-        // address need to be checked via order
+        // address need to be checked via erp entity
 
         // user checking
         $userGroups = QUI\Utils\UserGroups::parseUsersGroupsString(
@@ -355,12 +355,12 @@ class ShippingRule extends QUI\CRUD\Child
     }
 
     /**
-     * is the shipping allowed in the order?
+     * is the shipping allowed in this erp entity?
      *
-     * @param QUI\ERP\Order\OrderInterface|null $Order
+     * @param QUI\ERP\ErpEntityInterface|null $ErpEntity
      * @return bool
      */
-    public function canUsedInOrder($Order)
+    public function canUsedIn(QUI\ERP\ErpEntityInterface $ErpEntity = null): bool
     {
         if (!$this->isValid()) {
             Debug::addLog("{$this->getTitle()} :: is not valid");
@@ -368,17 +368,17 @@ class ShippingRule extends QUI\CRUD\Child
             return false;
         }
 
-        if (!($Order instanceof QUI\ERP\Order\OrderInterface)) {
+        if (!$ErpEntity) {
             return true;
         }
 
-        if (!$this->canUsedBy($Order->getCustomer())) {
-            Debug::addLog("{$this->getTitle()} :: can not be used by {$Order->getCustomer()->getId()}");
+        if (!$this->canUsedBy($ErpEntity->getCustomer())) {
+            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getId()}");
 
             return false;
         }
 
-        $DeliveryAddress = $Order->getDeliveryAddress();
+        $DeliveryAddress = $ErpEntity->getDeliveryAddress();
 
         if (!$this->canUsedWithAddress($DeliveryAddress)) {
             Debug::addLog("{$this->getTitle()} :: can not be used with address");
@@ -386,8 +386,7 @@ class ShippingRule extends QUI\CRUD\Child
             return false;
         }
 
-        /* @var $Order QUI\ERP\Order\Order */
-        $Articles = $Order->getArticles();
+        $Articles = $ErpEntity->getArticles();
         $articleList = $Articles->getArticles();
 
         if (!$Articles->count()) {
@@ -432,7 +431,7 @@ class ShippingRule extends QUI\CRUD\Child
             $articleOnly = 0;
         }
 
-        $categoryIdsInOrder = [];
+        $categoryIdsInEntity = [];
 
         $checkCategoryIds = function (array $catIds) use ($categories) {
             foreach ($catIds as $categoryId) {
@@ -462,7 +461,7 @@ class ShippingRule extends QUI\CRUD\Child
                     return false;
                 }
 
-                $categoryIdsInOrder = array_merge($categoryIdsInOrder, $categoryIds);
+                $categoryIdsInEntity = array_merge($categoryIdsInEntity, $categoryIds);
 
 
                 foreach ($unitIds as $unitId) {
@@ -527,17 +526,17 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         // category check
-        $categoryIdsInOrder = array_unique($categoryIdsInOrder);
+        $categoryIdsInEntity = array_unique($categoryIdsInEntity);
 
         if (
-            !empty($categoryIdsInOrder)
+            !empty($categoryIdsInEntity)
             && !empty($categories)
             && (count($categories) === 1 && $categories[0] !== 0)
         ) {
             $found = false;
 
             foreach ($categories as $cid) {
-                if (in_array($cid, $categoryIdsInOrder)) {
+                if (in_array($cid, $categoryIdsInEntity)) {
                     $found = true;
                     break;
                 }
@@ -649,7 +648,7 @@ class ShippingRule extends QUI\CRUD\Child
 
 
         // quantity check
-        $count = $Order->count();
+        $count = $ErpEntity->count();
 
         if (!empty($quantityFrom) && $quantityFrom < $count) {
             QUI\ERP\Shipping\Debug::addLog(
@@ -669,9 +668,9 @@ class ShippingRule extends QUI\CRUD\Child
 
         // purchase
         try {
-            $Calculation = $Order->getPriceCalculation();
-            $Currency = $Order->getCurrency();
-            $PriceFactors = $Order->getArticles()->getPriceFactors();
+            $Calculation = $ErpEntity->getPriceCalculation();
+            $Currency = $ErpEntity->getCurrency();
+            $PriceFactors = $ErpEntity->getArticles()->getPriceFactors();
             $ShippingFactor = null;
 
             /* @var $Factor QUI\ERP\Products\Interfaces\PriceFactorInterface */
@@ -723,7 +722,8 @@ class ShippingRule extends QUI\CRUD\Child
 
 
         try {
-            QUI::getEvents()->fireEvent('shippingCanUsedInOrder', [$this, $Order]);
+            QUI::getEvents()->fireEvent('shippingCanUsedInOrder', [$this, $ErpEntity]);
+            QUI::getEvents()->fireEvent('shippingCanUsedInEntity', [$this, $ErpEntity]);
         } catch (ShippingCanNotBeUsed $Exception) {
             return false;
         } catch (QUI\Exception $Exception) {
