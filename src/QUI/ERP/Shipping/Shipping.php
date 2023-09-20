@@ -342,7 +342,7 @@ class Shipping extends QUI\Utils\Singleton
 
         foreach ($userShipping as $ShippingEntry) {
             $ShippingEntry->setErpEntity($Entity);
-            
+
             if (
                 $ShippingEntry->isValid()
                 && $ShippingEntry->canUsedInErpEntity($Entity)
