@@ -313,6 +313,21 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
+     * @param AbstractOrder $Order
+     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|null
+     *
+     * @deprecated use getShippingPriceFactor
+     */
+    public function getShippingPriceFactorByOrder(
+        AbstractOrder $Order
+    ): ?QUI\ERP\Products\Interfaces\PriceFactorInterface {
+        QUI\System\Log::addNotice(
+            'Shipping->getShippingPriceFactorByOrder() is deprecated, use getShippingPriceFactor'
+        );
+        return $this->getShippingPriceFactor($Order);
+    }
+
+    /**
      * Get all valid shipping entries for an erp entity
      *
      * @param QUI\ERP\ErpEntityInterface $Entity
@@ -326,10 +341,8 @@ class Shipping extends QUI\Utils\Singleton
         $shippingList = [];
 
         foreach ($userShipping as $ShippingEntry) {
-            if ($Entity instanceof QUI\ERP\ErpEntityInterface) {
-                $ShippingEntry->setErpEntity($Entity);
-            }
-
+            $ShippingEntry->setErpEntity($Entity);
+            
             if (
                 $ShippingEntry->isValid()
                 && $ShippingEntry->canUsedInErpEntity($Entity)
@@ -340,6 +353,19 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         return $shippingList;
+    }
+
+    /**
+     * @param AbstractOrder $Order
+     * @return Types\ShippingEntry[]
+     * @deprecated use getValidShippingEntries
+     */
+    public function getValidShippingEntriesByOrder(AbstractOrder $Order): array
+    {
+        QUI\System\Log::addNotice(
+            'Shipping->getValidShippingEntriesByOrder() is deprecated, use getValidShippingEntries'
+        );
+        return $this->getValidShippingEntries($Order);
     }
 
     /**
