@@ -314,13 +314,12 @@ class Shipping extends QUI\Utils\Singleton
 
     /**
      * @param AbstractOrder $Order
-     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|null
+     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|QUI\ERP\Accounting\PriceFactors\Factor|null
      *
      * @deprecated use getShippingPriceFactor
      */
-    public function getShippingPriceFactorByOrder(
-        AbstractOrder $Order
-    ): ?QUI\ERP\Products\Interfaces\PriceFactorInterface {
+    public function getShippingPriceFactorByOrder(AbstractOrder $Order)
+    {
         QUI\System\Log::addNotice(
             'Shipping->getShippingPriceFactorByOrder() is deprecated, use getShippingPriceFactor'
         );
