@@ -296,11 +296,11 @@ class Shipping extends QUI\Utils\Singleton
      * Return the shipping price factor of an erp entity
      *
      * @param QUI\ERP\ErpEntityInterface $Entity
-     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface
+     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|QUI\ERP\Accounting\PriceFactors\Factor|null
      */
     public function getShippingPriceFactor(
         QUI\ERP\ErpEntityInterface $Entity
-    ): ?QUI\ERP\Products\Interfaces\PriceFactorInterface {
+    ) {
         $PriceFactors = $Entity->getArticles()->getPriceFactors();
 
         foreach ($PriceFactors as $PriceFactor) {
