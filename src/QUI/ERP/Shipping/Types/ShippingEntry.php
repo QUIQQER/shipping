@@ -213,7 +213,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $DefaultCurrency = QUI\ERP\Defaults::getCurrency();
         $UserCurrency = QUI\ERP\Defaults::getUserCurrency();
 
-        if ($DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
+        if ($UserCurrency && $DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
             try {
                 $price = $DefaultCurrency->convert($price, $UserCurrency);
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
