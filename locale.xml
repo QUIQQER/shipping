@@ -571,6 +571,11 @@
             <de><![CDATA[Versendet]]></de>
             <en><![CDATA[Sent]]></en>
         </locale>
+
+        <locale name="shipping.plus">
+            <de><![CDATA[zzgl.]]></de>
+            <en><![CDATA[plus]]></en>
+        </locale>
     </groups>
 
 
