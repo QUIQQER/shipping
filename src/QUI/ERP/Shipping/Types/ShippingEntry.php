@@ -224,7 +224,32 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             $Price = new QUI\ERP\Money\Price($price, $DefaultCurrency);
         }
 
-        return '+' . $Price->getDisplayPrice();
+        if (!$price) {
+            return '';
+        }
+
+        $numberAsString = strval($price);
+        $exploded = explode('.', $numberAsString);
+        $numberOfDecimalPlaces = isset($exploded[1]) ? strlen($exploded[1]) : 0;
+
+        $priceStringTitle = '';
+        $priceStringTitle .= QUI::getLocale()->get('quiqqer/shipping', 'shipping.plus');
+        $priceStringTitle .= ' ';
+        $priceStringTitle .= $Price->getDisplayPrice();
+
+        $priceString = $priceStringTitle;
+
+        if ($numberOfDecimalPlaces > 4) {
+            $priceRounded = round($price, 4);
+            $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
+
+            $priceString = '';
+            $priceString .= QUI::getLocale()->get('quiqqer/shipping', 'shipping.plus');
+            $priceString .= ' ~';
+            $priceString .= $PriceDisplay->getDisplayPrice();
+        }
+
+        return '<span title="' . $priceStringTitle . '">' . $priceString . '</span>';
     }
 
     /**
