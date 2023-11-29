@@ -1,9 +1,5 @@
 .quiqqer-shipping-address {
-    display: block;
-    clear: both;
-    float: left;
     margin-top: 20px;
-    width: 100%;
 }
 
 .quiqqer-shipping-address [name="shipping-address"] {
