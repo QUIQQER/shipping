@@ -681,6 +681,10 @@ class EventHandler
             return;
         }
 
+        if (!$shippingFactor) {
+            return;
+        }
+
         $identifier = $shippingFactor['identifier'];
         $identifier = str_replace('shipping-pricefactor-', '', $identifier);
         $id = $identifier;
