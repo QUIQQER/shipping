@@ -16,6 +16,7 @@
     display: grid;
     grid-template-columns: auto max(25%, 150px) 1fr auto;
     grid-template-areas: 'select icon text price';
+    background-color: var(--_shipping-order-listEntry-bg);
     gap: var(--_shipping-order-listEntry-gap);
     padding: var(--_shipping-order-listEntry-padding);
     border-radius: var(--_shipping-order-listEntry-radius);
@@ -60,7 +61,8 @@
 }
 
 .quiqqer-order-step-shipping-list-entry-text-description {
-    font-size: var(--qui-fs-base, 1rem);
+    font-size: var(--qui-fs-sm, 0.875rem);
+    margin-bottom: 0.25rem;
 }
 
 .quiqqer-order-step-shipping-list-entry-text-description > p:last-child {
@@ -80,10 +82,6 @@
                 ". price";
         grid-template-columns: 1.5rem 1fr;
         gap: 0 1rem;
-    }
-
-    .quiqqer-order-step-shipping-list-entry.selected {
-        background-color: var(--quiqqer-order-shipping-entry-selected, rgba(0, 0, 0, 0.05));
     }
 }
 
