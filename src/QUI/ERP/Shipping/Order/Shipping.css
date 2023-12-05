@@ -1,50 +1,49 @@
-
-.quiqqer-order-step-shipping-list {
-    display: inline-block;
-    width: 100%;
+.quiqqer-order-step-shipping {
+    --_shipping-order-listEntry-padding: var(--shipping-order-listEntry-padding, var(--_order-listEntry-padding, 1rem));
+    --_shipping-order-listEntry-bg: var(--shipping-order-listEntry-bg, var(--_order-listEntry-bg, transparent));
+    --_shipping-order-listEntry-bg--hover: var(--shipping-order-listEntry-bg--hover, var(--_order-listEntry-bg--hover, #f8f8f8));
+    --_shipping-order-listEntry-radius: var(--shipping-order-listEntry-radius, var(--_order-listEntry-radius, 0.25rem));
+    --_shipping-order-listEntry-gap: var(--shipping-order-listEntry-gap, var(--_order-listEntry-gap, 2rem));
+    --_shipping-order-listEntry-spacing: var(--shipping-order-listEntry-spacing, var(--_order-listEntry-spacing, .5rem));
 }
 
 .quiqqer-order-step-shipping form {
-    margin-top: 20px;
+    margin-top: 1rem;
 }
 
 .quiqqer-order-step-shipping-list-entry {
-    align-content: stretch;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    clear: both;
     cursor: pointer;
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: row;
-    -webkit-flex-direction: row;
-    -webkit-align-content: stretch;
-    position: relative;
-    width: 100%;
+    display: grid;
+    grid-template-columns: auto max(25%, 150px) 1fr auto;
+    grid-template-areas: 'select icon text price';
+    background-color: var(--_shipping-order-listEntry-bg);
+    gap: var(--_shipping-order-listEntry-gap);
+    padding: var(--_shipping-order-listEntry-padding);
+    border-radius: var(--_shipping-order-listEntry-radius);
+}
+
+.quiqqer-order-step-shipping-list-entry:not(:last-child) {
+    margin-bottom: var(--_shipping-order-listEntry-spacing, 0.25rem);
 }
 
 .quiqqer-order-step-shipping-list-entry-select {
+    grid-area: select;
     align-items: center;
     display: flex;
-    flex: 1;
-    -webkit-flex: 1;
-    justify-content: center;
-    padding: 20px;
     text-align: center;
-    width: 80px;
 }
 
-.quiqqer-order-step-shipping-list-entry:hover {
-    background: rgba(0, 0, 0, 0.1);
+.quiqqer-order-step-shipping-list-entry-select input {
+    margin: 0;
 }
 
-.quiqqer-order-step-shipping-list-entry-selected .quiqqer-order-step-shipping-list-entry-select {
-    background: #75b947;
+.quiqqer-order-step-shipping-list-entry:hover,
+.quiqqer-order-step-shipping-list-entry.selected {
+    background-color: var(--_shipping-order-listEntry-bg--hover);
 }
 
 .quiqqer-order-step-shipping-list-entry-icon {
-    float: left;
-    padding: 20px;
-    width: 25%;
+    grid-area: icon;
 }
 
 .quiqqer-order-step-shipping-list-entry-icon img {
@@ -52,64 +51,37 @@
 }
 
 .quiqqer-order-step-shipping-list-entry-text {
-    float: left;
-    padding: 20px;
-    width: calc(75% - 80px);
+    grid-area: text;
 }
 
 .quiqqer-order-step-shipping-list-entry-text label {
     cursor: pointer;
-    font-size: 16px;
+    font-size: var(--qui-fs-md, 1.125rem);
     font-weight: bold;
 }
 
 .quiqqer-order-step-shipping-list-entry-text-description {
-    font-size: 14px;
+    font-size: var(--qui-fs-sm, 0.875rem);
+    margin-bottom: 0.25rem;
+}
+
+.quiqqer-order-step-shipping-list-entry-text-description > p:last-child {
+    margin-bottom: 0;
 }
 
 .quiqqer-order-step-shipping-list-entry-price {
-    padding: 20px;
+    grid-area: price;
+    font-size: 1.125rem;
 }
 
 @media (max-width: 768px) {
     .quiqqer-order-step-shipping-list-entry {
-        clear: both;
-        display: block !important;
-        float: left;
-        margin-bottom: 20px;
-        padding-top: 10px;
-    }
-
-    .quiqqer-order-step-shipping-list-entry:last-child {
-        border: none;
-    }
-
-    .quiqqer-order-step-shipping-list-entry.selected {
-        background: rgba(0, 0, 0, 0.1);
-    }
-
-    .quiqqer-order-step-shipping-list-entry-select {
-        display: none !important;
-    }
-
-    .quiqqer-order-step-shipping-list-entry-icon,
-    .quiqqer-order-step-shipping-list-entry-text,
-    .quiqqer-order-step-shipping-list-entry-text-description {
-        width: 100% !important;
-    }
-
-    .quiqqer-order-step-shipping-list-entry-icon {
-        padding: 0 10px !important;
-        text-align: left;
-    }
-
-    .quiqqer-order-step-shipping-list-entry-text,
-    .quiqqer-order-step-shipping-list-entry-price {
-        padding: 10px;
-    }
-
-    .quiqqer-order-step-shipping-list-entry-text-description p {
-        margin-bottom: 0;
+        grid-template-areas:
+                "select icon"
+                ". text"
+                ". price";
+        grid-template-columns: 1.5rem 1fr;
+        gap: 0 1rem;
     }
 }
 
