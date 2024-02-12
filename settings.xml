@@ -56,7 +56,7 @@
             </params>
 
             <categories>
-                <category name="shipping" index="4">
+                <category name="shipping">
                     <text>
                         <locale group="quiqqer/shipping" var="window.erp.shipping.title"/>
                     </text>
