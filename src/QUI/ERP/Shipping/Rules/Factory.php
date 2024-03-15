@@ -54,7 +54,7 @@ class Factory extends QUI\CRUD\Factory
         });
 
         // create new translation var for the area
-        $this->Events->addEvent('onCreateEnd', function () use ($self) {
+        $this->Events->addEvent('onCreateEnd', function () {
             QUI\Translator::publish('quiqqer/shipping');
         });
     }

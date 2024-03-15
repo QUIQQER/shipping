@@ -8,6 +8,9 @@ namespace QUI\ERP\Shipping\Api;
 
 use QUI;
 
+use function get_class;
+use function md5;
+
 /**
  * Shipping abstract class
  * This is the parent shipping class for all shipping methods
@@ -21,28 +24,28 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      *
      * @var array
      */
-    protected $shippingFields = [];
+    protected array $shippingFields = [];
 
     /**
      * default settings
      *
      * @var array
      */
-    protected $defaults = [];
+    protected array $defaults = [];
 
     /**
      * Locale object for the shipping
      *
-     * @var QUI\Locale
+     * @var ?QUI\Locale
      */
-    protected $Locale = null;
+    protected ?QUI\Locale $Locale = null;
 
     /**
      * Set the locale object to the shipping
      *
      * @param QUI\Locale $Locale
      */
-    public function setLocale(QUI\Locale $Locale)
+    public function setLocale(QUI\Locale $Locale): void
     {
         $this->Locale = $Locale;
     }
@@ -52,7 +55,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      *
      * @return QUI\Locale
      */
-    public function getLocale()
+    public function getLocale(): QUI\Locale
     {
         if ($this->Locale === null) {
             $this->Locale = QUI::getLocale();
@@ -64,9 +67,9 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return \md5(\get_class($this));
+        return md5(get_class($this));
     }
 
     /**
@@ -74,25 +77,27 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      *
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
-        return \get_class($this);
+        return get_class($this);
     }
 
     /**
+     * @param null $Locale
      * @return string
      */
-    abstract public function getTitle();
+    abstract public function getTitle($Locale = null): string;
+
+    /**
+     * @param null $Locale
+     * @return string
+     */
+    abstract public function getDescription($Locale = null): string;
 
     /**
      * @return string
      */
-    abstract public function getDescription();
-
-    /**
-     * @return string
-     */
-    abstract public function getWorkingTitle();
+    abstract public function getWorkingTitle(): string;
 
     /**
      * Return the shipping icon (the URL path)
@@ -100,7 +105,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return QUI\ERP\Shipping\Shipping::getInstance()->getHost() .
             URL_OPT_DIR
@@ -112,7 +117,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'name' => $this->getName(),
@@ -127,7 +132,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      *
      * @return bool
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return true;
     }
@@ -138,10 +143,11 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      * Return the extra text for the invoice
      *
      * @param QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
-     * @return mixed
+     * @return string
      */
-    public function getInvoiceInformationText($Invoice)
-    {
+    public function getInvoiceInformationText(
+        QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+    ): string {
         return '';
     }
 

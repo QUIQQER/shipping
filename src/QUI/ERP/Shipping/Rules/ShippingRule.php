@@ -528,11 +528,7 @@ class ShippingRule extends QUI\CRUD\Child
         // category check
         $categoryIdsInEntity = array_unique($categoryIdsInEntity);
 
-        if (
-            !empty($categoryIdsInEntity)
-            && !empty($categories)
-            && (count($categories) === 1 && $categories[0] !== 0)
-        ) {
+        if (!empty($categoryIdsInEntity) && (count($categories) === 1 && $categories[0] !== 0)) {
             $found = false;
 
             foreach ($categories as $cid) {

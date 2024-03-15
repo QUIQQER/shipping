@@ -9,6 +9,9 @@ namespace QUI\ERP\Shipping\Types;
 use QUI;
 use QUI\Permissions\Permission;
 
+use function class_exists;
+use function is_integer;
+
 /**
  * Class Factory
  *
@@ -30,7 +33,7 @@ class Factory extends QUI\CRUD\Factory
         });
 
         // create new translation var for the area
-        $this->Events->addEvent('onCreateEnd', function () use ($self) {
+        $this->Events->addEvent('onCreateEnd', function () {
             QUI\Translator::publish('quiqqer/shipping');
         });
     }
@@ -45,15 +48,15 @@ class Factory extends QUI\CRUD\Factory
      */
     public function createChild($data = [])
     {
-        if (!isset($data['active']) || !\is_integer($data['active'])) {
+        if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
         }
 
-        if (!isset($data['priority']) || !\is_integer($data['priority'])) {
+        if (!isset($data['priority']) || !is_integer($data['priority'])) {
             $data['priority'] = 0;
         }
 
-        if (!isset($data['shipping_type']) || !\class_exists($data['shipping_type'])) {
+        if (!isset($data['shipping_type']) || !class_exists($data['shipping_type'])) {
             throw new QUI\ERP\Shipping\Exception([
                 'quiqqer/shipping',
                 'exception.create.shipping.class.not.found'
@@ -157,7 +160,7 @@ class Factory extends QUI\CRUD\Factory
         $data = [];
 
         foreach (QUI::availableLanguages() as $language) {
-            $data[$language]           = $title;
+            $data[$language] = $title;
             $data[$language . '_edit'] = $title;
         }
 
