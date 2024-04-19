@@ -5,7 +5,6 @@ namespace QUI\ERP\Shipping\Types;
 use QUI;
 use QUI\ERP\Shipping\Api;
 use QUI\ERP\Shipping\Api\ShippingInterface;
-
 use QUI\ERP\Shipping\Api\ShippingTypeInterface;
 use QUI\ERP\Shipping\Exception;
 
