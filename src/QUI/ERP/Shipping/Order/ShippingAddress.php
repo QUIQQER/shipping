@@ -8,6 +8,8 @@ namespace QUI\ERP\Shipping\Order;
 
 use QUI;
 
+use function dirname;
+
 /**
  * Class Shipping
  *
@@ -20,29 +22,21 @@ class ShippingAddress extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/ShippingAddress.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ShippingAddress.css');
         $this->addCSSClass('quiqqer-shipping-address');
     }
 
     /**
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            return '';
-        }
-
-        /* @var $User QUI\Users\User */
+        $Engine = QUI::getTemplateManager()->getEngine();
         $User = $this->getAttribute('User');
-
-        /* @var $Order QUI\ERP\Order\OrderInterface */
         $Order = $this->getAttribute('Order');
 
         if (!$User) {
@@ -73,16 +67,12 @@ class ShippingAddress extends QUI\Control
 
         // current address
         $currentAddress = '';
-        $ShippingAddress = null;
 
         $Shipping = QUI\ERP\Shipping\Shipping::getInstance()->getShippingByObject($Order);
-
-        if ($Shipping) {
-            $ShippingAddress = $Shipping->getAddress();
-        }
+        $ShippingAddress = $Shipping?->getAddress();
 
         if ($ShippingAddress) {
-            $currentAddress = $ShippingAddress->getId();
+            $currentAddress = $ShippingAddress->getUUID();
         } elseif ($User->getAttribute('quiqqer.delivery.address')) {
             $currentAddress = $User->getAttribute('quiqqer.delivery.address');
         }
@@ -93,6 +83,6 @@ class ShippingAddress extends QUI\Control
             'currentAddress' => $currentAddress
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ShippingAddress.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ShippingAddress.html');
     }
 }

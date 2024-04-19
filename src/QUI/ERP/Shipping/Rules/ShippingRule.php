@@ -15,6 +15,7 @@ use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
+use QUI\Locale;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
@@ -154,7 +155,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $lg = 'quiqqer/shipping';
         $id = $this->getId();
@@ -186,10 +187,10 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Return the shipping rule title
      *
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -210,7 +211,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return int
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return (int)$this->getAttribute('priority');
     }
@@ -220,7 +221,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return float
      */
-    public function getDiscount()
+    public function getDiscount(): float
     {
         return floatval($this->getAttribute('discount'));
     }
@@ -231,7 +232,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param QUI\Interfaces\Users\User $User
      * @return boolean
      */
-    public function canUsedBy(QUI\Interfaces\Users\User $User)
+    public function canUsedBy(QUI\Interfaces\Users\User $User): bool
     {
         if ($this->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: is not active");
@@ -248,7 +249,7 @@ class ShippingRule extends QUI\CRUD\Child
 
         try {
             QUI::getEvents()->fireEvent('quiqqerShippingCanUsedBy', [$this, $User]);
-        } catch (ShippingCanNotBeUsed $Exception) {
+        } catch (ShippingCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
@@ -303,7 +304,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         foreach ($discountUsers as $uid) {
-            if ($User->getId() == $uid) {
+            if ($User->getId() == $uid || $User->getUUID() === $uid) {
                 Debug::addLog("{$this->getTitle()} :: user is found in users [ok]");
 
                 return true;
@@ -316,7 +317,7 @@ class ShippingRule extends QUI\CRUD\Child
         /* @var $Group QUI\Groups\Group */
         foreach ($discountGroups as $gid) {
             foreach ($groupsOfUser as $Group) {
-                if ($Group->getId() == $gid) {
+                if ($Group->getId() == $gid || $Group->getUUID() == $gid) {
                     Debug::addLog("{$this->getTitle()} :: group is found in groups [ok]");
 
                     return true;
@@ -372,7 +373,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!$this->canUsedBy($ErpEntity->getCustomer())) {
-            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getId()}");
+            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getUUID()}");
 
             return false;
         }

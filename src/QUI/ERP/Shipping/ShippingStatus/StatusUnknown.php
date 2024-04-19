@@ -18,17 +18,17 @@ class StatusUnknown extends Status
     /**
      * @var int
      */
-    protected $id = 0;
+    protected int $id = 0;
 
     /**
      * @var string
      */
-    protected $color = '#999';
+    protected mixed $color = '#999';
 
     /**
      * @var bool
      */
-    protected $notification = false;
+    protected bool $notification = false;
 
     /**
      * Status constructor
