@@ -13,8 +13,11 @@ use QUI\Permissions\Permission;
 use function array_filter;
 use function array_flip;
 use function is_array;
+use function is_int;
+use function is_integer;
 use function is_numeric;
 use function json_encode;
+use function mb_strlen;
 
 use const ARRAY_FILTER_USE_KEY;
 
@@ -47,8 +50,6 @@ class Factory extends QUI\CRUD\Factory
     {
         parent::__construct();
 
-        $self = $this;
-
         $this->Events->addEvent('onCreateBegin', function () {
             Permission::checkPermission('quiqqer.shipping.rule.create');
         });
@@ -61,12 +62,11 @@ class Factory extends QUI\CRUD\Factory
 
     /**
      * @param array $data
-     *
      * @return ShippingRule
      *
      * @throws QUI\Exception
      */
-    public function createChild($data = [])
+    public function createChild(array $data = []): QUI\CRUD\Child
     {
         // filter
         $allowed = array_flip([
@@ -94,21 +94,21 @@ class Factory extends QUI\CRUD\Factory
         }, ARRAY_FILTER_USE_KEY);
 
 
-        if (!isset($data['active']) || !\is_integer($data['active'])) {
+        if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
         }
 
-        if (!isset($data['purchase_quantity_from']) || !\is_integer($data['purchase_quantity_from'])) {
+        if (!isset($data['purchase_quantity_from']) || !is_integer($data['purchase_quantity_from'])) {
             $data['purchase_quantity_from'] = 0;
         }
 
-        if (!isset($data['purchase_quantity_until']) || !\is_integer($data['purchase_quantity_until'])) {
+        if (!isset($data['purchase_quantity_until']) || !is_integer($data['purchase_quantity_until'])) {
             $data['purchase_quantity_until'] = 0;
         }
 
         if (!isset($data['priority']) || !is_numeric($data['priority'])) {
             $data['priority'] = 0;
-        } elseif (!\is_int($data['priority'])) {
+        } elseif (!is_int($data['priority'])) {
             $data['priority'] = (int)$data['priority'];
         }
 
@@ -165,8 +165,6 @@ class Factory extends QUI\CRUD\Factory
                 $data['discount_type'] = RuleFactory::DISCOUNT_TYPE_ABS;
         }
 
-        $attributes['discount'] = \floatval($data['discount']);
-
 
         // start creating
         QUI::getEvents()->fireEvent('shippingRuleCreateBegin', [$data]);
@@ -188,11 +186,11 @@ class Factory extends QUI\CRUD\Factory
         );
 
         // set translations
-        if (isset($data['title']) && !empty($data['title']) && is_array($data['title'])) {
+        if (!empty($data['title']) && is_array($data['title'])) {
             $title = [];
 
             foreach ($data['title'] as $lang => $v) {
-                if (\mb_strlen($lang) === 2) {
+                if (mb_strlen($lang) === 2) {
                     $title[$lang] = $v;
                 }
             }
@@ -205,11 +203,11 @@ class Factory extends QUI\CRUD\Factory
             );
         }
 
-        if (isset($data['workingTitle']) && !empty($data['workingTitle']) && is_array($data['workingTitle'])) {
+        if (!empty($data['workingTitle']) && is_array($data['workingTitle'])) {
             $title = [];
 
             foreach ($data['workingTitle'] as $lang => $v) {
-                if (\mb_strlen($lang) === 2) {
+                if (mb_strlen($lang) === 2) {
                     $title[$lang] = $v;
                 }
             }
@@ -237,7 +235,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return string
      */
-    public function getDataBaseTableName()
+    public function getDataBaseTableName(): string
     {
         return 'shipping_rules';
     }
@@ -245,7 +243,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return string
      */
-    public function getChildClass()
+    public function getChildClass(): string
     {
         return ShippingRule::class;
     }
@@ -253,7 +251,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return array
      */
-    public function getChildAttributes()
+    public function getChildAttributes(): array
     {
         return [
             'id',
@@ -290,7 +288,7 @@ class Factory extends QUI\CRUD\Factory
      *
      * @throws QUI\Exception
      */
-    public function getChild($id)
+    public function getChild($id): QUI\CRUD\Child
     {
         /* @var QUI\ERP\Shipping\Api\AbstractShippingEntry $Shipping */
         $Shipping = parent::getChild($id);
@@ -304,7 +302,7 @@ class Factory extends QUI\CRUD\Factory
      * @param $var
      * @param $title
      */
-    protected function createShippingLocale($var, $title)
+    protected function createShippingLocale($var, $title): void
     {
         $current = QUI::getLocale()->getCurrent();
 
