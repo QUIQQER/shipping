@@ -15,6 +15,8 @@ use QUI\ERP\Shipping\Types\Factory;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 use QUI\ERP\Shipping\Types\ShippingUnique;
 use QUI\Interfaces\Users\User;
+use QUI\ERP\Accounting\PriceFactors\Factor as ErpPriceFactor;
+use QUI\ERP\Products\Interfaces\PriceFactorInterface;
 
 use function array_filter;
 use function array_keys;
@@ -298,11 +300,10 @@ class Shipping extends QUI\Utils\Singleton
      * Return the shipping price factor of an erp entity
      *
      * @param QUI\ERP\ErpEntityInterface $Entity
-     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|QUI\ERP\Accounting\PriceFactors\Factor|null
+     * @return PriceFactorInterface|ErpPriceFactor|null
      */
-    public function getShippingPriceFactor(
-        QUI\ERP\ErpEntityInterface $Entity
-    ): QUI\ERP\Accounting\PriceFactors\Factor|QUI\ERP\Products\Interfaces\PriceFactorInterface|null {
+    public function getShippingPriceFactor(QUI\ERP\ErpEntityInterface $Entity): ErpPriceFactor|PriceFactorInterface|null
+    {
         $PriceFactors = $Entity->getArticles()->getPriceFactors();
 
         foreach ($PriceFactors as $PriceFactor) {
@@ -316,12 +317,12 @@ class Shipping extends QUI\Utils\Singleton
 
     /**
      * @param AbstractOrder $Order
-     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|QUI\ERP\Accounting\PriceFactors\Factor|null
+     * @return PriceFactorInterface|ErpPriceFactor|null
      *
      * @deprecated use getShippingPriceFactor
      */
-    public function getShippingPriceFactorByOrder(AbstractOrder $Order
-    ): QUI\ERP\Accounting\PriceFactors\Factor|QUI\ERP\Products\Interfaces\PriceFactorInterface|null {
+    public function getShippingPriceFactorByOrder(AbstractOrder $Order): ErpPriceFactor|PriceFactorInterface|null
+    {
         QUI\System\Log::addNotice(
             'Shipping->getShippingPriceFactorByOrder() is deprecated, use getShippingPriceFactor'
         );
@@ -418,7 +419,8 @@ class Shipping extends QUI\Utils\Singleton
      * @param ErpEntityInterface $Entity
      * @return ShippingEntry|ShippingUnique|null
      */
-    public function getShippingByObject(QUI\ERP\ErpEntityInterface $Entity
+    public function getShippingByObject(
+        QUI\ERP\ErpEntityInterface $Entity
     ): Types\ShippingEntry|Types\ShippingUnique|null {
         $Shipping = null;
         $Delivery = $Entity->getDeliveryAddress();
