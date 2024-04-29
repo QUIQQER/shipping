@@ -23,7 +23,7 @@ class StatusUnknown extends Status
     /**
      * @var string
      */
-    protected mixed $color = '#999';
+    protected string $color = '#999';
 
     /**
      * @var bool
@@ -40,10 +40,10 @@ class StatusUnknown extends Status
     /**
      * Return the title
      *
-     * @param null|QUI\Locale (optional) $Locale
+     * @param null|QUI\Locale $Locale (optional) $Locale
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if (!($Locale instanceof QUI\Locale)) {
             $Locale = QUI::getLocale();

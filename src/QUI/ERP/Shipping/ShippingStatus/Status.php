@@ -159,11 +159,11 @@ class Status
     public function toArray(QUI\Locale $Locale = null): array
     {
         $title = $this->getTitle($Locale);
+        $statusChangeText = [];
 
         if ($Locale === null) {
             $statusId = $this->getId();
             $title = [];
-            $statusChangeText = [];
 
             $Locale = QUI::getLocale();
             $languages = QUI::availableLanguages();
@@ -187,7 +187,8 @@ class Status
             'id' => $this->getId(),
             'title' => $title,
             'color' => $this->getColor(),
-            'notification' => $this->isAutoNotification()
+            'notification' => $this->isAutoNotification(),
+            'statusChangeText' => $statusChangeText
         ];
     }
 }
