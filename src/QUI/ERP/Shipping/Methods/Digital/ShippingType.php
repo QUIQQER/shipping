@@ -177,7 +177,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         if ($User instanceof QUI\ERP\User) {
             try {
-                $User = QUI::getUsers()->get($User->getId());
+                $User = QUI::getUsers()->get($User->getUUID());
             } catch (QUI\Exception) {
             }
         }

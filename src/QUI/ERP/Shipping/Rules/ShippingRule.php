@@ -242,7 +242,7 @@ class ShippingRule extends QUI\CRUD\Child
 
         if ($User instanceof QUI\ERP\User) {
             try {
-                $User = QUI::getUsers()->get($User->getId());
+                $User = QUI::getUsers()->get($User->getUUID());
             } catch (QUI\Exception) {
             }
         }
