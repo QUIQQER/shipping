@@ -5,10 +5,16 @@ namespace QUI\ERP\Shipping\Types;
 use QUI;
 use QUI\ERP\Shipping\Api;
 use QUI\ERP\Shipping\Api\ShippingInterface;
+use QUI\ERP\Shipping\Api\ShippingTypeInterface;
+use QUI\ERP\Shipping\Exception;
+
+use function class_exists;
+use function floatval;
+use function json_encode;
 
 /**
  * Class ShippingUnique
- * - This class represent a Shipping Entry, but its only a database container
+ * - This class represent a Shipping Entry, but it's only a database container
  * - This shipping is created from pure shipping data, for example an invoice.
  * - This shipping cannot perform database operations.
  *
@@ -19,22 +25,22 @@ class ShippingUnique implements ShippingInterface
     /**
      * @var array
      */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /**
      * ShippingUnique constructor.
      *
      * @param array $attributes - shipping data
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->attributes = $attributes;
     }
 
     /**
-     * @return int
+     * @return int|string
      */
-    public function getId()
+    public function getId(): int|string
     {
         if (isset($this->attributes['id'])) {
             return $this->attributes['id'];
@@ -47,7 +53,7 @@ class ShippingUnique implements ShippingInterface
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -66,7 +72,7 @@ class ShippingUnique implements ShippingInterface
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription($Locale = null)
+    public function getDescription($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -84,7 +90,7 @@ class ShippingUnique implements ShippingInterface
     /**
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         if (isset($this->attributes['icon'])) {
             return $this->attributes['icon'];
@@ -98,7 +104,7 @@ class ShippingUnique implements ShippingInterface
      *
      * @return string
      */
-    public function getPriceDisplay()
+    public function getPriceDisplay(): string
     {
         $Price = new QUI\ERP\Money\Price(
             $this->getPrice(),
@@ -113,24 +119,24 @@ class ShippingUnique implements ShippingInterface
      *
      * @return float|int
      */
-    public function getPrice()
+    public function getPrice(): float|int
     {
         if (isset($this->attributes['price'])) {
-            return \floatval($this->attributes['price']);
+            return floatval($this->attributes['price']);
         }
 
         return 0;
     }
 
     /**
-     * @return string
-     * @throws QUI\ERP\Shipping\Exception
+     * @return ShippingTypeInterface
+     * @throws Exception
      */
-    public function getShippingType()
+    public function getShippingType(): Api\ShippingTypeInterface
     {
         $type = $this->getAttribute('shipping_type');
 
-        if (!\class_exists($type)) {
+        if (!class_exists($type)) {
             throw new QUI\ERP\Shipping\Exception([
                 'quiqqer/shipping',
                 'exception.shipping.type.not.found',
@@ -157,7 +163,7 @@ class ShippingUnique implements ShippingInterface
      * @param string $name
      * @return mixed
      */
-    public function getAttribute($name)
+    public function getAttribute(string $name): mixed
     {
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
@@ -169,19 +175,19 @@ class ShippingUnique implements ShippingInterface
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->attributes;
     }
 
     /**
-     * Return the shipping as an json array
+     * Return the shipping as a json array
      *
      * @return string
      */
-    public function toJSON()
+    public function toJSON(): string
     {
-        return \json_encode($this->toArray());
+        return json_encode($this->toArray());
     }
 
     //endregion
@@ -191,7 +197,7 @@ class ShippingUnique implements ShippingInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return true;
     }

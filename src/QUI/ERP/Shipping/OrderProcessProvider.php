@@ -26,7 +26,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
     /**
      * @var null|AbstractShippingEntry
      */
-    protected $Shipping = null;
+    protected ?AbstractShippingEntry $Shipping = null;
 
     /**
      * @param OrderProcessSteps $OrderProcessSteps
@@ -35,7 +35,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
      * @throws \QUI\Exception
      * @throws \QUI\ERP\Order\Exception
      */
-    public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Process)
+    public function initSteps(OrderProcessSteps $OrderProcessSteps, OrderProcess $Process): void
     {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
@@ -63,7 +63,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
                     }
                 }
             }
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
         }
 
         $OrderProcessSteps->append(
@@ -80,7 +80,7 @@ class OrderProcessProvider extends AbstractOrderProcessProvider
      * @param AbstractOrderingStep|null $Step
      * @return string
      */
-    public function getDisplay(AbstractOrder $Order, $Step = null)
+    public function getDisplay(AbstractOrder $Order, $Step = null): string
     {
         return '';
     }

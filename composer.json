@@ -1,5 +1,5 @@
 {
-  "name": "quiqqer\/shipping",
+  "name": "quiqqer/shipping",
   "type": "quiqqer-plugin",
   "description": "Provided the shipping management for QUIQQER. Can manage shipping methods",
   "license": [
@@ -10,13 +10,13 @@
     {
       "name": "Henning Leutz",
       "email": "leutz@pcsg.de",
-      "homepage": "http:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     },
     {
       "name": "Moritz Scholz",
       "email": "scholz@pcsg.de",
-      "homepage": "http:\/\/www.pcsg.de",
+      "homepage": "https://www.pcsg.de",
       "role": "Developer"
     }
   ],
@@ -24,15 +24,15 @@
     "email": "support@pcsg.de"
   },
   "require": {
-    "quiqqer\/quiqqer": ">=1.5|dev-master|dev-dev",
-    "quiqqer\/erp": "^1.9|dev-master|dev-dev",
-    "quiqqer\/areas": "^1.1|dev-master|dev-dev",
-    "quiqqer\/order": "^1.0|dev-master|dev-dev",
-    "quiqqer\/products": "^1.5|dev-master|dev-dev"
+    "quiqqer/core": "^2",
+    "quiqqer/erp": "^3.2",
+    "quiqqer/areas": "^2",
+    "quiqqer/order": "^2",
+    "quiqqer/products": "^2"
   },
   "autoload": {
     "psr-4": {
-      "QUI\\ERP\\Shipping\\": "src\/QUI\/ERP\/Shipping"
+      "QUI\\ERP\\Shipping\\": "src/QUI/ERP/Shipping"
     }
   }
 }

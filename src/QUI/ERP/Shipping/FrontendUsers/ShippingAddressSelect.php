@@ -8,6 +8,8 @@ namespace QUI\ERP\Shipping\FrontendUsers;
 
 use QUI;
 
+use function dirname;
+
 /**
  * Class Shipping
  *
@@ -20,34 +22,28 @@ class ShippingAddressSelect extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
         $this->setAttribute('nodeName', 'section');
-        $this->addCSSFile(\dirname(__FILE__) . '/ShippingAddressSelect.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ShippingAddressSelect.css');
         $this->addCSSClass('quiqqer-shipping-user-address');
     }
 
     /**
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            return '';
-        }
-
+        $Engine = QUI::getTemplateManager()->getEngine();
         $addresses = [];
         $current = '';
         $User = $this->getAttribute('User');
 
         if ($User) {
-            /* @var $User QUI\Users\User */
             $addresses = $User->getAddressList();
-            $current = (int)$User->getAttribute('quiqqer.delivery.address');
+            $current = $User->getAttribute('quiqqer.delivery.address');
         }
 
         $Engine->assign([
@@ -55,6 +51,6 @@ class ShippingAddressSelect extends QUI\Control
             'current' => $current
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ShippingAddressSelect.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ShippingAddressSelect.html');
     }
 }

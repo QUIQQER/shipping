@@ -13,6 +13,7 @@ use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
 use QUI\ERP\Shipping\Rules\ShippingRule;
 use QUI\Exception;
+use QUI\Locale;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
@@ -41,7 +42,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @var null|QUI\ERP\Address|QUI\Users\Address
      */
-    protected $Address = null;
+    protected QUI\Users\Address|QUI\ERP\Address|null $Address = null;
 
     /**
      * Shipping constructor.
@@ -217,7 +218,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             try {
                 $price = $DefaultCurrency->convert($price, $UserCurrency);
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 $Price = new QUI\ERP\Money\Price($price, $DefaultCurrency);
             }
         } else {
@@ -257,7 +258,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return float|int
      */
-    public function getPrice()
+    public function getPrice(): float|int
     {
         $rules = $this->getShippingRules();
         $price = 0;
@@ -274,22 +275,18 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
 
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $ErpEntity) {
-                try {
-                    $ErpEntity = $this->ErpEntity;
-                    $Calculation = $ErpEntity->getPriceCalculation();
-                    $nettoSum = $Calculation->getNettoSum()->get();
+                $ErpEntity = $this->ErpEntity;
+                $Calculation = $ErpEntity->getPriceCalculation();
+                $nettoSum = $Calculation->getNettoSum()->get();
 
-                    if (!$nettoSum) {
-                        continue;
-                    }
-
-                    $pc = round($nettoSum * ($discount / 100));
-                    $price = $price + $pc;
-
+                if (!$nettoSum) {
                     continue;
-                } catch (Exception $Exception) {
-                    QUI\System\Log::addDebug($Exception->getMessage());
                 }
+
+                $pc = round($nettoSum * ($discount / 100));
+                $price = $price + $pc;
+
+                continue;
             }
 
             $pc = round($price * ($discount / 100));
@@ -325,7 +322,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if (method_exists($ShippingType, 'canUsedBy')) {
                 return $ShippingType->canUsedBy($User, $this, $Entity);
             }
-        } catch (Exception $Exception) {
+        } catch (Exception) {
             return false;
         }
 
@@ -353,7 +350,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if (method_exists($ShippingType, 'canUsedIn')) {
                 return $ShippingType->canUsedIn($Entity, $this);
             }
-        } catch (Exception $Exception) {
+        } catch (Exception) {
             return false;
         }
 
@@ -365,7 +362,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @throws QUI\ExceptionStack|Exception
      */
-    public function activate()
+    public function activate(): void
     {
         $this->setAttribute('active', 1);
         $this->update();
@@ -387,7 +384,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @throws QUI\ExceptionStack|Exception
      */
-    public function deactivate()
+    public function deactivate(): void
     {
         $this->setAttribute('active', 0);
         $this->update();
@@ -399,10 +396,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the shipping title
      *
-     * @param null $Locale
-     * @return array|string
+     * @param null|Locale $Locale
+     * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -418,9 +415,9 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Return the shipping description
      *
      * @param null $Locale
-     * @return array|string
+     * @return string
      */
-    public function getDescription($Locale = null)
+    public function getDescription($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -438,7 +435,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param null $Locale
      * @return array|string
      */
-    public function getWorkingTitle($Locale = null)
+    public function getWorkingTitle($Locale = null): array|string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -484,7 +481,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @param array $titles
      */
-    public function setTitle(array $titles)
+    public function setTitle(array $titles): void
     {
         $this->setShippingLocale(
             'shipping.' . $this->getId() . '.title',
@@ -497,7 +494,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @param array $descriptions
      */
-    public function setDescription(array $descriptions)
+    public function setDescription(array $descriptions): void
     {
         $this->setShippingLocale(
             'shipping.' . $this->getId() . '.description',
@@ -510,7 +507,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @param array $titles
      */
-    public function setWorkingTitle(array $titles)
+    public function setWorkingTitle(array $titles): void
     {
         $this->setShippingLocale(
             'shipping.' . $this->getId() . '.workingTitle',
@@ -521,7 +518,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @param string $icon - image.php?
      */
-    public function setIcon(string $icon)
+    public function setIcon(string $icon): void
     {
         if (QUI\Projects\Media\Utils::isMediaUrl($icon)) {
             $this->setAttribute('icon', $icon);
@@ -531,7 +528,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Remove the shipping entry icon
      */
-    public function removeIcon()
+    public function removeIcon(): void
     {
         $this->setAttribute('icon', false);
     }
@@ -542,7 +539,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param string $var
      * @param array $title
      */
-    protected function setShippingLocale(string $var, array $title)
+    protected function setShippingLocale(string $var, array $title): void
     {
         $data = [
             'datatype' => 'php,js',
@@ -586,7 +583,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @param ShippingRule $Rule
      */
-    public function addShippingRule(ShippingRule $Rule)
+    public function addShippingRule(ShippingRule $Rule): void
     {
         $shippingRules = $this->getAttribute('shipping_rules');
         $shippingRules = json_decode($shippingRules, true);
@@ -608,7 +605,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param integer $shippingRuleId
      * @throws Exception
      */
-    public function addShippingRuleId(int $shippingRuleId)
+    public function addShippingRuleId(int $shippingRuleId): void
     {
         /* @var $Rule ShippingRule */
         $Rule = RuleFactory::getInstance()->getChild($shippingRuleId);
@@ -779,7 +776,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @param QUI\ERP\ErpEntityInterface $ErpEntity
      */
-    public function setErpEntity(QUI\ERP\ErpEntityInterface $ErpEntity)
+    public function setErpEntity(QUI\ERP\ErpEntityInterface $ErpEntity): void
     {
         $this->ErpEntity = $ErpEntity;
     }
@@ -787,7 +784,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @deprecated use setErpEntity()
      */
-    public function setOrder(QUI\ERP\ErpEntityInterface $ErpEntity)
+    public function setOrder(QUI\ERP\ErpEntityInterface $ErpEntity): void
     {
         $this->setErpEntity($ErpEntity);
     }
@@ -816,7 +813,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         if ($DefaultCurrency->getCode() !== $EntityCurrency->getCode()) {
             try {
                 $price = $DefaultCurrency->convert($price, $EntityCurrency);
-            } catch (Exception $exception) {
+            } catch (Exception) {
             }
         }
 
@@ -858,7 +855,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @param $Address
      */
-    public function setAddress($Address)
+    public function setAddress($Address): void
     {
         $this->Address = $Address;
     }
@@ -866,7 +863,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the address
      */
-    public function getAddress()
+    public function getAddress(): QUI\ERP\Address|QUI\Users\Address|null
     {
         return $this->Address;
     }

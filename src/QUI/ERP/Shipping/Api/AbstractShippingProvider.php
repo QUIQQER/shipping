@@ -18,5 +18,5 @@ abstract class AbstractShippingProvider
      *
      * @return array
      */
-    abstract public function getShippingTypes();
+    abstract public function getShippingTypes(): array;
 }

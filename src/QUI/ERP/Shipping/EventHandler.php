@@ -6,19 +6,22 @@
 
 namespace QUI\ERP\Shipping;
 
+use Exception;
 use QUI;
 use QUI\ERP\Accounting\ArticleList;
+use QUI\ERP\Accounting\Invoice\InvoiceTemporary;
+use QUI\ERP\Accounting\Offers\AbstractOffer;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
+use QUI\ERP\SalesOrders\SalesOrder;
 use QUI\ERP\Shipping\Shipping as ShippingHandler;
-use Quiqqer\Engine\Collector;
+use QUI\Smarty\Collector;
 
 use function array_merge;
 use function explode;
 use function json_decode;
 use function method_exists;
-use function strpos;
 use function time;
 use function usort;
 
@@ -36,7 +39,7 @@ class EventHandler
      *
      * @throws QUI\Exception
      */
-    public static function onPackageSetup(QUI\Package\Package $Package)
+    public static function onPackageSetup(QUI\Package\Package $Package): void
     {
         if ($Package->getName() !== 'quiqqer/shipping') {
             return;
@@ -115,7 +118,7 @@ class EventHandler
     /**
      * event : on admin load footer
      */
-    public static function onAdminLoadFooter()
+    public static function onAdminLoadFooter(): void
     {
         echo '<script src="' . URL_OPT_DIR . 'quiqqer/shipping/bin/backend/load.js"></script>';
     }
@@ -131,7 +134,7 @@ class EventHandler
         $Basket,
         AbstractOrder $Order,
         QUI\ERP\Products\Product\ProductList $Products
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -171,7 +174,7 @@ class EventHandler
     public static function onQuiqqerPaymentCanUsedInOrder(
         QUI\ERP\Accounting\Payments\Types\Payment $Payment,
         QUI\ERP\Order\OrderInterface $Order
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -211,6 +214,7 @@ class EventHandler
     /**
      * @param Collector $Collector
      * @param $User
+     * @param $Address
      * @param $Order
      */
     public static function onOrderProcessCustomerDataEnd(
@@ -218,22 +222,26 @@ class EventHandler
         $User,
         $Address,
         $Order
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
 
-        $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
-            'User' => $User,
-            'Order' => $Order
-        ]);
+        try {
+            $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
+                'User' => $User,
+                'Order' => $Order
+            ]);
 
-        $Collector->append($Control->create());
+            $Collector->append($Control->create());
+        } catch (Exception $exception) {
+            QUI\System\Log::addError($exception->getMessage());
+        }
     }
 
     public static function onQuiqqerOrderOrderProcessCheckoutOutputBefore(
         OrderCheckoutStepControl $Checkout
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -251,7 +259,7 @@ class EventHandler
         $SessionUser = QUI::getUserBySession();
         $Customer = $Order->getCustomer();
 
-        if ($SessionUser->getId() !== $Customer->getId()) {
+        if ($SessionUser->getUUID() !== $Customer->getUUID()) {
             return;
         }
 
@@ -262,7 +270,7 @@ class EventHandler
                 $DeliveryAddress = $Customer->getAddress($addressId);
                 $Order->setDeliveryAddress($DeliveryAddress);
                 $Order->save(QUI::getUsers()->getSystemUser());
-            } catch (\Exception $Exception) {
+            } catch (Exception) {
             }
         }
     }
@@ -274,8 +282,10 @@ class EventHandler
      * @param string $text
      * @return void
      */
-    public static function onQuiqqerOrderOrderProcessCheckoutOutput(OrderCheckoutStepControl $Checkout, string $text)
-    {
+    public static function onQuiqqerOrderOrderProcessCheckoutOutput(
+        OrderCheckoutStepControl $Checkout,
+        string $text
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -288,8 +298,8 @@ class EventHandler
 
         $DeliveryAddress = $Order->getDeliveryAddress();
 
-        if ($DeliveryAddress->getId() === 0) {
-            $customerId = $Order->getCustomer()->getId();
+        if ($DeliveryAddress->getId() === 0 || $DeliveryAddress->getUUID() == 0) {
+            $customerId = $Order->getCustomer()->getUUID();
             $Customer = QUI::getUsers()->get($customerId);
 
             $deliveryAddressId = $Customer->getAttribute('quiqqer.delivery.address');
@@ -304,7 +314,7 @@ class EventHandler
 
                     $Order->setDeliveryAddress($ErpDeliveryAddress);
                     $Order->save(QUI::getUsers()->getSystemUser());
-                } catch (\Exception $Exception) {
+                } catch (Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
                 }
             }
@@ -319,7 +329,7 @@ class EventHandler
      */
     public static function onQuiqqerOrderCustomerDataSave(
         QUI\ERP\Order\Controls\OrderProcess\CustomerData $CustomerData
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -333,8 +343,8 @@ class EventHandler
         $Customer = $Order->getCustomer();
 
         try {
-            $User = QUI::getUsers()->get($Customer->getId());
-        } catch (QUI\Exception $Exception) {
+            $User = QUI::getUsers()->get($Customer->getUUID());
+        } catch (QUI\Exception) {
             $User = QUI::getUserBySession();
         }
 
@@ -347,15 +357,14 @@ class EventHandler
 
         try {
             $Address = $User->getAddress($_REQUEST['shipping-address']);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $Order->clearAddressDelivery();
             $Order->save();
-
             return;
         }
 
         $ErpAddress = new QUI\ERP\Address(
-            array_merge($Address->getAttributes(), ['id' => $Address->getId()])
+            array_merge($Address->getAttributes(), ['uuid' => $Address->getUUID()])
         );
 
         $Order->setDeliveryAddress($ErpAddress);
@@ -365,11 +374,12 @@ class EventHandler
     /**
      * @param Collector $Collector
      * @param QUI\Users\User $User
+     * @throws Exception
      */
     public static function onFrontendUsersAddressTop(
         Collector $Collector,
         QUI\Users\User $User
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -384,7 +394,7 @@ class EventHandler
     /**
      * @param QUI\Users\User $User
      */
-    public static function onUserSaveBegin(QUI\Users\User $User)
+    public static function onUserSaveBegin(QUI\Users\User $User): void
     {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
@@ -423,7 +433,7 @@ class EventHandler
      * event: onTemplateGetHeader
      * sets the uer current address
      */
-    public static function onTemplateGetHeader()
+    public static function onTemplateGetHeader(): void
     {
         $User = QUI::getUserBySession();
         $addressId = $User->getAttribute('quiqqer.delivery.address');
@@ -437,7 +447,7 @@ class EventHandler
                 $User,
                 $User->getAddress($addressId)
             );
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
     }
 
@@ -447,7 +457,7 @@ class EventHandler
      * @return void
      * @throws QUI\Exception
      */
-    protected static function createProductFields()
+    protected static function createProductFields(): void
     {
         $fields = [
             Shipping::PRODUCT_FIELD_SHIPPING_TIME => [
@@ -467,7 +477,7 @@ class EventHandler
             try {
                 ProductFields::getField($fieldId);
                 continue;
-            } catch (\Exception $Exception) {
+            } catch (Exception) {
                 // Field does not exist -> create it
             }
 
@@ -482,7 +492,7 @@ class EventHandler
                     'publicField' => !empty($field['public']) ? 1 : 0,
                     'options' => !empty($field['options']) ? $field['options'] : null
                 ]);
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 continue;
             }
@@ -502,7 +512,7 @@ class EventHandler
      * @param QUI\ERP\Products\Controls\Price $Price
      * @throws QUI\Exception
      */
-    public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price)
+    public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price): void
     {
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
         $enableShippingInfo = !!$Config->getValue('shipping', 'showShippingInfoAfterPrice');
@@ -525,16 +535,11 @@ class EventHandler
      * @param AbstractOrder $Order
      * @return void
      */
-    public static function onQuiqqerOrderFactoryCreate(AbstractOrder $Order)
+    public static function onQuiqqerOrderFactoryCreate(AbstractOrder $Order): void
     {
-        //if ($Order->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
-        //    return;
-        //}
-
         try {
             self::addDefaultShipping($Order->getArticles());
 
-            //$Order->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $Order->update(QUI::getUsers()->getSystemUser());
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
@@ -544,12 +549,12 @@ class EventHandler
     /**
      * event: add default shipping at onQuiqqerInvoiceTemporaryInvoiceCreated
      *
-     * @param \QUI\ERP\Accounting\Invoice\InvoiceTemporary $TemporaryInvoice
+     * @param InvoiceTemporary $TemporaryInvoice
      * @return void
      */
     public static function onQuiqqerInvoiceTemporaryInvoiceCreated(
-        QUI\ERP\Accounting\Invoice\InvoiceTemporary $TemporaryInvoice
-    ) {
+        InvoiceTemporary $TemporaryInvoice
+    ): void {
         if ($TemporaryInvoice->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
             return;
         }
@@ -566,10 +571,10 @@ class EventHandler
     /**
      * event: add default shipping at onQuiqqerOffersCreated
      *
-     * @param \QUI\ERP\Accounting\Offers\AbstractOffer $Offer
+     * @param AbstractOffer $Offer
      * @return void
      */
-    public static function onQuiqqerOffersCreated(QUI\ERP\Accounting\Offers\AbstractOffer $Offer)
+    public static function onQuiqqerOffersCreated(AbstractOffer $Offer): void
     {
         if ($Offer->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
             return;
@@ -579,7 +584,7 @@ class EventHandler
             self::addDefaultShipping($Offer->getArticles());
             $Offer->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $Offer->update(QUI::getUsers()->getSystemUser());
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
         }
     }
@@ -587,18 +592,13 @@ class EventHandler
     /**
      * event: add default shipping at onQuiqqerSalesOrdersCreated
      *
-     * @param \QUI\ERP\SalesOrders\SalesOrder $Sales
+     * @param SalesOrder $Sales
      * @return void
      */
-    public static function onQuiqqerSalesOrdersCreated(QUI\ERP\SalesOrders\SalesOrder $Sales)
+    public static function onQuiqqerSalesOrdersCreated(SalesOrder $Sales): void
     {
-        //if ($Sales->getCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY)) {
-        //    return;
-        //}
-
         try {
             self::addDefaultShipping($Sales->getArticles());
-            //$Sales->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
             $Sales->update();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
@@ -608,11 +608,11 @@ class EventHandler
     /**
      * event: addDefaultShipping
      *
-     * @param \QUI\ERP\Accounting\ArticleList $Articles
+     * @param ArticleList $Articles
      * @return void
-     * @throws \QUI\Exception
+     * @throws QUI\Exception
      */
-    protected static function addDefaultShipping(ArticleList $Articles)
+    protected static function addDefaultShipping(ArticleList $Articles): void
     {
         if (!QUI::isBackend()) {
             return;
@@ -633,7 +633,7 @@ class EventHandler
             $factors = $PriceFactors->toArray();
 
             foreach ($factors as $factor) {
-                if (strpos($factor['identifier'], 'shipping-pricefactor-') !== false) {
+                if (str_contains($factor['identifier'], 'shipping-pricefactor-')) {
                     $shippingFactor = $factor;
                     break;
                 }
@@ -644,7 +644,7 @@ class EventHandler
                 $Articles->addPriceFactor($PriceFactor);
                 $Articles->recalculate();
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
     }
 
@@ -652,12 +652,15 @@ class EventHandler
 
     /**
      * @param AbstractOrder $Order
+     * @param array $data
      * @return void
+     * @throws QUI\ERP\Exception
+     * @throws QUI\Exception
      */
     public static function onQuiqqerOrderUpdateBegin(
         AbstractOrder $Order,
-        &$data = []
-    ) {
+        array &$data = []
+    ): void {
         $Articles = $Order->getArticles();
         $PriceFactors = $Articles->getPriceFactors();
 
@@ -671,7 +674,7 @@ class EventHandler
         $Shipping = $Order->getShipping();
 
         foreach ($factors as $index => $factor) {
-            if (strpos($factor['identifier'], 'shipping-pricefactor-') !== false) {
+            if (str_contains($factor['identifier'], 'shipping-pricefactor-')) {
                 $shippingFactor = $factor;
                 break;
             }
@@ -723,13 +726,16 @@ class EventHandler
         }
     }
 
-    public static function onQuiqqerCustomerChange(QUI\ERP\ErpEntityInterface $ErpEntity)
+    /**
+     * @throws QUI\ERP\Exception
+     */
+    public static function onQuiqqerCustomerChange(QUI\ERP\ErpEntityInterface $ErpEntity): void
     {
         try {
             if (!QUI::getPackage('quiqqer/shipping')->getConfig()->get('shipping', 'considerCustomerCountry')) {
                 return;
             }
-        } catch (\Exception $exception) {
+        } catch (Exception) {
             return;
         }
 
@@ -756,7 +762,7 @@ class EventHandler
 
         /* @var $PriceFactor QUI\ERP\Accounting\PriceFactors\Factor */
         foreach ($PriceFactors as $index => $PriceFactor) {
-            if (strpos($PriceFactor->getIdentifier(), 'shipping-pricefactor-') === false) {
+            if (!str_contains($PriceFactor->getIdentifier(), 'shipping-pricefactor-')) {
                 continue;
             }
 
@@ -770,7 +776,7 @@ class EventHandler
                         $ErpEntity->setAttribute('__SHIPPING__', $Entry);
                         $ShippingEntry = $Entry;
                         break;
-                    } catch (QUI\Exception $exception) {
+                    } catch (QUI\Exception) {
                     }
                 }
             } else {

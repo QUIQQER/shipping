@@ -2,7 +2,11 @@
 
 namespace QUI\ERP\Shipping\Products\Fields;
 
+use Exception;
 use QUI;
+
+use function dirname;
+use function json_decode;
 
 /**
  * Class UnitSelectFrontendView
@@ -15,9 +19,8 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
      * Render the view, return the html
      *
      * @return string
-     * @throws QUI\Exception
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -73,6 +76,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
                         'period' => $from
                     ]);
+                    /* @@phpstan-ignore-next-line */
                 } elseif (empty($from) && !empty($to)) {
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
                         'period' => $to
@@ -103,7 +107,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             'cssClass' => $cssClass
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ShippingTimePeriodFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ShippingTimePeriodFrontendView.html');
     }
 
     /**
@@ -111,12 +115,12 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
      *
      * @return string|array
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         if (!empty($this->value['option']) && $this->value['option'] === ShippingTimePeriod::OPTION_USE_DEFAULT) {
             try {
                 $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 return null;
             }
@@ -124,7 +128,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
             $defaultValue = $Conf->get('shipping', 'deliveryTimeDefault');
 
             if (!empty($defaultValue)) {
-                return \json_decode($defaultValue, true);
+                return json_decode($defaultValue, true);
             }
         }
 
