@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping\Api;
 
 use QUI;
+use QUI\ERP\Shipping\Exception;
 
 /**
  * Interface for a Shipping Entry
@@ -15,46 +16,46 @@ use QUI;
 interface ShippingInterface
 {
     /**
-     * @return integer
+     * @return int|string
      */
-    public function getId();
+    public function getId(): int|string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle($Locale = null);
+    public function getTitle(QUI\Locale $Locale = null): string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription($Locale = null);
+    public function getDescription(QUI\Locale $Locale = null): string;
 
     /**
      * @return string
      */
-    public function getIcon();
+    public function getIcon(): string;
 
     /**
-     * @return string
-     * @throws QUI\ERP\Shipping\Exception
+     * @return ShippingTypeInterface
+     * @throws Exception
      */
-    public function getShippingType();
+    public function getShippingType(): ShippingTypeInterface;
 
     /**
      * Return the price of the shipping entry
      *
      * @return float|int
      */
-    public function getPrice();
+    public function getPrice(): float|int;
 
     /**
      * Return the price display
      *
      * @return string
      */
-    public function getPriceDisplay();
+    public function getPriceDisplay(): string;
 
     //region attributes
 
@@ -62,19 +63,19 @@ interface ShippingInterface
      * @param string $name
      * @return mixed
      */
-    public function getAttribute($name);
+    public function getAttribute(string $name): mixed;
 
     /**
      * @return array
      */
-    public function toArray();
+    public function toArray(): array;
 
     /**
-     * Return the shipping as an json array
+     * Return the shipping as a json array
      *
      * @return string
      */
-    public function toJSON();
+    public function toJSON(): string;
 
     //endregion
 
@@ -83,7 +84,7 @@ interface ShippingInterface
     /**
      * @return bool
      */
-    public function isActive();
+    public function isActive(): bool;
 
     /**
      * Activate ths shipping entry

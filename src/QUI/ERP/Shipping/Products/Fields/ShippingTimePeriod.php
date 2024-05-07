@@ -3,7 +3,16 @@
 namespace QUI\ERP\Shipping\Products\Fields;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\Types\TimePeriod;
+
+use function array_key_exists;
+use function is_array;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+
+use const JSON_ERROR_NONE;
 
 /**
  * Class TimePeriod
@@ -24,10 +33,10 @@ class ShippingTimePeriod extends TimePeriod
      * Check the value
      * is the value valid for the field type?
      *
-     * @param array
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @param mixed $value
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         parent::validate($value);
 
@@ -35,8 +44,8 @@ class ShippingTimePeriod extends TimePeriod
             return;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
         $needles = [
@@ -44,8 +53,8 @@ class ShippingTimePeriod extends TimePeriod
         ];
 
         foreach ($needles as $needle) {
-            if (!\array_key_exists($needle, $value)) {
-                throw new QUI\ERP\Products\Field\Exception([
+            if (!array_key_exists($needle, $value)) {
+                throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
@@ -61,10 +70,10 @@ class ShippingTimePeriod extends TimePeriod
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param string|array $value
+     * @param mixed $value
      * @return array|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
         $defaultValue = $this->getDefaultValue();
 
@@ -72,14 +81,14 @@ class ShippingTimePeriod extends TimePeriod
             return $defaultValue;
         }
 
-        if (!\is_string($value) && !\is_array($value)) {
+        if (!is_string($value) && !is_array($value)) {
             return $defaultValue;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 return $defaultValue;
             }
         }
@@ -97,7 +106,7 @@ class ShippingTimePeriod extends TimePeriod
                 break;
 
             case self::OPTION_CUSTOM_TEXT:
-                if (empty($value['text']) || !\is_array($value['text'])) {
+                if (empty($value['text']) || !is_array($value['text'])) {
                     $value['text'] = [];
 
                     foreach (QUI::availableLanguages() as $lang) {
@@ -116,7 +125,7 @@ class ShippingTimePeriod extends TimePeriod
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod';
     }
@@ -126,7 +135,7 @@ class ShippingTimePeriod extends TimePeriod
      *
      * @return ShippingTimeFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): ShippingTimeFrontendView
     {
         return new ShippingTimeFrontendView($this->getFieldDataForView());
     }
@@ -136,7 +145,7 @@ class ShippingTimePeriod extends TimePeriod
      *
      * @return mixed|null
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         try {
             $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
@@ -151,6 +160,6 @@ class ShippingTimePeriod extends TimePeriod
             return null;
         }
 
-        return \json_decode($defaultValue, true);
+        return json_decode($defaultValue, true);
     }
 }

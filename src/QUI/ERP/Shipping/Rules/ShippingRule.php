@@ -15,6 +15,7 @@ use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Exceptions\ShippingCanNotBeUsed;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
+use QUI\Locale;
 use QUI\Permissions\Permission;
 use QUI\Translator;
 
@@ -33,7 +34,6 @@ use function is_string;
 use function json_decode;
 use function json_encode;
 use function round;
-use function strpos;
 use function strtotime;
 use function time;
 use function trim;
@@ -155,7 +155,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $lg = 'quiqqer/shipping';
         $id = $this->getId();
@@ -187,10 +187,10 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Return the shipping rule title
      *
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -211,7 +211,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return int
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return (int)$this->getAttribute('priority');
     }
@@ -221,7 +221,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return float
      */
-    public function getDiscount()
+    public function getDiscount(): float
     {
         return floatval($this->getAttribute('discount'));
     }
@@ -232,7 +232,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param QUI\Interfaces\Users\User $User
      * @return boolean
      */
-    public function canUsedBy(QUI\Interfaces\Users\User $User)
+    public function canUsedBy(QUI\Interfaces\Users\User $User): bool
     {
         if ($this->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: is not active");
@@ -242,14 +242,14 @@ class ShippingRule extends QUI\CRUD\Child
 
         if ($User instanceof QUI\ERP\User) {
             try {
-                $User = QUI::getUsers()->get($User->getId());
-            } catch (QUI\Exception $Exception) {
+                $User = QUI::getUsers()->get($User->getUUID());
+            } catch (QUI\Exception) {
             }
         }
 
         try {
             QUI::getEvents()->fireEvent('quiqqerShippingCanUsedBy', [$this, $User]);
-        } catch (ShippingCanNotBeUsed $Exception) {
+        } catch (ShippingCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
@@ -264,13 +264,13 @@ class ShippingRule extends QUI\CRUD\Child
         $now = time();
 
         if ($dateFrom && strtotime($dateFrom) > $now) {
-            Debug::addLog("{$this->getTitle()} :: date from is not valid {$dateFrom} > {$now}");
+            Debug::addLog("{$this->getTitle()} :: date from is not valid $dateFrom > $now");
 
             return false;
         }
 
         if ($dateUntil && strtotime($dateUntil) < $now) {
-            Debug::addLog("{$this->getTitle()} :: date from is not valid {$dateFrom} < {$now}");
+            Debug::addLog("{$this->getTitle()} :: date from is not valid $dateFrom < $now");
 
             return false;
         }
@@ -304,7 +304,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         foreach ($discountUsers as $uid) {
-            if ($User->getId() == $uid) {
+            if ($User->getId() == $uid || $User->getUUID() === $uid) {
                 Debug::addLog("{$this->getTitle()} :: user is found in users [ok]");
 
                 return true;
@@ -317,7 +317,7 @@ class ShippingRule extends QUI\CRUD\Child
         /* @var $Group QUI\Groups\Group */
         foreach ($discountGroups as $gid) {
             foreach ($groupsOfUser as $Group) {
-                if ($Group->getId() == $gid) {
+                if ($Group->getId() == $gid || $Group->getUUID() == $gid) {
                     Debug::addLog("{$this->getTitle()} :: group is found in groups [ok]");
 
                     return true;
@@ -336,7 +336,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param QUI\ERP\Address|QUI\Users\Address $Address
      * @return bool
      */
-    public function canUsedWithAddress($Address)
+    public function canUsedWithAddress(QUI\ERP\Address|QUI\Users\Address $Address): bool
     {
         $areasValue = $this->getAttribute('areas');
 
@@ -373,7 +373,7 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!$this->canUsedBy($ErpEntity->getCustomer())) {
-            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getId()}");
+            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getUUID()}");
 
             return false;
         }
@@ -528,11 +528,7 @@ class ShippingRule extends QUI\CRUD\Child
         // category check
         $categoryIdsInEntity = array_unique($categoryIdsInEntity);
 
-        if (
-            !empty($categoryIdsInEntity)
-            && !empty($categories)
-            && (count($categories) === 1 && $categories[0] !== 0)
-        ) {
+        if (!empty($categoryIdsInEntity) && (count($categories) === 1 && $categories[0] !== 0)) {
             $found = false;
 
             foreach ($categories as $cid) {
@@ -591,7 +587,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                     if ($compare === false) {
                         QUI\ERP\Shipping\Debug::addLog(
-                            "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$hTerm} {$unitValue}"
+                            "{$this->getTitle()} :: weight is not valid $articleUnits[$id] $hTerm $unitValue"
                         );
 
                         return false;
@@ -608,7 +604,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                         if ($compare2 === false) {
                             QUI\ERP\Shipping\Debug::addLog(
-                                "{$this->getTitle()} :: weight is not valid {$articleUnits[$id]} {$hTerm2} {$unitValue}"
+                                "{$this->getTitle()} :: weight is not valid $articleUnits[$id] $hTerm2 $unitValue"
                             );
 
                             return false;
@@ -622,7 +618,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                 if ($compare === false) {
                     QUI\ERP\Shipping\Debug::addLog(
-                        "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$hTerm} {$value}"
+                        "{$this->getTitle()} :: unit term is not valid $articleUnits[$id] $hTerm $value"
                     );
 
                     return false;
@@ -637,7 +633,7 @@ class ShippingRule extends QUI\CRUD\Child
 
                     if ($compare2 === false) {
                         QUI\ERP\Shipping\Debug::addLog(
-                            "{$this->getTitle()} :: unit term is not valid {$articleUnits[$id]} {$hTerm2} {$value2}"
+                            "{$this->getTitle()} :: unit term is not valid $articleUnits[$id] $hTerm2 $value2"
                         );
 
                         return false;
@@ -652,7 +648,7 @@ class ShippingRule extends QUI\CRUD\Child
 
         if (!empty($quantityFrom) && $quantityFrom < $count) {
             QUI\ERP\Shipping\Debug::addLog(
-                "{$this->getTitle()} :: quantity from is not valid, {$count} < {$quantityFrom}"
+                "{$this->getTitle()} :: quantity from is not valid, $count < $quantityFrom"
             );
 
             return false;
@@ -660,7 +656,7 @@ class ShippingRule extends QUI\CRUD\Child
 
         if (!empty($quantityUntil) && $quantityFrom > $count) {
             QUI\ERP\Shipping\Debug::addLog(
-                "{$this->getTitle()} :: quantity until is not valid, {$count} > {$quantityFrom}"
+                "{$this->getTitle()} :: quantity until is not valid, $count > $quantityFrom"
             );
 
             return false;
@@ -675,7 +671,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             /* @var $Factor QUI\ERP\Products\Interfaces\PriceFactorInterface */
             foreach ($PriceFactors as $Factor) {
-                if (strpos($Factor->getIdentifier(), 'shipping-pricefactor') !== false) {
+                if (str_contains($Factor->getIdentifier(), 'shipping-pricefactor')) {
                     $ShippingFactor = $Factor;
                     break;
                 }
@@ -695,11 +691,11 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseFrom)) {
-            $purchaseFrom = QUI\Erp\Money\Price::validatePrice($purchaseFrom);
+            $purchaseFrom = QUI\ERP\Money\Price::validatePrice($purchaseFrom);
 
             if ($purchaseFrom >= $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    "{$this->getTitle()} :: purchase from is not valid, {$purchaseFrom} < {$sum}"
+                    "{$this->getTitle()} :: purchase from is not valid, $purchaseFrom < $sum"
                 );
 
                 return false;
@@ -707,11 +703,11 @@ class ShippingRule extends QUI\CRUD\Child
         }
 
         if (!empty($purchaseUntil)) {
-            $purchaseUntil = QUI\Erp\Money\Price::validatePrice($purchaseUntil);
+            $purchaseUntil = QUI\ERP\Money\Price::validatePrice($purchaseUntil);
 
             if ($purchaseUntil <= $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    "{$this->getTitle()} :: purchase from is not valid, {$purchaseFrom} > {$sum}"
+                    "{$this->getTitle()} :: purchase from is not valid, $purchaseFrom > $sum"
                 );
 
                 return false;
@@ -724,7 +720,7 @@ class ShippingRule extends QUI\CRUD\Child
         try {
             QUI::getEvents()->fireEvent('shippingCanUsedInOrder', [$this, $ErpEntity]);
             QUI::getEvents()->fireEvent('shippingCanUsedInEntity', [$this, $ErpEntity]);
-        } catch (ShippingCanNotBeUsed $Exception) {
+        } catch (ShippingCanNotBeUsed) {
             return false;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
@@ -744,7 +740,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return bool
      */
-    public function noRulesAfter()
+    public function noRulesAfter(): bool
     {
         if ($this->existsAttribute('no_rule_after')) {
             return !!$this->getAttribute('no_rule_after');
@@ -757,7 +753,7 @@ class ShippingRule extends QUI\CRUD\Child
      * Return the validation status of this rule
      * can the rule be used?
      */
-    public function isValid()
+    public function isValid(): bool
     {
         if (!$this->isActive()) {
             QUI\ERP\Shipping\Debug::addLog(
@@ -777,7 +773,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if ($usageFrom > $time) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    $this->getTitle() . " :: usage from is not ok, {$usageFrom} > {$time}"
+                    $this->getTitle() . " :: usage from is not ok, $usageFrom > $time"
                 );
 
                 return false;
@@ -789,7 +785,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if ($usageUntil < $time) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    $this->getTitle() . " :: usage from is not ok, {$usageFrom} < {$time}"
+                    $this->getTitle() . " :: usage from is not ok, $usageFrom < $time"
                 );
 
                 return false;
@@ -808,7 +804,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return int
      */
-    public function getDiscountType()
+    public function getDiscountType(): int
     {
         return (int)$this->getAttribute('discount_type');
     }
@@ -818,7 +814,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return bool|array
      */
-    public function getUnitTerms()
+    public function getUnitTerms(): bool|array
     {
         $unitTerms = $this->getAttribute('unit_terms');
 
@@ -842,7 +838,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @throws QUI\ExceptionStack|QUI\Exception
      */
-    public function activate()
+    public function activate(): void
     {
         $this->setAttribute('active', 1);
         $this->update();
@@ -854,7 +850,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return !!$this->getAttribute('active');
     }
@@ -864,7 +860,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @throws QUI\ExceptionStack|QUI\Exception
      */
-    public function deactivate()
+    public function deactivate(): void
     {
         $this->setAttribute('active', 0);
         $this->update();
@@ -880,7 +876,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @param array $titles
      */
-    public function setTitle(array $titles)
+    public function setTitle(array $titles): void
     {
         $this->setLocaleVar(
             'shipping.' . $this->getId() . '.rule.title',
@@ -893,7 +889,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @param array $titles
      */
-    public function setWorkingTitle(array $titles)
+    public function setWorkingTitle(array $titles): void
     {
         $this->setLocaleVar(
             'shipping.' . $this->getId() . '.rule.workingTitle',
@@ -907,7 +903,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param string $var
      * @param array $title
      */
-    protected function setLocaleVar($var, $title)
+    protected function setLocaleVar(string $var, array $title): void
     {
         $data = [
             'datatype' => 'php,js',
