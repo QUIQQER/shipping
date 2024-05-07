@@ -289,7 +289,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                 maxWidth : 600,
                 autoclose: false,
                 ok_button: {
-                    text     : QUILocale.get('quiqqer/quiqqer', 'edit'),
+                    text     : QUILocale.get('quiqqer/core', 'edit'),
                     textimage: 'fa fa-edit'
                 },
                 events   : {
@@ -384,7 +384,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                 maxWidth   : 600,
                 autoclose  : false,
                 ok_button  : {
-                    text     : QUILocale.get('quiqqer/quiqqer', 'remove'),
+                    text     : QUILocale.get('quiqqer/core', 'remove'),
                     textimage: 'fa fa-trash'
                 },
                 events     : {

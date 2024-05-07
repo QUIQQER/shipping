@@ -92,7 +92,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                 serverSort       : true,
                 buttons          : [{
                     name     : 'create',
-                    text     : QUILocale.get('quiqqer/quiqqer', 'create'),
+                    text     : QUILocale.get('quiqqer/core', 'create'),
                     textimage: 'fa fa-plus',
                     events   : {
                         onClick: this.$openCreateDialog

@@ -76,8 +76,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
         $onCreate: function () {
             this.addButton({
                 name     : 'save',
-                title    : QUILocale.get('quiqqer/quiqqer', 'save'),
-                text     : QUILocale.get('quiqqer/quiqqer', 'save'),
+                title    : QUILocale.get('quiqqer/core', 'save'),
+                text     : QUILocale.get('quiqqer/core', 'save'),
                 textimage: 'fa fa-save',
                 events   : {
                     onClick: this.save
@@ -90,8 +90,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
             this.addButton({
                 name     : 'status',
-                text     : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
-                title    : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                text     : QUILocale.get('quiqqer/core', 'deactivate'),
+                title    : QUILocale.get('quiqqer/core', 'deactivate'),
                 textimage: 'fa fa-remove',
                 disabled : true,
                 events   : {
@@ -180,12 +180,12 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                 Status = this.getButtons('status');
 
             if (status) {
-                Status.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
-                Status.setAttribute('title', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
+                Status.setAttribute('text', QUILocale.get('quiqqer/core', 'deactivate'));
+                Status.setAttribute('title', QUILocale.get('quiqqer/core', 'deactivate'));
                 Status.setAttribute('textimage', 'fa fa-remove');
             } else {
-                Status.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'activate'));
-                Status.setAttribute('title', QUILocale.get('quiqqer/quiqqer', 'activate'));
+                Status.setAttribute('text', QUILocale.get('quiqqer/core', 'activate'));
+                Status.setAttribute('title', QUILocale.get('quiqqer/core', 'activate'));
                 Status.setAttribute('textimage', 'fa fa-check');
             }
 
