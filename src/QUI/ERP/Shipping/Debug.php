@@ -2,6 +2,12 @@
 
 namespace QUI\ERP\Shipping;
 
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\ChromePHPHandler;
+use Monolog\Handler\FirePHPHandler;
+use Monolog\Logger;
+use PHPMailer\PHPMailer\Exception;
 use QUI;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 
@@ -15,34 +21,34 @@ class Debug
     /**
      * @var bool
      */
-    protected static $shippingRuleDebugs = [];
+    protected static array|bool $shippingRuleDebugs = [];
 
     /**
-     * @var \Monolog\Logger
+     * @var Logger|null
      */
-    protected static $Logger = null;
+    protected static ?Logger $Logger = null;
 
     /**
-     * @var \Monolog\Logger
+     * @var Logger|null
      */
-    protected static $FormatLogger = null;
+    protected static ?Logger $FormatLogger = null;
 
     /**
      * Stack of log messages
      *
      * @var array
      */
-    protected static $logStack = [];
+    protected static array $logStack = [];
 
     /**
      * @var bool
      */
-    protected static $enable = false;
+    protected static bool $enable = false;
 
     /**
      * enable the debugging
      */
-    public static function enable()
+    public static function enable(): void
     {
         self::$enable = true;
     }
@@ -50,7 +56,7 @@ class Debug
     /**
      * disable the debugging
      */
-    public static function disable()
+    public static function disable(): void
     {
         self::$enable = false;
     }
@@ -58,7 +64,7 @@ class Debug
     /**
      * @return bool
      */
-    public static function isEnabled()
+    public static function isEnabled(): bool
     {
         return self::$enable;
     }
@@ -67,7 +73,7 @@ class Debug
      * @param $ruleId
      * @return bool
      */
-    public static function isRuleAlreadyDebugged($ruleId)
+    public static function isRuleAlreadyDebugged($ruleId): bool
     {
         return isset(self::$shippingRuleDebugs[$ruleId]);
     }
@@ -75,7 +81,7 @@ class Debug
     /**
      * @param $ruleId
      */
-    public static function ruleIsDebugged($ruleId)
+    public static function ruleIsDebugged($ruleId): void
     {
         self::$shippingRuleDebugs[$ruleId] = true;
     }
@@ -83,7 +89,7 @@ class Debug
     /**
      * @param string $messages
      */
-    public static function addLog($messages)
+    public static function addLog(string $messages): void
     {
         if (self::$enable) {
             self::$logStack[] = $messages;
@@ -93,7 +99,7 @@ class Debug
     /**
      * @return array
      */
-    public static function getLogStack()
+    public static function getLogStack(): array
     {
         return self::$logStack;
     }
@@ -101,13 +107,13 @@ class Debug
     /**
      * clear the log stack
      */
-    public static function clearLogStock()
+    public static function clearLogStock(): void
     {
         self::$logStack = [];
     }
 
     /**
-     * @param $Entry
+     * @param ShippingEntry $Entry
      * @param $result
      * @param $debuggingLog
      */
@@ -115,7 +121,7 @@ class Debug
         ShippingEntry $Entry,
         $result,
         $debuggingLog
-    ) {
+    ): void {
         if (self::isRuleAlreadyDebugged($Entry->getId())) {
             return;
         }
@@ -165,22 +171,22 @@ class Debug
     }
 
     /**
-     * @return \Monolog\Logger
+     * @return Logger|null
      */
-    public static function getLogger()
+    public static function getLogger(): ?Logger
     {
         if (self::$Logger !== null) {
             return self::$Logger;
         }
 
-        $Logger = new \Monolog\Logger('quiqqer-shipping');
+        $Logger = new Logger('quiqqer-shipping');
 
         if (class_exists('Monolog\Handler\BrowserConsoleHandler')) {
-            $Logger->pushHandler(new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG));
+            $Logger->pushHandler(new BrowserConsoleHandler(Logger::DEBUG));
         }
 
-        $Logger->pushHandler(new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG));
-        $Logger->pushHandler(new \Monolog\Handler\ChromePHPHandler(\Monolog\Logger::DEBUG));
+        $Logger->pushHandler(new FirePHPHandler(Logger::DEBUG));
+        $Logger->pushHandler(new ChromePHPHandler(Logger::DEBUG));
 
         self::$Logger = $Logger;
 
@@ -188,24 +194,24 @@ class Debug
     }
 
     /**
-     * @return \Monolog\Logger
+     * @return Logger|null
      */
-    public static function getLoggerWithoutFormatter()
+    public static function getLoggerWithoutFormatter(): ?Logger
     {
         if (self::$FormatLogger !== null) {
             return self::$FormatLogger;
         }
 
-        $Logger = new \Monolog\Logger('quiqqer-shipping');
+        $Logger = new Logger('quiqqer-shipping');
 
         if (class_exists('Monolog\Handler\BrowserConsoleHandler')) {
-            $Console = new \Monolog\Handler\BrowserConsoleHandler(\Monolog\Logger::DEBUG);
+            $Console = new BrowserConsoleHandler(Logger::DEBUG);
         }
 
-        $FireFox = new \Monolog\Handler\FirePHPHandler(\Monolog\Logger::DEBUG);
-        $Chrome  = new \Monolog\Handler\ChromePHPHandler(\Monolog\Logger::DEBUG);
+        $FireFox = new FirePHPHandler(Logger::DEBUG);
+        $Chrome  = new ChromePHPHandler(Logger::DEBUG);
 
-        $Formatter = new \Monolog\Formatter\LineFormatter(
+        $Formatter = new LineFormatter(
             null,
             // Format of message in log, default [%datetime%] %channel%.%level_name%: %message% %context% %extra%\n
             null, // Datetime format
@@ -231,10 +237,11 @@ class Debug
 
     /**
      * @param QUI\ERP\Order\OrderInterface $Order
+     * @throws Exception
      */
     public static function sendAdminInfoMailAboutEmptyShipping(
         QUI\ERP\Order\OrderInterface $Order
-    ) {
+    ): void {
         if (Shipping::getInstance()->shippingDisabled()) {
             return;
         }
@@ -242,7 +249,7 @@ class Debug
         try {
             $Article     = $Order->getArticles();
             $articleHtml = $Article->toHTML();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             //@todo send mail because of exception
             return;
         }

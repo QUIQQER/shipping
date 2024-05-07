@@ -9,7 +9,10 @@ namespace QUI\ERP\Shipping\Order;
 use QUI;
 use QUI\ERP\Shipping\Shipping as ShippingHandler;
 
+use function array_merge;
 use function count;
+use function dirname;
+use function implode;
 
 /**
  * Class Shipping
@@ -23,18 +26,18 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/Shipping.css');
+        $this->addCSSFile(dirname(__FILE__) . '/Shipping.css');
     }
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getName($Locale = null)
+    public function getName($Locale = null): string
     {
         return 'Shipping';
     }
@@ -42,7 +45,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return 'fa-truck';
     }
@@ -52,7 +55,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      *
      * @throws QUI\Exception
      */
-    public function getBody()
+    public function getBody(): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
         $User = QUI::getUserBySession();
@@ -86,7 +89,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
                     $DebugShippingEntry->canUsedBy($User, $Order);
                 }
 
-                $debugStack = \array_merge($debugStack, QUI\ERP\Shipping\Debug::getLogStack());
+                $debugStack = array_merge($debugStack, QUI\ERP\Shipping\Debug::getLogStack());
                 $debugStack[] = "";
 
                 QUI\ERP\Shipping\Debug::clearLogStock();
@@ -94,8 +97,8 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
             QUI\ERP\Shipping\Debug::disable();
 
-            $Logger->info("\n\n" . \implode("\n", $debugStack));
-            $Engine->assign('debug', \implode("\n", $debugStack));
+            $Logger->info("\n\n" . implode("\n", $debugStack));
+            $Engine->assign('debug', implode("\n", $debugStack));
         }
 
         // send email if empty
@@ -130,13 +133,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             'shippingList' => $shippingList
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/Shipping.html');
+        return $Engine->fetch(dirname(__FILE__) . '/Shipping.html');
     }
 
     /**
      * @throws QUI\ERP\Order\Exception
      */
-    public function validate()
+    public function validate(): void
     {
         $Order = $this->getOrder();
 
@@ -216,7 +219,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    protected function getValidShipping()
+    protected function getValidShipping(): array
     {
         return ShippingHandler::getInstance()->getValidShippingEntries($this->getOrder());
     }
@@ -227,7 +230,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function save()
+    public function save(): void
     {
         $shipping = false;
 

@@ -6,7 +6,6 @@
 
 namespace QUI\ERP\Shipping;
 
-use QUI;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 
 /**
@@ -19,7 +18,7 @@ class Provider extends AbstractShippingProvider
     /**
      * @return array
      */
-    public function getShippingTypes()
+    public function getShippingTypes(): array
     {
         return [
             Methods\Standard\ShippingType::class,

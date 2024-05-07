@@ -111,7 +111,7 @@ class Tracking
      *
      * @return void
      */
-    public static function onPackageInstall()
+    public static function onPackageInstall(): void
     {
         $file = self::getConfigFile();
 
@@ -142,7 +142,7 @@ class Tracking
      *
      * @return string
      */
-    public static function getUrl($trackingId, string $carrier, ?Country $Country): string
+    public static function getUrl(float|int|string $trackingId, string $carrier, ?Country $Country): string
     {
         $carriers = self::getActiveCarriers();
         $country = false;

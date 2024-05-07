@@ -7,11 +7,16 @@
 namespace QUI\ERP\Shipping;
 
 use QUI;
+use QUI\ERP\ErpEntityInterface;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 use QUI\ERP\Shipping\Types\Factory;
+use QUI\ERP\Shipping\Types\ShippingEntry;
+use QUI\ERP\Shipping\Types\ShippingUnique;
 use QUI\Interfaces\Users\User;
+use QUI\ERP\Accounting\PriceFactors\Factor as ErpPriceFactor;
+use QUI\ERP\Products\Interfaces\PriceFactorInterface;
 
 use function array_filter;
 use function array_keys;
@@ -22,7 +27,6 @@ use function explode;
 use function key;
 use function max;
 use function method_exists;
-use function strpos;
 use function trim;
 
 /**
@@ -63,7 +67,7 @@ class Shipping extends QUI\Utils\Singleton
     protected ?bool $debugging = null;
 
     /**
-     * @var null
+     * @var bool|null
      */
     protected ?bool $shippingDisabled = null;
 
@@ -78,7 +82,7 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             $providers = QUI\Cache\Manager::get($cacheProvider);
-        } catch (QUI\Cache\Exception $Exception) {
+        } catch (QUI\Cache\Exception) {
             $packages = array_map(function ($package) {
                 return $package['name'];
             }, QUI::getPackageManager()->getInstalled());
@@ -92,7 +96,7 @@ class Shipping extends QUI\Utils\Singleton
                     if ($Package->isQuiqqerPackage()) {
                         $providers = array_merge($providers, $Package->getProvider('shipping'));
                     }
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
 
@@ -137,7 +141,7 @@ class Shipping extends QUI\Utils\Singleton
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
             $this->shippingDisabled = !!$Config->getValue('shipping', 'deactivated');
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $this->shippingDisabled = false;
         }
 
@@ -158,7 +162,7 @@ class Shipping extends QUI\Utils\Singleton
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
             $this->debugging = !!$Config->getValue('shipping', 'debug');
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $this->debugging = false;
         }
 
@@ -235,11 +239,11 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @throws Exception
      */
-    public function getShippingEntry($shippingId): Types\ShippingEntry
+    public function getShippingEntry(int|string $shippingId): Types\ShippingEntry
     {
         try {
             return Factory::getInstance()->getChild($shippingId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             throw new Exception([
                 'quiqqer/shipping',
                 'exception.shipping.not.found'
@@ -261,7 +265,7 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             return Factory::getInstance()->getChildren($queryParams);
-        } catch (QUi\Exception $Exception) {
+        } catch (QUi\Exception) {
             return [];
         }
     }
@@ -296,15 +300,14 @@ class Shipping extends QUI\Utils\Singleton
      * Return the shipping price factor of an erp entity
      *
      * @param QUI\ERP\ErpEntityInterface $Entity
-     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|QUI\ERP\Accounting\PriceFactors\Factor|null
+     * @return PriceFactorInterface|ErpPriceFactor|null
      */
-    public function getShippingPriceFactor(
-        QUI\ERP\ErpEntityInterface $Entity
-    ) {
+    public function getShippingPriceFactor(QUI\ERP\ErpEntityInterface $Entity): ErpPriceFactor|PriceFactorInterface|null
+    {
         $PriceFactors = $Entity->getArticles()->getPriceFactors();
 
         foreach ($PriceFactors as $PriceFactor) {
-            if (strpos($PriceFactor->getIdentifier(), 'shipping-pricefactor') !== false) {
+            if (str_contains($PriceFactor->getIdentifier(), 'shipping-pricefactor')) {
                 return $PriceFactor;
             }
         }
@@ -314,11 +317,11 @@ class Shipping extends QUI\Utils\Singleton
 
     /**
      * @param AbstractOrder $Order
-     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface|QUI\ERP\Accounting\PriceFactors\Factor|null
+     * @return PriceFactorInterface|ErpPriceFactor|null
      *
      * @deprecated use getShippingPriceFactor
      */
-    public function getShippingPriceFactorByOrder(AbstractOrder $Order)
+    public function getShippingPriceFactorByOrder(AbstractOrder $Order): ErpPriceFactor|PriceFactorInterface|null
     {
         QUI\System\Log::addNotice(
             'Shipping->getShippingPriceFactorByOrder() is deprecated, use getShippingPriceFactor'
@@ -376,7 +379,7 @@ class Shipping extends QUI\Utils\Singleton
     {
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
         }
 
@@ -396,7 +399,7 @@ class Shipping extends QUI\Utils\Singleton
     {
         try {
             $Project = QUI::getRewrite()->getProject();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             try {
                 $Project = QUI::getProjectManager()->getStandard();
             } catch (QUI\Exception $Exception) {
@@ -413,12 +416,12 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
-     * @param QUI\ERP\ErpEntityInterface $Entity
-     *
-     * @return QUI\ERP\Shipping\Types\ShippingEntry|QUI\ERP\Shipping\Types\ShippingUnique
+     * @param ErpEntityInterface $Entity
+     * @return ShippingEntry|ShippingUnique|null
      */
-    public function getShippingByObject(QUI\ERP\ErpEntityInterface $Entity)
-    {
+    public function getShippingByObject(
+        QUI\ERP\ErpEntityInterface $Entity
+    ): Types\ShippingEntry|Types\ShippingUnique|null {
         $Shipping = null;
         $Delivery = $Entity->getDeliveryAddress();
 
@@ -435,13 +438,13 @@ class Shipping extends QUI\Utils\Singleton
 
     /**
      * @param $orderId
-     * @return QUI\ERP\Shipping\Types\ShippingEntry|QUI\ERP\Shipping\Types\ShippingUnique
+     * @return ShippingEntry|ShippingUnique|null
      */
-    public function getShippingByOrderId($orderId)
+    public function getShippingByOrderId($orderId): ShippingEntry|ShippingUnique|null
     {
         try {
             $Order = QUI\ERP\Order\Handler::getInstance()->getOrderById($orderId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return null;
         }
 
@@ -489,10 +492,9 @@ class Shipping extends QUI\Utils\Singleton
      * @return float|int|mixed|string|null
      * @throws \QUI\Exception
      */
-    public function getVat(QUI\ERP\ErpEntityInterface $ErpEntity)
+    public function getVat(QUI\ERP\ErpEntityInterface $ErpEntity): mixed
     {
         /* @var $Article QUI\ERP\Accounting\Article */
-
         $Articles = $ErpEntity->getArticles();
         $vats = [];
 
@@ -550,14 +552,14 @@ class Shipping extends QUI\Utils\Singleton
         AbstractOrder $Order,
         int $statusId,
         string $message = null
-    ) {
+    ): void {
         $Customer = $Order->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
 
         if (empty($customerEmail)) {
             QUI\System\Log::addWarning(
                 'Status change notification for order #' . $Order->getPrefixedId() . ' cannot be sent'
-                . ' because customer #' . $Customer->getId() . ' has no e-mail address.'
+                . ' because customer #' . $Customer->getUUID() . ' has no e-mail address.'
             );
 
             return;

@@ -2,24 +2,33 @@
 
 namespace QUI\ERP\Shipping\Methods\Digital;
 
+use Exception;
 use QUI;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\DigitalProduct;
 use QUI\ERP\Shipping\Debug;
+use QUI\Locale;
+
+use function array_filter;
+use function array_map;
+use function explode;
+use function in_array;
+use function is_numeric;
+use function trim;
 
 /**
  * Class DigitalType
  *
- * Shipping for digital products that are deliverd via download and/or email.
+ * Shipping for digital products that are delivered via download and/or email.
  */
 class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 {
     /**
-     * @param null $Locale
-     * @return array|string
+     * @param Locale|null $Locale
+     * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(?QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -31,7 +40,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     /**
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string
     {
         return QUI\ERP\Shipping\Shipping::getInstance()->getHost() .
             URL_OPT_DIR
@@ -46,7 +55,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
     public function canUsedInOrder(
         QUI\ERP\ErpEntityInterface $Entity,
         QUI\ERP\Shipping\Types\ShippingEntry $ShippingEntry
-    ) {
+    ): bool {
         if ($ShippingEntry->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
 
@@ -62,7 +71,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         foreach ($Entity->getArticles() as $Article) {
             try {
                 // Do not parse coupon codes / discounts
-                if (empty($Article->getId()) || !\is_numeric($Article->getId())) {
+                if (empty($Article->getId()) || !is_numeric($Article->getId())) {
                     continue;
                 }
 
@@ -77,7 +86,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
                     return false;
                 }
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
             }
         }
@@ -91,13 +100,13 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         };
 
         if (!empty($articles)) {
-            $articles = \array_map($toInt, \explode(',', $articles));
+            $articles = array_map($toInt, explode(',', $articles));
         } else {
             $articles = [];
         }
 
         if (!empty($categories)) {
-            $categories = \array_map($toInt, \explode(',', $categories));
+            $categories = array_map($toInt, explode(',', $categories));
         } else {
             $categories = [];
         }
@@ -116,32 +125,30 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             try {
                 $productId = $Article->getId();
 
-                if (!empty($articles) && \in_array($productId, $articles)) {
+                if (!empty($articles) && in_array($productId, $articles)) {
                     Debug::addLog(
-                        "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product {$productId} is in allowed list [ok]"
+                        "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: product $productId is in allowed list [ok]"
                     );
 
                     return true;
                 }
 
-                if (\is_array($categories)) {
-                    $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
-                    $articleCategories = $Product->getCategories();
+                $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                $articleCategories = $Product->getCategories();
 
-                    /* @var $Category QUI\ERP\Products\Category\Category */
-                    foreach ($articleCategories as $Category) {
-                        $categoryId = $Category->getId();
+                /* @var $Category QUI\ERP\Products\Category\Category */
+                foreach ($articleCategories as $Category) {
+                    $categoryId = $Category->getId();
 
-                        if (\in_array($categoryId, $categories)) {
-                            Debug::addLog(
-                                "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category {$categoryId} is in allowed list [ok]"
-                            );
+                    if (in_array($categoryId, $categories)) {
+                        Debug::addLog(
+                            "{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: category $categoryId is in allowed list [ok]"
+                        );
 
-                            return true;
-                        }
+                        return true;
                     }
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 return false;
             }
         }
@@ -161,7 +168,7 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         QUI\Interfaces\Users\User $User,
         QUI\ERP\Shipping\Api\ShippingInterface $ShippingEntry,
         QUI\ERP\ErpEntityInterface $Entity
-    ) {
+    ): bool {
         if ($ShippingEntry->isActive() === false) {
             Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: is not active");
 
@@ -170,8 +177,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         if ($User instanceof QUI\ERP\User) {
             try {
-                $User = QUI::getUsers()->get($User->getId());
-            } catch (QUI\Exception $Exception) {
+                $User = QUI::getUsers()->get($User->getUUID());
+            } catch (QUI\Exception) {
             }
         }
 
@@ -188,10 +195,10 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         $Address = $Entity->getDeliveryAddress();
 
-        $areasValue = \trim($areasValue);
-        $areasValue = \trim($areasValue, ',');
-        $areasValue = \explode(',', $areasValue);
-        $areasValue = \array_filter($areasValue);
+        $areasValue = trim($areasValue);
+        $areasValue = trim($areasValue, ',');
+        $areasValue = explode(',', $areasValue);
+        $areasValue = array_filter($areasValue);
 
         // not in area
         if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
@@ -217,8 +224,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
 
         // user checking
         foreach ($discountUsers as $uid) {
-            if ($User->getId() == $uid) {
-                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: user found {$uid} [OK]");
+            if ($User->getId() == $uid || $User->getUUID() == $uid) {
+                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: user found $uid [OK]");
 
                 return true;
             }
@@ -230,8 +237,8 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         /* @var $Group QUI\Groups\Group */
         foreach ($discountGroups as $gid) {
             foreach ($groupsOfUser as $Group) {
-                if ($Group->getId() == $gid) {
-                    Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: group found {$gid} [OK]");
+                if ($Group->getId() == $gid || $Group->getUUID() == $gid) {
+                    Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: group found $gid [OK]");
 
                     return true;
                 }

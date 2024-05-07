@@ -89,10 +89,10 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
     abstract public function getTitle($Locale = null): string;
 
     /**
-     * @param null $Locale
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    abstract public function getDescription($Locale = null): string;
+    abstract public function getDescription(QUI\Locale $Locale = null): string;
 
     /**
      * @return string

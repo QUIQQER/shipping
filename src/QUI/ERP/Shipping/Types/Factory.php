@@ -26,8 +26,6 @@ class Factory extends QUI\CRUD\Factory
     {
         parent::__construct();
 
-        $self = $this;
-
         $this->Events->addEvent('onCreateBegin', function () {
             Permission::checkPermission('quiqqer.shipping.create');
         });
@@ -46,7 +44,7 @@ class Factory extends QUI\CRUD\Factory
      * @throws QUI\ERP\Shipping\Exception
      * @throws QUI\Exception
      */
-    public function createChild($data = [])
+    public function createChild(array $data = []): QUI\CRUD\Child
     {
         if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
@@ -96,7 +94,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return string
      */
-    public function getDataBaseTableName()
+    public function getDataBaseTableName(): string
     {
         return 'shipping';
     }
@@ -104,7 +102,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return string
      */
-    public function getChildClass()
+    public function getChildClass(): string
     {
         return ShippingEntry::class;
     }
@@ -112,7 +110,7 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @return array
      */
-    public function getChildAttributes()
+    public function getChildAttributes(): array
     {
         return [
             'id',
@@ -136,7 +134,7 @@ class Factory extends QUI\CRUD\Factory
      *
      * @throws QUI\Exception
      */
-    public function getChild($id)
+    public function getChild($id): QUI\CRUD\Child
     {
         /* @var QUI\ERP\Shipping\Types\ShippingEntry $Shipping */
         $Shipping = parent::getChild($id);
@@ -150,7 +148,7 @@ class Factory extends QUI\CRUD\Factory
      * @param $var
      * @param $title
      */
-    protected function createShippingLocale($var, $title)
+    protected function createShippingLocale($var, $title): void
     {
         if (QUI::getLocale()->isLocaleString($title)) {
             $parts = QUI::getLocale()->getPartsOfLocaleString($title);
@@ -166,7 +164,7 @@ class Factory extends QUI\CRUD\Factory
 
 
         try {
-            QUI\Translator::add('quiqqer/shipping', $var, 'quiqqer/shipping', 'php,js');
+            QUI\Translator::add('quiqqer/shipping', $var, 'quiqqer/shipping');
             QUI\Translator::update('quiqqer/shipping', $var, 'quiqqer/shipping', $data);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage());

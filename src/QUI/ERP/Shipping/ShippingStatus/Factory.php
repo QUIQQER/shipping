@@ -8,6 +8,10 @@ namespace QUI\ERP\Shipping\ShippingStatus;
 
 use QUI;
 
+use function array_keys;
+use function count;
+use function max;
+
 /**
  * Class Factory
  * - For shipping status creation
@@ -19,7 +23,7 @@ class Factory extends QUI\Utils\Singleton
     /**
      * Create a new shipping status
      *
-     * @param string|integer $id - shipping ID
+     * @param integer|string $id - shipping ID
      * @param string $color - color of the status
      * @param array $title - title
      *
@@ -28,7 +32,7 @@ class Factory extends QUI\Utils\Singleton
      *
      * @todo permissions
      */
-    public function createShippingStatus($id, $color, array $title)
+    public function createShippingStatus(int|string $id, string $color, array $title): void
     {
         $list = Handler::getInstance()->getList();
         $id = (int)$id;
@@ -49,13 +53,11 @@ class Factory extends QUI\Utils\Singleton
         $Config->save();
 
         // translations
-        if (\is_array($title)) {
-            $languages = QUI::availableLanguages();
+        $languages = QUI::availableLanguages();
 
-            foreach ($languages as $language) {
-                if (isset($title[$language])) {
-                    $data[$language] = $title[$language];
-                }
+        foreach ($languages as $language) {
+            if (isset($title[$language])) {
+                $data[$language] = $title[$language];
             }
         }
 
@@ -86,11 +88,11 @@ class Factory extends QUI\Utils\Singleton
     {
         $list = Handler::getInstance()->getList();
 
-        if (!\count($list)) {
+        if (!count($list)) {
             return 1;
         }
 
-        $max = \max(\array_keys($list));
+        $max = max(array_keys($list));
 
         return $max + 1;
     }

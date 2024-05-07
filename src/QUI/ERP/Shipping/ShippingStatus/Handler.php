@@ -9,6 +9,8 @@ namespace QUI\ERP\Shipping\ShippingStatus;
 use QUI;
 use QUI\ERP\Order\AbstractOrder;
 
+use function is_array;
+
 /**
  * Class Handler
  * - Shipping status management
@@ -20,9 +22,9 @@ use QUI\ERP\Order\AbstractOrder;
 class Handler extends QUI\Utils\Singleton
 {
     /**
-     * @var array
+     * @var array|null
      */
-    protected $list = null;
+    protected ?array $list = null;
 
     /**
      * Exists a specific status?
@@ -30,7 +32,7 @@ class Handler extends QUI\Utils\Singleton
      * @param integer $id
      * @return bool
      */
-    public function exists($id)
+    public function exists(int $id): bool
     {
         $list = Handler::getInstance()->getList();
 
@@ -40,9 +42,9 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Return all shipping status entries from the config
      *
-     * @return array
+     * @return array|null
      */
-    public function getList()
+    public function getList(): ?array
     {
         if ($this->list !== null) {
             return $this->list;
@@ -58,7 +60,7 @@ class Handler extends QUI\Utils\Singleton
             return [];
         }
 
-        if (!$result || !\is_array($result)) {
+        if (!$result || !is_array($result)) {
             $this->list = [];
 
             return $this->list;
@@ -72,9 +74,9 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Refresh the internal list
      *
-     * @return array
+     * @return array|null
      */
-    public function refreshList()
+    public function refreshList(): ?array
     {
         $this->list = null;
 
@@ -86,7 +88,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @return Status[]
      */
-    public function getShippingStatusList()
+    public function getShippingStatusList(): array
     {
         $list = $this->getList();
         $result = [];
@@ -94,7 +96,7 @@ class Handler extends QUI\Utils\Singleton
         foreach ($list as $entry => $color) {
             try {
                 $result[] = $this->getShippingStatus($entry);
-            } catch (Exception $Exception) {
+            } catch (Exception) {
             }
         }
 
@@ -104,12 +106,12 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Return a shipping status
      *
-     * @param $id
+     * @param int $id
      * @return Status|StatusUnknown
      *
      * @throws Exception
      */
-    public function getShippingStatus($id)
+    public function getShippingStatus(int $id): StatusUnknown|Status
     {
         if ($id === 0) {
             return new StatusUnknown();
@@ -121,14 +123,14 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Delete / Remove a shipping status
      *
-     * @param string|int $id
+     * @param int|string $id
      *
      * @throws Exception
      * @throws QUI\Exception
      *
      * @todo permissions
      */
-    public function deleteShippingStatus($id)
+    public function deleteShippingStatus(int|string $id): void
     {
         $Status = $this->getShippingStatus($id);
 
@@ -158,7 +160,7 @@ class Handler extends QUI\Utils\Singleton
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function setShippingStatusNotification($id, $notify)
+    public function setShippingStatusNotification(int $id, bool $notify): void
     {
         $Status = $this->getShippingStatus($id);
 
@@ -173,7 +175,7 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Update a shipping status
      *
-     * @param int|string $id
+     * @param int $id
      * @param int|string $color
      * @param array $title
      *
@@ -181,7 +183,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @todo permissions
      */
-    public function updateShippingStatus($id, $color, array $title)
+    public function updateShippingStatus(int $id, int|string $color, array $title): void
     {
         $Status = $this->getShippingStatus($id);
 
@@ -224,7 +226,7 @@ class Handler extends QUI\Utils\Singleton
      * @param int $id
      * @return void
      */
-    public function createNotificationTranslations($id)
+    public function createNotificationTranslations(int $id): void
     {
         $data = [
             'package' => 'quiqqer/shipping',
@@ -267,12 +269,12 @@ class Handler extends QUI\Utils\Singleton
      *
      * @param AbstractOrder $Order
      * @param int $statusId
-     * @param string $message (optional) - Custom notification message [default: default status change message]
+     * @param string|null $message (optional) - Custom notification message [default: default status change message]
      * @return void
      *
      * @throws QUI\Exception
      */
-    public function sendStatusChangeNotification(AbstractOrder $Order, $statusId, $message = null)
+    public function sendStatusChangeNotification(AbstractOrder $Order, int $statusId, string $message = null): void
     {
         $Customer = $Order->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
@@ -280,7 +282,7 @@ class Handler extends QUI\Utils\Singleton
         if (empty($customerEmail)) {
             QUI\System\Log::addWarning(
                 'Status change notification for order #' . $Order->getPrefixedId() . ' cannot be sent'
-                . ' because customer #' . $Customer->getId() . ' has no e-mail address.'
+                . ' because customer #' . $Customer->getUUID() . ' has no e-mail address.'
             );
 
             return;
@@ -292,7 +294,6 @@ class Handler extends QUI\Utils\Singleton
         }
 
         $Mailer = new QUI\Mail\Mailer();
-        /** @var QUI\Locale $Locale */
         $Locale = $Order->getCustomer()->getLocale();
 
         $Mailer->setSubject(
