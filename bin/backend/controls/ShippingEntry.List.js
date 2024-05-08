@@ -125,7 +125,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                 pagination : false,
                 buttons    : [{
                     name     : 'add',
-                    text     : QUILocale.get('quiqqer/quiqqer', 'add'),
+                    text     : QUILocale.get('quiqqer/core', 'add'),
                     textimage: 'fa fa-plus',
                     events   : {
                         onClick: this.$openAddDialog
