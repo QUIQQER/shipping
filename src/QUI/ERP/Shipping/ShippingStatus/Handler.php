@@ -267,21 +267,24 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Notify customer about an Order status change (via e-mail)
      *
-     * @param AbstractOrder $Order
+     * @param AbstractOrder $ErpEntity
      * @param int $statusId
      * @param string|null $message (optional) - Custom notification message [default: default status change message]
      * @return void
      *
      * @throws QUI\Exception
      */
-    public function sendStatusChangeNotification(AbstractOrder $Order, int $statusId, string $message = null): void
-    {
-        $Customer = $Order->getCustomer();
+    public function sendStatusChangeNotification(
+        QUI\ERP\ErpEntityInterface $ErpEntity,
+        int $statusId,
+        string $message = null
+    ): void {
+        $Customer = $ErpEntity->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
 
         if (empty($customerEmail)) {
             QUI\System\Log::addWarning(
-                'Status change notification for order #' . $Order->getPrefixedId() . ' cannot be sent'
+                'Status change notification for entity #' . $ErpEntity->getPrefixedNumber() . ' cannot be sent'
                 . ' because customer #' . $Customer->getUUID() . ' has no e-mail address.'
             );
 
@@ -290,15 +293,15 @@ class Handler extends QUI\Utils\Singleton
 
         if (empty($message)) {
             $Status = $this->getShippingStatus($statusId);
-            $message = $Status->getStatusChangeNotificationText($Order);
+            $message = $Status->getStatusChangeNotificationText($ErpEntity);
         }
 
         $Mailer = new QUI\Mail\Mailer();
-        $Locale = $Order->getCustomer()->getLocale();
+        $Locale = $ErpEntity->getCustomer()->getLocale();
 
         $Mailer->setSubject(
             $Locale->get('quiqqer/shipping', 'shipping.status.notification.subject', [
-                'orderNo' => $Order->getPrefixedId()
+                'prefixedNumber' => $ErpEntity->getPrefixedNumber()
             ])
         );
 
@@ -307,7 +310,7 @@ class Handler extends QUI\Utils\Singleton
 
         try {
             $Mailer->send();
-            $Order->addStatusMail($message);
+            $ErpEntity->addStatusMail($message);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }

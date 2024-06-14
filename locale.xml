@@ -541,8 +541,8 @@
         </locale>
 
         <locale name="shipping.status.notification.subject">
-            <de><![CDATA[Änderung Ihrer Bestellung [orderNo]]]></de>
-            <en><![CDATA[Change of your order [orderNo]]]></en>
+            <de><![CDATA[Änderung Ihrer Bestellung [prefixedNumber]]]></de>
+            <en><![CDATA[Change of your order [prefixedNumber]]]></en>
         </locale>
         <locale name="shipping.status.notification.template" html="true">
             <de><![CDATA[
