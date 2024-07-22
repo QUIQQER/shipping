@@ -25,16 +25,10 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise|*}
          */
         getList: function (options) {
-            // workaround for https://dev.quiqqer.com/quiqqer/shipping/-/issues/52
-            const optionsWithoutButtons = Object.assign({}, options);
-            if (typeof optionsWithoutButtons['buttons'] !== 'undefined') {
-                delete optionsWithoutButtons['buttons'];
-            }
-
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getList', resolve, {
                     'package': 'quiqqer/shipping',
-                    options  : JSON.encode(optionsWithoutButtons),
+                    options  : JSON.encode(options),
                     onError  : reject
                 });
             });

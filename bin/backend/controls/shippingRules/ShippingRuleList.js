@@ -194,7 +194,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
         refresh: function () {
             this.fireEvent('refreshBegin', this);
 
-            ShippingRules.getList(this.$Grid.options).then((result) => {
+            ShippingRules.getList(this.$Grid.getPaginationData()).then((result) => {
                 this.fireEvent('refresh', [this, result, result.data]);
 
                 result.data = ShippingUtils.parseRulesDataForGrid(result.data);
