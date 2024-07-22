@@ -9,13 +9,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
     'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleList',
     'Locale'
 
-], function (QUI, QUIConfirm, List, QUILocale) {
-    "use strict";
+], function(QUI, QUIConfirm, List, QUILocale) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleListWindow',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleListWindow',
 
         Binds: [
             '$onOpen',
@@ -24,15 +24,15 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
         options: {
             maxHeight: 600,
-            maxWidth : 600
+            maxWidth: 600
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttributes({
                 title: QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
-                icon : 'fa fa-truck'
+                icon: 'fa fa-truck'
             });
 
             this.addEvents({
@@ -43,7 +43,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
         /**
          * event: on inject
          */
-        $onOpen: function () {
+        $onOpen: function() {
             var self = this;
 
             this.Loader.show();
@@ -51,15 +51,15 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
 
             this.$List = new List({
                 events: {
-                    onRefresh: function () {
+                    onRefresh: function() {
                         self.Loader.hide();
                     },
 
-                    onOpenCreateRuleWindow: function () {
+                    onOpenCreateRuleWindow: function() {
                         self.close();
                     },
 
-                    onCloseCreateRuleWindow: function () {
+                    onCloseCreateRuleWindow: function() {
                         self.open();
                         self.$List.refresh();
                     }
@@ -75,7 +75,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
          *
          * @method qui/controls/windows/Confirm#submit
          */
-        submit: function () {
+        submit: function() {
             this.fireEvent('submit', [this, this.$List.getSelected()]);
 
             if (this.getAttribute('autoclose')) {

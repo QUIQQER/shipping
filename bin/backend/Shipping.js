@@ -3,8 +3,8 @@
  */
 define('package/quiqqer/shipping/bin/backend/Shipping', [
     'package/quiqqer/shipping/bin/backend/classes/Handler'
-], function (Shipping) {
-    "use strict";
+], function(Shipping) {
+    'use strict';
 
     return new Shipping();
 });

@@ -8,19 +8,19 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelectItem', [
     'qui/controls/elements/SelectItem',
     'package/quiqqer/shipping/bin/backend/Shipping'
 
-], function (QUI, QUIElementSelectItem, Handler) {
-    "use strict";
+], function(QUI, QUIElementSelectItem, Handler) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIElementSelectItem,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/ShippingSelectItem',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/ShippingSelectItem',
 
         Binds: [
             'refresh'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttribute('icon', 'fa fa-truck');
@@ -31,10 +31,10 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelectItem', [
          *
          * @returns {Promise}
          */
-        refresh: function () {
+        refresh: function() {
             var self = this;
 
-            return Handler.getShippingEntry(this.getAttribute('id')).then(function (Shipping) {
+            return Handler.getShippingEntry(this.getAttribute('id')).then(function(Shipping) {
                 self.$Text.set({
                     html: Shipping.currentTitle
                 });

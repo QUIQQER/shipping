@@ -11,20 +11,20 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
 
     'css!package/quiqqer/shipping/bin/backend/controls/TrackingInput.css'
 
-], function (QUI, QUIControl, QUISelect, QUIAjax) {
-    "use strict";
+], function(QUI, QUIControl, QUISelect, QUIAjax) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/TrackingInput',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/TrackingInput',
 
         Binds: [
             '$onImport',
             '$onChange'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$value = null;
@@ -34,7 +34,7 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
             });
         },
 
-        $onImport: function () {
+        $onImport: function() {
             this.$Value = this.$Elm;
             this.$Value.setStyle('display', 'none');
 
@@ -79,7 +79,7 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
          *
          * @returns {Promise}
          */
-        getTrackingList: function () {
+        getTrackingList: function() {
             return new Promise((resolve) => {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_tracking_getList', resolve, {
                     'package': 'quiqqer/shipping'
@@ -87,17 +87,17 @@ define('package/quiqqer/shipping/bin/backend/controls/TrackingInput', [
             });
         },
 
-        $onChange: function () {
+        $onChange: function() {
             const tracking = this.$TrackingType.getValue();
             const trackingNumber = this.$Input.value;
 
             this.$Value.set('value', JSON.encode({
-                type  : tracking,
+                type: tracking,
                 number: trackingNumber
             }));
         },
 
-        setValue: function (value) {
+        setValue: function(value) {
             if (typeof value === 'string') {
                 value = JSON.decode(value);
             }

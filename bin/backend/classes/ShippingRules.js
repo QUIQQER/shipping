@@ -12,30 +12,24 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
     'qui/classes/DOM',
     'Ajax'
 
-], function (QUI, QUIDOM, QUIAjax) {
-    "use strict";
+], function(QUI, QUIDOM, QUIAjax) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIDOM,
-        Type   : 'package/quiqqer/shipping/bin/backend/classes/ShippingRules',
+        Type: 'package/quiqqer/shipping/bin/backend/classes/ShippingRules',
 
         /**
          * Return
          * @return {Promise|*}
          */
-        getList: function (options) {
-            // workaround for https://dev.quiqqer.com/quiqqer/shipping/-/issues/52
-            const optionsWithoutButtons = Object.assign({}, options);
-            if (typeof optionsWithoutButtons['buttons'] !== 'undefined') {
-                delete optionsWithoutButtons['buttons'];
-            }
-
-            return new Promise(function (resolve, reject) {
+        getList: function(options) {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getList', resolve, {
                     'package': 'quiqqer/shipping',
-                    options  : JSON.encode(optionsWithoutButtons),
-                    onError  : reject
+                    options: JSON.encode(options),
+                    onError: reject
                 });
             });
         },
@@ -46,17 +40,17 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @param rules
          * @return {Promise}
          */
-        create: function (rules) {
+        create: function(rules) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_create', function (ruleId) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_create', function(ruleId) {
                     resolve(ruleId);
                     self.fireEvent('create', [self, ruleId]);
                 }, {
                     'package': 'quiqqer/shipping',
-                    rules    : JSON.encode(rules),
-                    onError  : reject
+                    rules: JSON.encode(rules),
+                    onError: reject
                 });
             });
         },
@@ -68,18 +62,18 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @param {Object} data
          * @return {Promise}
          */
-        update: function (ruleId, data) {
+        update: function(ruleId, data) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_update', function () {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_update', function() {
                     resolve();
                     self.fireEvent('update', [self, ruleId]);
                 }, {
                     'package': 'quiqqer/shipping',
-                    ruleId   : ruleId,
-                    data     : JSON.encode(data),
-                    onError  : reject
+                    ruleId: ruleId,
+                    data: JSON.encode(data),
+                    onError: reject
                 });
             });
         },
@@ -90,17 +84,17 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @param {Number|Array} ruleIds
          * @return {Promise}
          */
-        delete: function (ruleIds) {
+        delete: function(ruleIds) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_delete', function () {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_delete', function() {
                     resolve();
                     self.fireEvent('delete', [self, ruleIds]);
                 }, {
                     'package': 'quiqqer/shipping',
-                    ruleIds  : JSON.encode(ruleIds),
-                    onError  : reject
+                    ruleIds: JSON.encode(ruleIds),
+                    onError: reject
                 });
             });
         },
@@ -111,12 +105,12 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @param ruleIds
          * @return {Promise}
          */
-        getRules: function (ruleIds) {
-            return new Promise(function (resolve, reject) {
+        getRules: function(ruleIds) {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_getRules', resolve, {
                     'package': 'quiqqer/shipping',
-                    ruleIds  : JSON.encode(ruleIds),
-                    onError  : reject
+                    ruleIds: JSON.encode(ruleIds),
+                    onError: reject
                 });
             });
         },
@@ -127,8 +121,8 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @param {Integer} ruleId
          * @return {Promise}
          */
-        getRule: function (ruleId) {
-            return this.getRules([ruleId]).then(function (result) {
+        getRule: function(ruleId) {
+            return this.getRules([ruleId]).then(function(result) {
                 return result[0];
             });
         },
@@ -137,8 +131,8 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          *
          * @return {Promise}
          */
-        getShippingRuleUnitFields: function () {
-            return new Promise(function (resolve) {
+        getShippingRuleUnitFields: function() {
+            return new Promise(function(resolve) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_settings_getUnitFieldSetting', resolve, {
                     'package': 'quiqqer/shipping'
                 });

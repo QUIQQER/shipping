@@ -10,14 +10,14 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
 
     'css!package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod.css'
 
-], function (QUI, TimePeriod, QUILocale) {
-    "use strict";
+], function(QUI, TimePeriod, QUILocale) {
+    'use strict';
 
     var lg = 'quiqqer/shipping';
 
     return new Class({
         Extends: TimePeriod,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTimePeriod',
 
         Binds: [
             '$onImport',
@@ -36,13 +36,13 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             show_default_option: true
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
-            this.$OptionsSelect       = null;
+            this.$OptionsSelect = null;
             this.$CustomTextContainer = null;
-            this.$CustomTextInput     = null;
-            this.$CustomText          = null;
+            this.$CustomTextInput = null;
+            this.$CustomText = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -52,9 +52,9 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
         /**
          * Event: onImport
          */
-        $onImport: function () {
-            var self  = this,
-                Elm   = this.getElm(),
+        $onImport: function() {
+            var self = this,
+                Elm = this.getElm(),
                 Value = false;
 
             this.parent();
@@ -65,13 +65,13 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             }).inject(this.$Content, 'top');
 
             this.$OptionsSelect = new Element('select', {
-                name  : 'option',
+                name: 'option',
                 events: {
                     change: this.$onOptionSelectChange
                 }
             }).inject(OptionsContainer);
 
-            var options  = this.getAttribute('selectOptions'),
+            var options = this.getAttribute('selectOptions'),
                 lgPrefix = 'controls.products.fields.ShippingTimePeriod.';
 
             if (this.getAttribute('show_default_option')) {
@@ -83,30 +83,30 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
 
                 new Element('option', {
                     value: option,
-                    html : QUILocale.get(lg, lgPrefix + 'option.' + option)
+                    html: QUILocale.get(lg, lgPrefix + 'option.' + option)
                 }).inject(this.$OptionsSelect);
             }
 
             // Custom text input
             this.$CustomTextContainer = new Element('div', {
-                'class': 'quiqqer-shipping-fields-shippingtimeperiod-customtext quiqqer-shipping-fields-shippingtimeperiod__hidden',
+                'class': 'quiqqer-shipping-fields-shippingtimeperiod-customtext quiqqer-shipping-fields-shippingtimeperiod__hidden'
             }).inject(
                 Elm.getParent().getElement('.quiqqer-products-fields-types-timeperiod')
             );
 
             var CustomTextInput = new Element('input', {
-                type      : 'text',
+                type: 'text',
                 'data-qui': 'package/quiqqer/products/bin/controls/fields/types/InputMultiLang'
             }).inject(this.$CustomTextContainer);
 
-            QUI.parse(this.$CustomTextContainer).then(function () {
+            QUI.parse(this.$CustomTextContainer).then(function() {
                 self.$CustomText = QUI.Controls.getById(
                     CustomTextInput.get('data-quiid')
                 );
 
                 self.$CustomText.getElm().getElements('input').addEvent('change', self.$onOptionSelectChange);
 
-                (function () {
+                (function() {
                     if (!Elm.value) {
                         self.$OptionsSelect.value = 'timeperiod';
                         return;
@@ -127,7 +127,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
         /**
          * Executed if an option is selected
          */
-        $onOptionSelectChange: function () {
+        $onOptionSelectChange: function() {
             var option = this.$OptionsSelect.value;
 
             if (option === 'timeperiod') {
@@ -152,7 +152,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
         /**
          * Set field value to input
          */
-        $setValue: function () {
+        $setValue: function() {
             var customText = this.$CustomText.getValue().trim();
 
             if (customText !== '') {
@@ -160,11 +160,11 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             }
 
             this.getElm().value = JSON.encode({
-                from  : this.$FromInput.value.trim(),
-                to    : this.$ToInput.value.trim(),
-                unit  : this.$UnitSelect.value,
+                from: this.$FromInput.value.trim(),
+                to: this.$ToInput.value.trim(),
+                unit: this.$UnitSelect.value,
                 option: this.$OptionsSelect.value,
-                text  : customText
+                text: customText
             });
         },
 
@@ -173,7 +173,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          *
          * @returns {Object}
          */
-        getValue: function () {
+        getValue: function() {
             var customText = this.$CustomText.getValue().trim();
 
             if (customText !== '') {
@@ -181,11 +181,11 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
             }
 
             return {
-                from  : this.$FromInput.value.trim(),
-                to    : this.$ToInput.value.trim(),
-                unit  : this.$UnitSelect.value,
+                from: this.$FromInput.value.trim(),
+                to: this.$ToInput.value.trim(),
+                unit: this.$UnitSelect.value,
                 option: this.$OptionsSelect.value,
-                text  : customText
+                text: customText
             };
         }
     });
