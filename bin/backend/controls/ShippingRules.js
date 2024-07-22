@@ -11,26 +11,26 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingRules', [
     'package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRuleList',
     'Locale'
 
-], function (QUI, QUIPanel, ShippingRuleList, QUILocale) {
-    "use strict";
+], function(QUI, QUIPanel, ShippingRuleList, QUILocale) {
+    'use strict';
 
     var lg = 'quiqqer/shipping';
 
     return new Class({
 
         Extends: QUIPanel,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/ShippingRules',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/ShippingRules',
 
         Binds: [
             '$onCreate',
             '$onInject'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttributes({
-                icon : 'fa fa-truck',
+                icon: 'fa fa-truck',
                 title: QUILocale.get(lg, 'menu.erp.shipping.rules.title')
             });
 
@@ -39,23 +39,23 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingRules', [
             this.addEvents({
                 onCreate: this.$onCreate,
                 onInject: this.$onInject,
-                onShow  : this.$onInject
+                onShow: this.$onInject
             });
         },
 
         /**
          * event: on create
          */
-        $onCreate: function () {
+        $onCreate: function() {
             var self = this;
 
             this.$List = new ShippingRuleList({
                 events: {
-                    onRefreshBegin: function () {
+                    onRefreshBegin: function() {
                         self.Loader.show();
                     },
 
-                    onRefreshEnd: function () {
+                    onRefreshEnd: function() {
                         self.Loader.hide();
                     }
                 }
@@ -65,8 +65,8 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingRules', [
         /**
          * event: on resize
          */
-        $onInject: function () {
-            (function () {
+        $onInject: function() {
+            (function() {
                 this.$List.resize();
             }).delay(200, this);
         }

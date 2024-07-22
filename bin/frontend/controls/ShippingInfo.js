@@ -11,19 +11,19 @@ define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
     'qui/controls/Control',
     'Locale'
 
-], function (QUI, QUIControl, QUILocale) {
-    "use strict";
+], function(QUI, QUIControl, QUILocale) {
+    'use strict';
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/shipping/bin/frontend/controls/ShippingInfo',
+        Type: 'package/quiqqer/shipping/bin/frontend/controls/ShippingInfo',
 
         Binds: [
             'showInfo',
             '$onImport'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.addEvents({
@@ -34,7 +34,7 @@ define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
         /**
          * event on import
          */
-        $onImport: function () {
+        $onImport: function() {
             this.getElm().addEvent('click', this.showInfo);
         },
 
@@ -43,21 +43,21 @@ define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
          *
          * @param event
          */
-        showInfo: function (event) {
+        showInfo: function(event) {
             event.stop();
 
             require([
                 'qui/controls/windows/Popup'
-            ], function (QUIPopup) {
+            ], function(QUIPopup) {
                 new QUIPopup({
-                    'maxWidth' : 700,
+                    'maxWidth': 700,
                     'maxHeight': 600,
-                    'icon'     : 'fa fa-truck',
-                    'title'    : QUILocale.get('quiqqer/shipping', 'frontend.shippingInfo.popup.title'),
-                    'content'  : QUILocale.get('quiqqer/shipping', 'frontend.shippingInfo.popup.content'),
-                    draggable  : false,
-                    resizable  : false,
-                    buttons    : false
+                    'icon': 'fa fa-truck',
+                    'title': QUILocale.get('quiqqer/shipping', 'frontend.shippingInfo.popup.title'),
+                    'content': QUILocale.get('quiqqer/shipping', 'frontend.shippingInfo.popup.content'),
+                    draggable: false,
+                    resizable: false,
+                    buttons: false
                 }).open();
             });
         }

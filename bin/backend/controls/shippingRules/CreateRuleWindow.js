@@ -9,13 +9,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
     'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
     'Locale'
 
-], function (QUI, QUIConfirm, CreateRule, QUILocale) {
-    "use strict";
+], function(QUI, QUIConfirm, CreateRule, QUILocale) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWindow',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWindow',
 
         Binds: [
             '$onOpen',
@@ -24,18 +24,18 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
 
         options: {
             maxHeight: 800,
-            maxWidth : 600,
+            maxWidth: 600,
             autoclose: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttributes({
-                title    : QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
-                icon     : 'fa fa-truck',
+                title: QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
+                icon: 'fa fa-truck',
                 ok_button: {
-                    text     : QUILocale.get('quiqqer/shipping', 'window.shipping.entry.delete.rule.create'),
+                    text: QUILocale.get('quiqqer/shipping', 'window.shipping.entry.delete.rule.create'),
                     textimage: 'fa fa-trash'
                 }
             });
@@ -43,7 +43,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
             this.$Create = null;
 
             this.addEvents({
-                onOpen  : this.$onOpen,
+                onOpen: this.$onOpen,
                 onSubmit: this.$onSubmit
             });
         },
@@ -51,7 +51,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
         /**
          * event: on inject
          */
-        $onOpen: function () {
+        $onOpen: function() {
             var self = this;
 
             this.Loader.show();
@@ -59,7 +59,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
 
             this.$Create = new CreateRule({
                 events: {
-                    onLoad: function () {
+                    onLoad: function() {
                         self.Loader.hide();
                     }
                 }
@@ -69,11 +69,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
         /**
          * event: on submit
          */
-        $onSubmit: function () {
+        $onSubmit: function() {
             var self = this;
 
             this.Loader.hide();
-            this.$Create.submit().then(function () {
+            this.$Create.submit().then(function() {
                 self.Loader.hide();
                 self.close();
             });

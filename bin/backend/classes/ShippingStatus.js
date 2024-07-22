@@ -8,15 +8,15 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
     'qui/classes/DOM',
     'Ajax'
 
-], function (QUI, QUIDOM, QUIAjax) {
-    "use strict";
+], function(QUI, QUIDOM, QUIAjax) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIDOM,
-        Type   : 'package/quiqqer/shipping/bin/backend/classes/ShippingStatus',
+        Type: 'package/quiqqer/shipping/bin/backend/classes/ShippingStatus',
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
         },
 
@@ -25,11 +25,11 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          *
          * @return {Promise}
          */
-        getList: function () {
-            return new Promise(function (resolve, reject) {
+        getList: function() {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_shippingStatus_list', resolve, {
                     'package': 'quiqqer/shipping',
-                    onError  : reject
+                    onError: reject
                 });
             });
         },
@@ -39,11 +39,11 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          *
          * @return {Promise}
          */
-        getNextId: function () {
-            return new Promise(function (resolve, reject) {
+        getNextId: function() {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_shippingStatus_getNextId', resolve, {
                     'package': 'quiqqer/shipping',
-                    onError  : reject
+                    onError: reject
                 });
             });
         },
@@ -57,23 +57,23 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          * @param {Boolean} notification
          * @return {Promise}
          */
-        createShippingStatus: function (id, color, title, notification) {
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_shippingStatus_create', function (result) {
+        createShippingStatus: function(id, color, title, notification) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_shippingStatus_create', function(result) {
                     require([
                         'package/quiqqer/translator/bin/Translator'
-                    ], function (Translator) {
-                        Translator.refreshLocale().then(function () {
+                    ], function(Translator) {
+                        Translator.refreshLocale().then(function() {
                             resolve(result);
                         });
                     });
                 }, {
-                    'package'   : 'quiqqer/shipping',
-                    id          : id,
-                    color       : color,
-                    title       : JSON.encode(title),
+                    'package': 'quiqqer/shipping',
+                    id: id,
+                    color: color,
+                    title: JSON.encode(title),
                     notification: notification ? 1 : 0,
-                    onError     : reject
+                    onError: reject
                 });
             });
         },
@@ -84,20 +84,20 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          * @param {String|Number} id - Processing Status ID
          * @return {Promise}
          */
-        deleteShippingStatus: function (id) {
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_shippingStatus_delete', function () {
+        deleteShippingStatus: function(id) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_shippingStatus_delete', function() {
                     require([
                         'package/quiqqer/translator/bin/Translator'
-                    ], function (Translator) {
-                        Translator.refreshLocale().then(function () {
+                    ], function(Translator) {
+                        Translator.refreshLocale().then(function() {
                             resolve();
                         });
                     });
                 }, {
                     'package': 'quiqqer/shipping',
-                    id       : id,
-                    onError  : reject
+                    id: id,
+                    onError: reject
                 });
             });
         },
@@ -108,12 +108,12 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          * @param {String|Number} id - Processing Status ID
          * @return {Promise}
          */
-        getShippingStatus: function (id) {
-            return new Promise(function (resolve, reject) {
+        getShippingStatus: function(id) {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_shippingStatus_get', resolve, {
                     'package': 'quiqqer/shipping',
-                    id       : id,
-                    onError  : reject
+                    id: id,
+                    onError: reject
                 });
             });
         },
@@ -127,14 +127,14 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          * @param {Boolean} notification
          * @return {Promise}
          */
-        updateShippingStatus: function (id, color, title, notification) {
-            return new Promise(function (resolve, reject) {
+        updateShippingStatus: function(id, color, title, notification) {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_shippingStatus_update', resolve, {
-                    'package'   : 'quiqqer/shipping',
-                    id          : id,
-                    color       : color,
-                    title       : JSON.encode(title),
-                    onError     : reject,
+                    'package': 'quiqqer/shipping',
+                    id: id,
+                    color: color,
+                    title: JSON.encode(title),
+                    onError: reject,
                     notification: notification ? 1 : 0
                 });
             });
@@ -147,13 +147,13 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingStatus', [
          * @param {Number} orderId - shipping ID
          * @return {Promise}
          */
-        getNotificationText: function (shippingId, orderId) {
-            return new Promise(function (resolve, reject) {
+        getNotificationText: function(shippingId, orderId) {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_shippingStatus_getNotificationText', resolve, {
-                    'package' : 'quiqqer/shipping',
+                    'package': 'quiqqer/shipping',
                     shippingId: shippingId,
-                    orderId   : orderId,
-                    onError   : reject
+                    orderId: orderId,
+                    onError: reject
                 });
             });
         }
