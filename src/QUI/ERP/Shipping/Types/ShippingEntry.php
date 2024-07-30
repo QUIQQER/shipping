@@ -724,7 +724,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         }
 
         // debug shipping entry / rules
-        if ($debugging) {
+        if ($debugging && !defined('QUIQQER_AJAX')) {
             QUI\ERP\Shipping\Debug::enable();
             QUI\ERP\Shipping\Debug::generateShippingEntryDebuggingLog($this, $result, $debuggingLog);
             QUI\ERP\Shipping\Debug::disable();

@@ -67,7 +67,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $shippingList = $this->getValidShipping();
 
         // debugging logger
-        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
+        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled() && !defined('QUIQQER_AJAX')) {
             QUI\ERP\Shipping\Debug::clearLogStock();
 
             $debugStack = [];
