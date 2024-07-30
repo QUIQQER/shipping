@@ -12,6 +12,7 @@ use QUI;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 
 use function class_exists;
+use function defined;
 
 /**
  * Class Debug
@@ -122,6 +123,10 @@ class Debug
         $result,
         $debuggingLog
     ): void {
+        if (defined('QUIQQER_AJAX')) {
+            return;
+        }
+
         if (self::isRuleAlreadyDebugged($Entry->getId())) {
             return;
         }
