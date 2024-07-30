@@ -116,6 +116,10 @@ class Debug
         $result,
         $debuggingLog
     ) {
+        if (defined('QUIQQER_AJAX')) {
+            return;
+        }
+
         if (self::isRuleAlreadyDebugged($Entry->getId())) {
             return;
         }
