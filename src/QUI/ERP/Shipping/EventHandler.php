@@ -19,6 +19,7 @@ use QUI\ERP\Shipping\Shipping as ShippingHandler;
 use QUI\Smarty\Collector;
 
 use function array_merge;
+use function class_exists;
 use function count;
 use function explode;
 use function json_decode;
@@ -294,6 +295,15 @@ class EventHandler
         $Order = $Checkout->getOrder();
 
         if (!$Order) {
+            return;
+        }
+
+        $Customer = $Order->getCustomer();
+
+        if (
+            class_exists('QUI\ERP\Order\Guest\GuestOrderUser')
+            && $Customer->getId() === 6
+        ) {
             return;
         }
 

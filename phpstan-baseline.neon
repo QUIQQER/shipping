@@ -1,0 +1,261 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(array, array\\)\\: int, Closure\\(mixed, mixed\\)\\: bool given\\.$#"
+			count: 1
+			path: ajax/backend/rules/getRules.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:setTitle\\(\\)\\.$#"
+			count: 1
+			path: ajax/backend/rules/update.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:setWorkingTitle\\(\\)\\.$#"
+			count: 1
+			path: ajax/backend/rules/update.php
+
+		-
+			message: "#^Parameter \\$Invoice of method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:getInvoiceInformationText\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\Invoice\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/Api/AbstractShippingEntry.php
+
+		-
+			message: "#^Parameter \\$Invoice of method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:getInvoiceInformationText\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/Api/AbstractShippingEntry.php
+
+		-
+			message: "#^Parameter \\$Invoice of method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:getInvoiceInformationText\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceView\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/Api/AbstractShippingEntry.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Order\\\\AbstractOrder\\:\\:save\\(\\)\\.$#"
+			count: 5
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method addCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method addCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getGlobalProcessId\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getGlobalProcessId\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method getGlobalProcessId\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Offset 'options' does not exist on array\\{title\\: array\\{de\\: 'Lieferzeit', en\\: 'Delivery time'\\}, type\\: 'shipping…', public\\: true, standard\\: true\\}\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Offset 'options' on array\\{title\\: array\\{de\\: 'Lieferzeit', en\\: 'Delivery time'\\}, type\\: 'shipping…', public\\: true, standard\\: true\\} in empty\\(\\) does not exist\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Offset 'public' on array\\{title\\: array\\{de\\: 'Lieferzeit', en\\: 'Delivery time'\\}, type\\: 'shipping…', public\\: true, standard\\: true\\} in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Offset 'standard' on array\\{title\\: array\\{de\\: 'Lieferzeit', en\\: 'Delivery time'\\}, type\\: 'shipping…', public\\: true, standard\\: true\\} in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Parameter \\#1 \\$Locale of method QUI\\\\ERP\\\\Shipping\\\\Types\\\\ShippingEntry\\:\\:toPriceFactor\\(\\) expects null, QUI\\\\Locale given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Parameter \\$Offer of method QUI\\\\ERP\\\\Shipping\\\\EventHandler\\:\\:onQuiqqerOffersCreated\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Parameter \\$Sales of method QUI\\\\ERP\\\\Shipping\\\\EventHandler\\:\\:onQuiqqerSalesOrdersCreated\\(\\) has invalid type QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Parameter \\$TemporaryInvoice of method QUI\\\\ERP\\\\Shipping\\\\EventHandler\\:\\:onQuiqqerInvoiceTemporaryInvoiceCreated\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/EventHandler.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Methods/Digital/ShippingType.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Methods/Standard/ShippingType.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Order\\\\AbstractOrder\\:\\:save\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/Order/Shipping.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimeFrontendView\\:\\:getValue\\(\\) should return array\\|string but returns null\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Products/Fields/ShippingTimeFrontendView.php
+
+		-
+			message: "#^Variable \\$Field in PHPDoc tag @var does not match assigned variable \\$value\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Products/Fields/ShippingTimeFrontendView.php
+
+		-
+			message: "#^Return type \\(QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimeFrontendView\\) of method QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimePeriod\\:\\:getFrontendView\\(\\) should be compatible with return type \\(QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\UnitSelectFrontendView\\) of method QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\TimePeriod\\:\\:getFrontendView\\(\\)$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Products/Fields/ShippingTimePeriod.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Shipping\\\\Rules\\\\Factory\\:\\:createChild\\(\\) should return QUI\\\\ERP\\\\Shipping\\\\Rules\\\\ShippingRule but returns QUI\\\\CRUD\\\\Child\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Rules/Factory.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Shipping\\\\Rules\\\\Factory\\:\\:getChild\\(\\) should return QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry but returns QUI\\\\CRUD\\\\Child\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Rules/Factory.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\ErpEntityInterface\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Rules/ShippingRule.php
+
+		-
+			message: "#^Parameter \\#1 \\$precision of method QUI\\\\ERP\\\\Accounting\\\\CalculationValue\\:\\:precision\\(\\) expects bool, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Rules/ShippingRule.php
+
+		-
+			message: "#^Parameter \\#2 \\$key of method QUI\\\\Config\\:\\:setValue\\(\\) expects string\\|null, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/ShippingStatus/Factory.php
+
+		-
+			message: "#^Parameter \\#2 \\$key of method QUI\\\\Config\\:\\:del\\(\\) expects string\\|null, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/ShippingStatus/Handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$key of method QUI\\\\Config\\:\\:setValue\\(\\) expects string\\|null, int given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/ShippingStatus/Handler.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(mixed\\)\\: int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Tracking/Tracking.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\CRUD\\\\Child\\:\\:getShippingType\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/Types/Factory.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Shipping\\\\Types\\\\Factory\\:\\:createChild\\(\\) should return QUI\\\\ERP\\\\Shipping\\\\Types\\\\ShippingEntry but returns QUI\\\\CRUD\\\\Child\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/Factory.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Shipping\\\\Types\\\\Factory\\:\\:getChild\\(\\) should return QUI\\\\ERP\\\\Shipping\\\\Types\\\\ShippingEntry but returns QUI\\\\CRUD\\\\Child\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/Factory.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:canUsedIn\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/ShippingEntry.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:getPriority\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Shipping/Types/ShippingEntry.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:isValid\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/ShippingEntry.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\:\\:noRulesAfter\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/ShippingEntry.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Shipping\\\\Types\\\\ShippingEntry\\:\\:getShippingRules\\(\\) should return array\\<QUI\\\\ERP\\\\Shipping\\\\Rules\\\\ShippingRule\\> but returns array\\<int\\<0, max\\>, QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry\\>\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/ShippingEntry.php
+
+		-
+			message: "#^Parameter \\#1 \\$Rule of method QUI\\\\ERP\\\\Shipping\\\\Types\\\\ShippingEntry\\:\\:addShippingRule\\(\\) expects QUI\\\\ERP\\\\Shipping\\\\Rules\\\\ShippingRule, QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Shipping/Types/ShippingEntry.php
