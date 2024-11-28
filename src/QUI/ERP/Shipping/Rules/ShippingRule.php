@@ -8,6 +8,7 @@ namespace QUI\ERP\Shipping\Rules;
 
 use QUI;
 use QUI\CRUD\Factory;
+use QUI\ERP\Address;
 use QUI\ERP\Areas\Utils as AreaUtils;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -333,11 +334,15 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Is this shipping rule allowed for this address?
      *
-     * @param QUI\ERP\Address|QUI\Users\Address $Address
+     * @param Address|QUI\Users\Address|null $Address
      * @return bool
      */
-    public function canUsedWithAddress(QUI\ERP\Address|QUI\Users\Address $Address): bool
+    public function canUsedWithAddress(QUI\ERP\Address|QUI\Users\Address $Address = null): bool
     {
+        if (!$Address) {
+            return false;
+        }
+
         $areasValue = $this->getAttribute('areas');
 
         if ($areasValue) {
