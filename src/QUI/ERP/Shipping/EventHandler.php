@@ -19,6 +19,8 @@ use QUI\ERP\Shipping\Shipping as ShippingHandler;
 use QUI\Smarty\Collector;
 
 use function array_merge;
+use function class_exists;
+use function count;
 use function explode;
 use function json_decode;
 use function method_exists;
@@ -296,6 +298,15 @@ class EventHandler
             return;
         }
 
+        $Customer = $Order->getCustomer();
+
+        if (
+            class_exists('QUI\ERP\Order\Guest\GuestOrderUser')
+            && $Customer->getId() === 6
+        ) {
+            return;
+        }
+
         $DeliveryAddress = $Order->getDeliveryAddress();
 
         if ($DeliveryAddress->getId() === 0 || $DeliveryAddress->getUUID() == 0) {
@@ -538,9 +549,14 @@ class EventHandler
     public static function onQuiqqerOrderFactoryCreate(AbstractOrder $Order): void
     {
         try {
-            self::addDefaultShipping($Order->getArticles());
+            $Process = new QUI\ERP\Process($Order->getGlobalProcessId());
 
-            $Order->update(QUI::getUsers()->getSystemUser());
+            // wenn verknüpfte entities, dann nicht standard versand setzen
+            // by mor
+            if (count($Process->getEntities()) <= 1) {
+                self::addDefaultShipping($Order->getArticles());
+                $Order->update(QUI::getUsers()->getSystemUser());
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
         }
@@ -560,9 +576,15 @@ class EventHandler
         }
 
         try {
-            self::addDefaultShipping($TemporaryInvoice->getArticles());
-            $TemporaryInvoice->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
-            $TemporaryInvoice->update(QUI::getUsers()->getSystemUser());
+            $Process = new QUI\ERP\Process($TemporaryInvoice->getGlobalProcessId());
+
+            // wenn verknüpfte entities, dann nicht standard versand setzen
+            // by mor
+            if (count($Process->getEntities()) <= 1) {
+                self::addDefaultShipping($TemporaryInvoice->getArticles());
+                $TemporaryInvoice->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
+                $TemporaryInvoice->update(QUI::getUsers()->getSystemUser());
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
         }
@@ -581,9 +603,15 @@ class EventHandler
         }
 
         try {
-            self::addDefaultShipping($Offer->getArticles());
-            $Offer->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
-            $Offer->update(QUI::getUsers()->getSystemUser());
+            $Process = new QUI\ERP\Process($Offer->getGlobalProcessId());
+
+            // wenn verknüpfte entities, dann nicht standard versand setzen
+            // by mor
+            if (count($Process->getEntities()) <= 1) {
+                self::addDefaultShipping($Offer->getArticles());
+                $Offer->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
+                $Offer->update(QUI::getUsers()->getSystemUser());
+            }
         } catch (Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
         }
@@ -598,8 +626,14 @@ class EventHandler
     public static function onQuiqqerSalesOrdersCreated(SalesOrder $Sales): void
     {
         try {
-            self::addDefaultShipping($Sales->getArticles());
-            $Sales->update();
+            $Process = new QUI\ERP\Process($Sales->getGlobalProcessId());
+
+            // wenn verknüpfte entities, dann nicht standard versand setzen
+            // by mor
+            if (count($Process->getEntities()) <= 1) {
+                self::addDefaultShipping($Sales->getArticles());
+                $Sales->update();
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
         }

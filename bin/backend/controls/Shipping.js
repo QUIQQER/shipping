@@ -16,8 +16,8 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
     'Mustache',
     'Locale'
 
-], function (QUI, QUIPanel, QUIConfirm, QUIButton, Shipping, Grid, Mustache, QUILocale) {
-    "use strict";
+], function(QUI, QUIPanel, QUIConfirm, QUIButton, Shipping, Grid, Mustache, QUILocale) {
+    'use strict';
 
     const lg = 'quiqqer/shipping';
     const current = QUILocale.getCurrent();
@@ -25,7 +25,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
     return new Class({
 
         Extends: QUIPanel,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/Shipping',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/Shipping',
 
         Binds: [
             'refresh',
@@ -40,36 +40,36 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
             '$refreshButtonStatus'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Grid = null;
 
             this.setAttributes({
-                icon : 'fa fa-truck',
+                icon: 'fa fa-truck',
                 title: QUILocale.get(lg, 'menu.erp.shipping.title')
             });
 
             this.addEvents({
-                onCreate : this.$onCreate,
-                onInject : this.$onInject,
-                onResize : this.$onResize,
+                onCreate: this.$onCreate,
+                onInject: this.$onInject,
+                onResize: this.$onResize,
                 onDestroy: this.$onDestroy
             });
 
             Shipping.addEvents({
                 onShippingDeactivate: this.$onShippingChange,
-                onShippingActivate  : this.$onShippingChange,
-                onShippingDelete    : this.$onShippingChange,
-                onShippingCreate    : this.$onShippingChange,
-                onShippingUpdate    : this.$onShippingChange
+                onShippingActivate: this.$onShippingChange,
+                onShippingDelete: this.$onShippingChange,
+                onShippingCreate: this.$onShippingChange,
+                onShippingUpdate: this.$onShippingChange
             });
         },
 
         /**
          * Refresh the value and the display
          */
-        refresh: function () {
+        refresh: function() {
             if (!this.$Elm) {
                 return;
             }
@@ -78,20 +78,20 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
 
             const self = this;
 
-            this.$Grid.getButtons().filter(function (Btn) {
+            this.$Grid.getButtons().filter(function(Btn) {
                 return Btn.getAttribute('name') === 'edit';
             })[0].disable();
 
-            this.$Grid.getButtons().filter(function (Btn) {
+            this.$Grid.getButtons().filter(function(Btn) {
                 return Btn.getAttribute('name') === 'delete';
             })[0].disable();
 
 
-            Shipping.getShippingList().then(function (result) {
-                const toggle = function (Btn) {
-                    let data       = Btn.getAttribute('data'),
+            Shipping.getShippingList().then(function(result) {
+                const toggle = function(Btn) {
+                    let data = Btn.getAttribute('data'),
                         shippingId = data.id,
-                        status     = parseInt(data.active);
+                        status = parseInt(data.active);
 
                     Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
@@ -106,11 +106,11 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                 for (let i = 0, len = result.length; i < len; i++) {
                     if (parseInt(result[i].active)) {
                         result[i].status = {
-                            icon  : 'fa fa-check',
+                            icon: 'fa fa-check',
                             styles: {
                                 lineHeight: 20,
-                                padding   : 0,
-                                width     : 20
+                                padding: 0,
+                                width: 20
                             },
                             events: {
                                 onClick: toggle
@@ -118,11 +118,11 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         };
                     } else {
                         result[i].status = {
-                            icon  : 'fa fa-remove',
+                            icon: 'fa fa-remove',
                             styles: {
                                 lineHeight: 20,
-                                padding   : 0,
-                                width     : 20
+                                padding: 0,
+                                width: 20
                             },
                             events: {
                                 onClick: toggle
@@ -140,7 +140,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         result[i].workingTitle = result[i].workingTitle[current];
                     }
 
-                    if ("shippingType" in result[i] && result[i].shippingType) {
+                    if ('shippingType' in result[i] && result[i].shippingType) {
                         result[i].shippingType_display = result[i].shippingType.title;
                     }
                 }
@@ -156,21 +156,21 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
         /**
          * event: on create
          */
-        $onCreate: function () {
+        $onCreate: function() {
             const Container = new Element('div', {
                 styles: {
                     minHeight: 300,
-                    width    : '100%'
+                    width: '100%'
                 }
             }).inject(this.getContent());
 
             this.$Grid = new Grid(Container, {
-                buttons    : [
+                buttons: [
                     {
-                        name     : 'add',
-                        text     : QUILocale.get('quiqqer/core', 'add'),
+                        name: 'add',
+                        text: QUILocale.get('quiqqer/core', 'add'),
                         textimage: 'fa fa-plus',
-                        events   : {
+                        events: {
                             onClick: this.$openCreateDialog
                         }
                     },
@@ -178,67 +178,67 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         type: 'separator'
                     },
                     {
-                        name     : 'edit',
-                        text     : QUILocale.get('quiqqer/core', 'edit'),
+                        name: 'edit',
+                        text: QUILocale.get('quiqqer/core', 'edit'),
                         textimage: 'fa fa-edit',
-                        disabled : true,
-                        events   : {
+                        disabled: true,
+                        events: {
                             onClick: this.$onEditClick
                         }
                     },
                     {
-                        name     : 'delete',
-                        text     : QUILocale.get('quiqqer/system', 'delete'),
+                        name: 'delete',
+                        text: QUILocale.get('quiqqer/system', 'delete'),
                         textimage: 'fa fa-trash',
-                        disabled : true,
-                        events   : {
+                        disabled: true,
+                        events: {
                             onClick: this.$openDeleteDialog
                         }
                     }
                 ],
                 columnModel: [
                     {
-                        header   : QUILocale.get('quiqqer/system', 'priority'),
+                        header: QUILocale.get('quiqqer/system', 'priority'),
                         dataIndex: 'priority',
-                        dataType : 'number',
-                        width    : 50
+                        dataType: 'number',
+                        width: 50
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        header: QUILocale.get('quiqqer/system', 'status'),
                         dataIndex: 'status',
-                        dataType : 'button',
-                        width    : 60
+                        dataType: 'button',
+                        width: 60
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
-                        dataType : 'string',
-                        width    : 200
+                        dataType: 'string',
+                        width: 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'workingtitle'),
+                        header: QUILocale.get('quiqqer/system', 'workingtitle'),
                         dataIndex: 'workingTitle',
-                        dataType : 'string',
-                        width    : 200
+                        dataType: 'string',
+                        width: 200
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
-                        dataType : 'number',
-                        width    : 30
+                        dataType: 'number',
+                        width: 30
                     },
                     {
-                        header   : QUILocale.get(lg, 'shipping.type'),
+                        header: QUILocale.get(lg, 'shipping.type'),
                         dataIndex: 'shippingType_display',
-                        dataType : 'string',
-                        width    : 200
+                        dataType: 'string',
+                        width: 200
                     }
                 ]
             });
 
             this.$Grid.addEvents({
-                onRefresh : this.refresh,
-                onClick   : this.$refreshButtonStatus,
+                onRefresh: this.refresh,
+                onClick: this.$refreshButtonStatus,
                 onDblClick: this.$onEditClick
             });
         },
@@ -246,27 +246,27 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
         /**
          * event : on inject
          */
-        $onInject: function () {
+        $onInject: function() {
             this.refresh();
         },
 
         /**
          * event: on destroy
          */
-        $onDestroy: function () {
+        $onDestroy: function() {
             Shipping.removeEvents({
                 onShippingDeactivate: this.$onShippingChange,
-                onShippingActivate  : this.$onShippingChange,
-                onShippingDelete    : this.$onShippingChange,
-                onShippingCreate    : this.$onShippingChange,
-                onShippingUpdate    : this.$onShippingChange
+                onShippingActivate: this.$onShippingChange,
+                onShippingDelete: this.$onShippingChange,
+                onShippingCreate: this.$onShippingChange,
+                onShippingUpdate: this.$onShippingChange
             });
         },
 
         /**
          * event : on resize
          */
-        $onResize: function () {
+        $onResize: function() {
             if (!this.$Grid) {
                 return;
             }
@@ -286,18 +286,18 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
          * event : on shipping change
          * if a shipping changed
          */
-        $onShippingChange: function () {
+        $onShippingChange: function() {
             this.refresh();
         },
 
         /**
          * open the edit dialog
          */
-        openShipping: function (shippingId) {
+        openShipping: function(shippingId) {
             require([
                 'package/quiqqer/shipping/bin/backend/controls/ShippingEntry',
                 'utils/Panels'
-            ], function (ShippingEntry, Utils) {
+            ], function(ShippingEntry, Utils) {
                 Utils.openPanelInTasks(
                     new ShippingEntry({
                         shippingId: shippingId
@@ -309,7 +309,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
         /**
          * event: on edit
          */
-        $onEditClick: function () {
+        $onEditClick: function() {
             const data = this.$Grid.getSelectedData();
 
             if (data.length) {
@@ -320,45 +320,45 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
         /**
          * open the add dialog
          */
-        $openCreateDialog: function () {
+        $openCreateDialog: function() {
             const self = this;
 
             new QUIConfirm({
-                icon       : 'fa fa-plus',
-                texticon   : 'fa fa-plus',
-                title      : QUILocale.get(lg, 'window.create.title'),
-                text       : QUILocale.get(lg, 'window.create.title'),
+                icon: 'fa fa-plus',
+                texticon: 'fa fa-plus',
+                title: QUILocale.get(lg, 'window.create.title'),
+                text: QUILocale.get(lg, 'window.create.title'),
                 information: QUILocale.get(lg, 'window.create.information'),
-                autoclose  : false,
-                maxHeight  : 400,
-                maxWidth   : 600,
-                events     : {
-                    onOpen  : function (Win) {
+                autoclose: false,
+                maxHeight: 400,
+                maxWidth: 600,
+                events: {
+                    onOpen: function(Win) {
                         const Content = Win.getContent(),
-                              Body    = Content.getElement('.textbody');
+                            Body = Content.getElement('.textbody');
 
                         Win.Loader.show();
 
                         const Container = new Element('div', {
-                            html  : QUILocale.get(lg, 'window.create.shippingType'),
+                            html: QUILocale.get(lg, 'window.create.shippingType'),
                             styles: {
-                                clear      : 'both',
-                                'float'    : 'left',
-                                marginTop  : 20,
+                                clear: 'both',
+                                'float': 'left',
+                                marginTop: 20,
                                 paddingLeft: 80,
-                                width      : '100%'
+                                width: '100%'
                             }
                         }).inject(Body, 'after');
 
                         const Select = new Element('select', {
                             styles: {
                                 marginTop: 10,
-                                maxWidth : '100%',
-                                width    : 300
+                                maxWidth: '100%',
+                                width: 300
                             }
                         }).inject(Container);
 
-                        Shipping.getShippingTypes().then(function (result) {
+                        Shipping.getShippingTypes().then(function(result) {
                             for (let i in result) {
                                 if (!result.hasOwnProperty(i)) {
                                     continue;
@@ -366,25 +366,25 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
 
                                 new Element('option', {
                                     value: result[i].type,
-                                    html : result[i].title
+                                    html: result[i].title
                                 }).inject(Select);
                             }
 
                             Win.Loader.hide();
-                        }).catch(function () {
+                        }).catch(function() {
                             Win.Loader.hide();
                         });
                     },
-                    onSubmit: function (Win) {
+                    onSubmit: function(Win) {
                         Win.Loader.show();
 
                         const Select = Win.getContent().getElement('select');
 
-                        Shipping.createShipping(Select.value).then(function (newId) {
+                        Shipping.createShipping(Select.value).then(function(newId) {
                             Win.close();
                             self.refresh();
                             self.openShipping(newId);
-                        }).catch(function () {
+                        }).catch(function() {
                             Win.Loader.hide();
                         });
                     }
@@ -395,7 +395,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
         /**
          * open the add dialog
          */
-        $openDeleteDialog: function () {
+        $openDeleteDialog: function() {
             const selected = this.$Grid.getSelectedData();
 
             if (!selected.length) {
@@ -403,7 +403,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
             }
 
             const self = this;
-            let shipping   = selected[0].title,
+            let shipping = selected[0].title,
                 shippingId = selected[0].id;
 
             if (shipping === '') {
@@ -411,27 +411,27 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
             }
 
             new QUIConfirm({
-                texticon   : 'fa fa-trash',
-                icon       : 'fa fa-trash',
-                title      : QUILocale.get(lg, 'window.delete.title'),
+                texticon: 'fa fa-trash',
+                icon: 'fa fa-trash',
+                title: QUILocale.get(lg, 'window.delete.title'),
                 information: QUILocale.get(lg, 'window.delete.information', {
                     shipping: shipping
                 }),
-                text       : QUILocale.get(lg, 'window.delete.text', {
+                text: QUILocale.get(lg, 'window.delete.text', {
                     shipping: shipping
                 }),
-                autoclose  : false,
-                maxHeight  : 400,
-                maxWidth   : 600,
-                ok_button  : {
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
+                autoclose: false,
+                maxHeight: 400,
+                maxWidth: 600,
+                ok_button: {
+                    text: QUILocale.get('quiqqer/system', 'delete'),
                     textimage: 'fa fa-trash'
                 },
-                events     : {
-                    onSubmit: function (Win) {
+                events: {
+                    onSubmit: function(Win) {
                         Win.Loader.show();
 
-                        Shipping.deleteShipping(shippingId).then(function () {
+                        Shipping.deleteShipping(shippingId).then(function() {
                             Win.close();
                             self.refresh();
                         });
@@ -444,15 +444,15 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
          * refresh the button disable enable status
          * looks at the grid
          */
-        $refreshButtonStatus: function () {
+        $refreshButtonStatus: function() {
             const selected = this.$Grid.getSelectedIndices(),
-                  buttons  = this.$Grid.getButtons();
+                buttons = this.$Grid.getButtons();
 
-            const Edit = buttons.filter(function (Btn) {
+            const Edit = buttons.filter(function(Btn) {
                 return Btn.getAttribute('name') === 'edit';
             })[0];
 
-            const Delete = buttons.filter(function (Btn) {
+            const Delete = buttons.filter(function(Btn) {
                 return Btn.getAttribute('name') === 'delete';
             })[0];
 

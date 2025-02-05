@@ -21,18 +21,18 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
     'text!package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleUnit.html',
     'css!package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule.css'
 
-], function (QUI, QUIControl, ControlUtils, Translator, TranslateUpdater, InputMultiLang, Fields,
-             ShippingRules, FormUtils, ElementsUtils, QUILocale, Mustache,
-             template, templateUnit
+], function(QUI, QUIControl, ControlUtils, Translator, TranslateUpdater, InputMultiLang, Fields,
+    ShippingRules, FormUtils, ElementsUtils, QUILocale, Mustache,
+    template, templateUnit
 ) {
-    "use strict";
+    'use strict';
 
     var lg = 'quiqqer/shipping';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
 
         Binds: [
             '$onInject',
@@ -43,7 +43,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             ruleId: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$DataTitle = null;
@@ -62,47 +62,50 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          *
          * @return {HTMLDivElement}
          */
-        create: function () {
+        create: function() {
             this.$Elm = this.parent();
 
             this.$Elm.addClass('quiqqer-shipping-rule-edit');
 
             this.$Elm.setStyles({
                 overflow: 'hidden',
-                opacity : 0
+                opacity: 0
             });
 
             this.$Elm.set('html', Mustache.render(template, {
-                generalHeader          : QUILocale.get(lg, 'shipping.edit.template.general'),
-                title                  : QUILocale.get(lg, 'shipping.edit.template.title'),
-                workingTitle           : QUILocale.get('quiqqer/system', 'workingtitle'),
-                calculationPriority    : QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
-                discountTitle          : QUILocale.get(lg, 'shipping.edit.template.discount'),
-                discountDescription    : QUILocale.get(lg, 'shipping.edit.template.discount.description'),
-                discountAbsolute       : QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
-                discountPercentage     : QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
+                generalHeader: QUILocale.get(lg, 'shipping.edit.template.general'),
+                title: QUILocale.get(lg, 'shipping.edit.template.title'),
+                workingTitle: QUILocale.get('quiqqer/system', 'workingtitle'),
+                calculationPriority: QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
+                discountTitle: QUILocale.get(lg, 'shipping.edit.template.discount'),
+                discountDescription: QUILocale.get(lg, 'shipping.edit.template.discount.description'),
+                discountAbsolute: QUILocale.get(lg, 'shipping.edit.template.discount.absolute'),
+                discountPercentage: QUILocale.get(lg, 'shipping.edit.template.discount.percentage'),
                 discountPercentageOrder: QUILocale.get(lg, 'shipping.edit.template.discount.percentageOrder'),
-                statusTitle            : QUILocale.get(lg, 'shipping.edit.template.status'),
-                statusDescription      : QUILocale.get(lg, 'shipping.edit.template.status.description'),
-                noRulesTitle           : QUILocale.get(lg, 'shipping.edit.template.noRules'),
-                noRulesText            : QUILocale.get(lg, 'shipping.edit.template.noRules.text'),
-                unitTitle              : QUILocale.get(lg, 'shipping.edit.template.unit'),
-                unitHeader             : QUILocale.get(lg, 'shipping.edit.template.unitTitle'),
-                usageHeader            : QUILocale.get(lg, 'shipping.edit.template.usage'),
-                usageFrom              : QUILocale.get(lg, 'shipping.edit.template.usage.from'),
-                usageTo                : QUILocale.get(lg, 'shipping.edit.template.usage.to'),
-                usageAmountOf          : QUILocale.get(lg, 'shipping.edit.template.shopping.amount.of'),
-                usageAmountTo          : QUILocale.get(lg, 'shipping.edit.template.shopping.amount.to'),
-                usageValueOf           : QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
-                usageValueTo           : QUILocale.get(lg, 'shipping.edit.template.purchase.value.to'),
-                usageAssignmentUser    : QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
-                usageAssignmentProduct : QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
-                usageAssignmentArea    : QUILocale.get(lg, 'shipping.edit.template.assignment.areas'),
+                statusTitle: QUILocale.get(lg, 'shipping.edit.template.status'),
+                statusDescription: QUILocale.get(lg, 'shipping.edit.template.status.description'),
+                noRulesTitle: QUILocale.get(lg, 'shipping.edit.template.noRules'),
+                noRulesText: QUILocale.get(lg, 'shipping.edit.template.noRules.text'),
+                unitTitle: QUILocale.get(lg, 'shipping.edit.template.unit'),
+                unitHeader: QUILocale.get(lg, 'shipping.edit.template.unitTitle'),
+                usageHeader: QUILocale.get(lg, 'shipping.edit.template.usage'),
+                usageFrom: QUILocale.get(lg, 'shipping.edit.template.usage.from'),
+                usageTo: QUILocale.get(lg, 'shipping.edit.template.usage.to'),
+                usageAmountOf: QUILocale.get(lg, 'shipping.edit.template.shopping.amount.of'),
+                usageAmountTo: QUILocale.get(lg, 'shipping.edit.template.shopping.amount.to'),
+                usageValueOf: QUILocale.get(lg, 'shipping.edit.template.purchase.value.of'),
+                usageValueTo: QUILocale.get(lg, 'shipping.edit.template.purchase.value.to'),
+                usageAssignmentUser: QUILocale.get(lg, 'shipping.edit.template.assignment.user'),
+                usageAssignmentProduct: QUILocale.get(lg, 'shipping.edit.template.assignment.product'),
+                usageAssignmentArea: QUILocale.get(lg, 'shipping.edit.template.assignment.areas'),
                 usageAssignmentCategory: QUILocale.get(lg, 'shipping.edit.template.assignment.category'),
 
-                productHeader                 : QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
-                usageAssignmentProductOnly    : QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
-                usageAssignmentProductOnlyText: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.text'),
+                productHeader: QUILocale.get(lg, 'shipping.edit.template.assignment.product.header'),
+                usageAssignmentProductOnly: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only'),
+                usageAssignmentProductOnlyText: QUILocale.get(
+                    lg,
+                    'shipping.edit.template.assignment.product.only.text'
+                ),
                 usageAssignmentProductOnlyDesc: QUILocale.get(lg, 'shipping.edit.template.assignment.product.only.desc')
             }));
 
@@ -112,13 +115,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
         /**
          * event: on inject
          */
-        $onInject: function () {
-            var self    = this,
+        $onInject: function() {
+            var self = this,
                 current = QUILocale.getCurrent();
 
-            var getOptions = function (field) {
+            var getOptions = function(field) {
                 var entries = field.options.entries,
-                    result  = [];
+                    result = [];
 
                 for (var i in entries) {
                     if (!entries.hasOwnProperty(i)) {
@@ -126,7 +129,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                     }
 
                     result.push({
-                        key  : i,
+                        key: i,
                         title: entries[i].title[current]
                     });
                 }
@@ -134,7 +137,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 return result;
             };
 
-            ShippingRules.getShippingRuleUnitFields().then(function (unitFields) {
+            ShippingRules.getShippingRuleUnitFields().then(function(unitFields) {
                 var i, len, html, field;
 
                 var Table = self.getElm().getElement('.unit-table'),
@@ -148,8 +151,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                     html = Mustache.render(templateUnit, {
                         andText: QUILocale.get(lg, 'shipping.edit.template.and'),
                         options: getOptions(field),
-                        id     : field.id,
-                        title  : field.title
+                        id: field.id,
+                        title: field.title
                     });
 
                     new Element('tr', {
@@ -159,9 +162,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
                 Tbody.getElements('select').set('disabled', false);
                 Tbody.getElements('input').set('disabled', false);
-            }).then(function () {
+            }).then(function() {
                 return ControlUtils.parse(self.getElm());
-            }).then(function () {
+            }).then(function() {
                 ElementsUtils.simulateEvent(
                     self.getElm().getElement('.usage-table thead .data-table-toggle'),
                     'click'
@@ -172,12 +175,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                     'click'
                 );
 
-                return new Promise(function (resolve) {
+                return new Promise(function(resolve) {
                     resolve.delay(500);
                 });
-            }).then(function () {
+            }).then(function() {
                 return QUI.parse(self.getElm());
-            }).then(function () {
+            }).then(function() {
                 // locale for title and working title
                 self.$DataTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-title'));
                 self.$DataWorkingTitle = new InputMultiLang().replaces(self.$Elm.getElement('.shipping-workingTitle'));
@@ -195,39 +198,28 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 );
 
                 self.$UserGroups = QUI.Controls.getById(
-                    self.$Elm
-                        .getElement('[name="user_groups"]')
-                        .getParent('.qui-elements-select')
-                        .get('data-quiid')
+                    self.$Elm.getElement('[name="user_groups"]').getParent('.qui-elements-select').get('data-quiid')
                 );
 
                 self.$Areas = QUI.Controls.getById(
-                    self.$Elm
-                        .getElement('[name="areas"]')
-                        .getParent('.qui-elements-select')
-                        .get('data-quiid')
+                    self.$Elm.getElement('[name="areas"]').getParent('.qui-elements-select').get('data-quiid')
                 );
 
                 self.$Articles = QUI.Controls.getById(
-                    self.$Elm
-                        .getElement('[name="articles"]')
-                        .getParent('.qui-elements-select')
-                        .get('data-quiid')
+                    self.$Elm.getElement('[name="articles"]').getParent('.qui-elements-select').get('data-quiid')
                 );
 
                 self.$Categories = QUI.Controls.getById(
-                    self.$Elm
-                        .getElement('[name="categories"]')
-                        .get('data-quiid')
+                    self.$Elm.getElement('[name="categories"]').get('data-quiid')
                 );
 
-                return new Promise(function (resolve) {
+                return new Promise(function(resolve) {
                     require([
                         'package/quiqqer/shipping/bin/backend/ShippingRules',
                         'qui/controls/buttons/Switch',
                         'qui/utils/Form'
-                    ], function (ShippingRules, QUISwitch, FormUtils) {
-                        ShippingRules.getRule(self.getAttribute('ruleId')).then(function (rule) {
+                    ], function(ShippingRules, QUISwitch, FormUtils) {
+                        ShippingRules.getRule(self.getAttribute('ruleId')).then(function(rule) {
                             self.$DataTitle.setData(rule.title);
                             self.$DataWorkingTitle.setData(rule.workingTitle);
 
@@ -250,7 +242,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 
                             new QUISwitch({
                                 status: parseInt(rule.active),
-                                name  : 'status'
+                                name: 'status'
                             }).inject(self.getElm().getElement('.field-shipping-rules'));
 
                             FormUtils.setDataToForm(rule, self.getElm().getElement('form'));
@@ -289,14 +281,14 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                         });
                     });
                 });
-            }).then(function () {
+            }).then(function() {
                 self.getElm().setStyle('overflow', null);
 
                 moofx(self.getElm()).animate({
                     opacity: 1
                 }, {
                     duration: 200,
-                    callback: function () {
+                    callback: function() {
                         self.getElm().setStyle('opacity', null);
                         self.fireEvent('load', [self]);
                     }
@@ -309,7 +301,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          *
          * @return {Promise}
          */
-        update: function () {
+        update: function() {
             if (!this.$DataTitle || !this.$DataWorkingTitle) {
                 return Promise.reject('Missing DOMNode Elements');
             }
@@ -334,12 +326,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 Label = UnitRows[i].getElement('label');
 
                 unitData.push({
-                    id    : parseInt(Label.get('data-id')),
-                    value : Value.value,
+                    id: parseInt(Label.get('data-id')),
+                    value: Value.value,
                     value2: Value2.value,
-                    term  : Term.value,
-                    term2 : Term2.value,
-                    unit  : Unit.value
+                    term: Term.value,
+                    term2: Term2.value,
+                    unit: Unit.value
                 });
             }
 

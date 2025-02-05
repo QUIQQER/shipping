@@ -12,13 +12,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
     'package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule',
     'Locale'
 
-], function (QUI, QUIConfirm, Rule, QUILocale) {
-    "use strict";
+], function(QUI, QUIConfirm, Rule, QUILocale) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
 
         Binds: [
             '$onOpen',
@@ -27,19 +27,19 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
 
         options: {
             maxHeight: 800,
-            maxWidth : 700,
+            maxWidth: 700,
             autoclose: false,
-            ruleId   : false
+            ruleId: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttributes({
-                title    : QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
-                icon     : 'fa fa-edit',
+                title: QUILocale.get('quiqqer/shipping', 'window.shipping.rules.title'),
+                icon: 'fa fa-edit',
                 ok_button: {
-                    text     : QUILocale.get('quiqqer/shipping', 'window.shipping.rules.button.update'),
+                    text: QUILocale.get('quiqqer/shipping', 'window.shipping.rules.button.update'),
                     textimage: 'fa fa-edit'
                 }
             });
@@ -47,7 +47,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
             this.$Rule = null;
 
             this.addEvents({
-                onOpen  : this.$onOpen,
+                onOpen: this.$onOpen,
                 onSubmit: this.$onSubmit
             });
         },
@@ -55,7 +55,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
         /**
          * event: on inject
          */
-        $onOpen: function () {
+        $onOpen: function() {
             var self = this;
 
             this.Loader.show();
@@ -64,7 +64,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
             this.$Rule = new Rule({
                 ruleId: this.getAttribute('ruleId'),
                 events: {
-                    onLoad: function () {
+                    onLoad: function() {
                         self.Loader.hide();
                     }
                 }
@@ -74,13 +74,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
         /**
          * event: on submit
          */
-        $onSubmit: function () {
+        $onSubmit: function() {
             var self = this;
 
             this.fireEvent('updateBegin', [this]);
 
             this.Loader.show();
-            this.$Rule.update().then(function () {
+            this.$Rule.update().then(function() {
                 self.Loader.hide();
                 self.fireEvent('updateEnd', [self]);
                 self.close();

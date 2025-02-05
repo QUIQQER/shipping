@@ -14,15 +14,15 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
 
     'css!package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window.css'
 
-], function (QUI, QUIControl, QUIConfirm, Handler, QUILocale) {
-    "use strict";
+], function(QUI, QUIControl, QUIConfirm, Handler, QUILocale) {
+    'use strict';
 
     var lg = 'quiqqer/shipping';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window',
 
         Binds: [
             '$onOpen'
@@ -30,22 +30,22 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
 
         options: {
             maxHeight: 600,
-            maxWidth : 800,
-            icon     : 'fa fa-globe',
-            title    : QUILocale.get(lg, 'control.search.ShippingWindow.title'),
+            maxWidth: 800,
+            icon: 'fa fa-globe',
+            title: QUILocale.get(lg, 'control.search.ShippingWindow.title'),
             autoclose: false,
 
             cancel_button: {
-                text     : QUILocale.get('quiqqer/system', 'cancel'),
+                text: QUILocale.get('quiqqer/system', 'cancel'),
                 textimage: 'fa fa-remove'
             },
-            ok_button    : {
-                text     : QUILocale.get('quiqqer/system', 'accept'),
+            ok_button: {
+                text: QUILocale.get('quiqqer/system', 'accept'),
                 textimage: 'fa fa-truck'
             }
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Result = null;
@@ -60,8 +60,8 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
          *
          * @returns {HTMLDivElement}
          */
-        $onOpen: function (Win) {
-            var self    = this,
+        $onOpen: function(Win) {
+            var self = this,
                 Content = Win.getContent();
 
             Win.Loader.show();
@@ -75,10 +75,10 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
 
             require([
                 'package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result'
-            ], function (Result) {
+            ], function(Result) {
                 self.$Result = new Result({
                     events: {
-                        onDblClick: function () {
+                        onDblClick: function() {
                             self.submit();
                         }
                     }
@@ -86,7 +86,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
 
                 self.$Result.resize();
 
-                Handler.getShippingList().then(function (result) {
+                Handler.getShippingList().then(function(result) {
                     self.$Result.setData(result);
                     Win.Loader.hide();
                 });
@@ -96,7 +96,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
         /**
          * Submit
          */
-        submit: function () {
+        submit: function() {
             if (!this.$Result) {
                 return;
             }

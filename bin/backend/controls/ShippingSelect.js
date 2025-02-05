@@ -11,20 +11,20 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelect', [
 
     'css!package/quiqqer/shipping/bin/backend/controls/ShippingSelect.css'
 
-], function (QUI, QUIElementSelect, Handler, QUILocale) {
-    "use strict";
+], function(QUI, QUIElementSelect, Handler, QUILocale) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIElementSelect,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/ShippingSelect',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/ShippingSelect',
 
         Binds: [
             '$onCreate',
             '$onSearchButtonClick'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.setAttribute('icon', 'fa fa-truck');
@@ -38,14 +38,14 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelect', [
 
             this.addEvents({
                 onSearchButtonClick: this.$onSearchButtonClick,
-                onCreate           : this.$onCreate
+                onCreate: this.$onCreate
             });
         },
 
         /**
          * Event: onCreate
          */
-        $onCreate: function () {
+        $onCreate: function() {
             this.getElm().getParent().addClass('quiqqer-shipping-select');
         },
 
@@ -55,16 +55,16 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelect', [
          * @param {Object} self - select object
          * @param {Object} Btn - button object
          */
-        $onSearchButtonClick: function (self, Btn) {
+        $onSearchButtonClick: function(self, Btn) {
             Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
             require(['package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window'], (Window) => {
                 new Window({
                     autoclose: true,
-                    multiple : this.getAttribute('multiple'),
-                    events   : {
+                    multiple: this.getAttribute('multiple'),
+                    events: {
                         onSubmit: (Win, data) => {
-                            data = data.map(function (Entry) {
+                            data = data.map(function(Entry) {
                                 return parseInt(Entry.id);
                             });
 

@@ -4,11 +4,11 @@
  */
 define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
 
-    'Locale',
+    'Locale'
 
-], function (QUILocale) {
+], function(QUILocale) {
 
-    "use strict";
+    'use strict';
 
     return {
 
@@ -18,7 +18,7 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
          * @param {Array} rules
          * @return {Array}
          */
-        parseRulesDataForGrid: function (rules) {
+        parseRulesDataForGrid: function(rules) {
             return rules.map((entry) => {
                 return this.parseRuleDataForGrid(entry);
             });
@@ -30,15 +30,15 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
          * @param {Object} ruleData
          * @return {Object}
          */
-        parseRuleDataForGrid: function (ruleData) {
+        parseRuleDataForGrid: function(ruleData) {
             let current = QUILocale.getCurrent();
 
-            ruleData.title        = ruleData.title[current];
+            ruleData.title = ruleData.title[current];
             ruleData.workingTitle = ruleData.workingTitle[current];
 
             ruleData.statusNode = new Element('span', {
                 'class': parseInt(ruleData.active) ? 'fa fa-check' : 'fa fa-close',
-                styles : {
+                styles: {
                     lineHeight: 26
                 }
             });
@@ -48,16 +48,18 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
                     'quiqqer/shipping',
                     'discount.type.abs'
                 );
-            } else if (parseInt(ruleData.discount_type) === 2) {
-                ruleData.discount_type_text = QUILocale.get(
-                    'quiqqer/shipping',
-                    'discount.type.percentageOrder'
-                );
             } else {
-                ruleData.discount_type_text = QUILocale.get(
-                    'quiqqer/shipping',
-                    'discount.type.percentage'
-                );
+                if (parseInt(ruleData.discount_type) === 2) {
+                    ruleData.discount_type_text = QUILocale.get(
+                        'quiqqer/shipping',
+                        'discount.type.percentageOrder'
+                    );
+                } else {
+                    ruleData.discount_type_text = QUILocale.get(
+                        'quiqqer/shipping',
+                        'discount.type.percentage'
+                    );
+                }
             }
 
             return ruleData;

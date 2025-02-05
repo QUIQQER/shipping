@@ -15,14 +15,14 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
     'controls/grid/Grid',
     'Locale'
 
-], function (QUI, QUIControl, QUIButton, Grid, QUILocale) {
-    "use strict";
+], function(QUI, QUIControl, QUIButton, Grid, QUILocale) {
+    'use strict';
 
     var lg = 'quiqqer/shipping';
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result',
+        Type: 'package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result',
 
         Binds: [
             '$onInject'
@@ -32,7 +32,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
             multipleSelection: true
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Grid = null;
@@ -46,51 +46,53 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
          * Return the DOMNode Element
          * @returns {HTMLDivElement}
          */
-        create: function () {
+        create: function() {
             var Elm = this.parent();
 
             Elm.set('html', '');
 
             Elm.setStyles({
-                'float' : 'left',
+                'float': 'left',
                 'height': '100%',
-                'width' : '100%'
+                'width': '100%'
             });
 
             var Container = new Element('div').inject(Elm);
 
             this.$Grid = new Grid(Container, {
-                filterInput      : true,
+                filterInput: true,
                 multipleSelection: this.getAttribute('multipleSelection'),
-                columnModel      : [{
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 30
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'number',
-                    width    : 50
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'currentTitle',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'workingtitle'),
-                    dataIndex: 'currentWorkingTitle',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'shipping.type'),
-                    dataIndex: 'shippingType_display',
-                    dataType : 'string',
-                    width    : 200
-                }]
+                columnModel: [
+                    {
+                        header: QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType: 'number',
+                        width: 30
+                    }, {
+                        header: QUILocale.get('quiqqer/system', 'priority'),
+                        dataIndex: 'priority',
+                        dataType: 'number',
+                        width: 50
+                    }, {
+                        header: QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'currentTitle',
+                        dataType: 'string',
+                        width: 200
+                    }, {
+                        header: QUILocale.get('quiqqer/system', 'workingtitle'),
+                        dataIndex: 'currentWorkingTitle',
+                        dataType: 'string',
+                        width: 200
+                    }, {
+                        header: QUILocale.get(lg, 'shipping.type'),
+                        dataIndex: 'shippingType_display',
+                        dataType: 'string',
+                        width: 200
+                    }
+                ]
             });
 
-            this.$Grid.addEvent('onDblClick', function () {
+            this.$Grid.addEvent('onDblClick', function() {
                 this.fireEvent('dblClick', [this]);
             }.bind(this));
 
@@ -100,7 +102,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
         /**
          * event : on inject
          */
-        $onInject: function () {
+        $onInject: function() {
             this.fireEvent('loaded');
         },
 
@@ -109,13 +111,13 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
          *
          * @param {Object} data - grid data
          */
-        setData: function (data) {
+        setData: function(data) {
             if (!this.$Grid) {
                 return;
             }
 
             for (var i = 0, len = data.length; i < len; i++) {
-                if ("shippingType" in data[i] && data[i].shippingType) {
+                if ('shippingType' in data[i] && data[i].shippingType) {
                     data[i].shippingType_display = data[i].shippingType.title;
                 }
             }
@@ -130,7 +132,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
          *
          * @returns {Array}
          */
-        getSelected: function () {
+        getSelected: function() {
             if (!this.$Grid) {
                 return [];
             }
@@ -143,7 +145,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
          *
          * @return {Promise}
          */
-        resize: function () {
+        resize: function() {
             var size = this.getElm().getSize();
 
             this.$Grid.setWidth(size.x);

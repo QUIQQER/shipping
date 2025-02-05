@@ -14,15 +14,15 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
     'qui/classes/DOM',
     'Ajax'
 
-], function (QUI, QUIDOM, QUIAjax) {
-    "use strict";
+], function(QUI, QUIDOM, QUIAjax) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIDOM,
-        Type   : 'package/quiqqer/shipping/bin/Manager',
+        Type: 'package/quiqqer/shipping/bin/Manager',
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$shippings = null;
@@ -33,20 +33,20 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          *
          * @return {Promise}
          */
-        getShippingList: function () {
+        getShippingList: function() {
             if (this.$shippings) {
                 return window.Promise.resolve(this.$shippings);
             }
 
             var self = this;
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingList', function (result) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingList', function(result) {
                     self.$shippings = result;
                     resolve(self.$shippings);
                 }, {
                     'package': 'quiqqer/shipping',
-                    onError  : reject
+                    onError: reject
                 });
             });
         },
@@ -57,11 +57,11 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @param {String|Number} shippingId
          * @return {Promise}
          */
-        getShippingEntry: function (shippingId) {
-            return new Promise(function (resolve, reject) {
+        getShippingEntry: function(shippingId) {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingEntry', resolve, {
-                    'package' : 'quiqqer/shipping',
-                    onError   : reject,
+                    'package': 'quiqqer/shipping',
+                    onError: reject,
                     shippingId: shippingId
                 });
             });
@@ -72,11 +72,11 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          *
          * @return {Promise}
          */
-        getShippingTypes: function () {
-            return new Promise(function (resolve, reject) {
+        getShippingTypes: function() {
+            return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingTypes', resolve, {
                     'package': 'quiqqer/shipping',
-                    onError  : reject
+                    onError: reject
                 });
             });
         },
@@ -87,24 +87,24 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @param {String} shippingType - Hash of the shipping type
          * @return {Promise}
          */
-        createShipping: function (shippingType) {
+        createShipping: function(shippingType) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_create', function (shippingId) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_create', function(shippingId) {
                     self.$shippings = null;
 
                     require([
                         'package/quiqqer/translator/bin/Translator'
-                    ], function (Translator) {
-                        Translator.refreshLocale().then(function () {
+                    ], function(Translator) {
+                        Translator.refreshLocale().then(function() {
                             self.fireEvent('shippingCreate', [self, shippingId]);
                             resolve(shippingId);
                         });
                     });
                 }, {
-                    'package'   : 'quiqqer/shipping',
-                    onError     : reject,
+                    'package': 'quiqqer/shipping',
+                    onError: reject,
                     shippingType: shippingType
                 });
             });
@@ -117,26 +117,26 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @param {Object} data - Data of the shipping
          * @return {Promise}
          */
-        updateShipping: function (shippingId, data) {
+        updateShipping: function(shippingId, data) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_update', function (result) {
+            return new Promise(function(resolve, reject) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_update', function(result) {
                     self.$shippings = null;
 
                     require([
                         'package/quiqqer/translator/bin/Translator'
-                    ], function (Translator) {
-                        Translator.refreshLocale().then(function () {
+                    ], function(Translator) {
+                        Translator.refreshLocale().then(function() {
                             self.fireEvent('shippingUpdate', [self, shippingId, result]);
                             resolve(result);
                         });
                     });
                 }, {
-                    'package' : 'quiqqer/shipping',
-                    onError   : reject,
+                    'package': 'quiqqer/shipping',
+                    onError: reject,
                     shippingId: shippingId,
-                    data      : window.JSON.encode(data)
+                    data: window.JSON.encode(data)
                 });
             });
         },
@@ -146,18 +146,18 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @param {String|Number} shippingId
          * @return {Promise}
          */
-        deleteShipping: function (shippingId) {
+        deleteShipping: function(shippingId) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 self.$shippings = null;
 
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_delete', function () {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_delete', function() {
                     self.fireEvent('shippingDelete', [self, shippingId]);
                     resolve();
                 }, {
-                    'package' : 'quiqqer/shipping',
-                    onError   : reject,
+                    'package': 'quiqqer/shipping',
+                    onError: reject,
                     shippingId: shippingId
                 });
             });
@@ -169,18 +169,18 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @param {String|Number} shippingId
          * @return {Promise}
          */
-        activateShipping: function (shippingId) {
+        activateShipping: function(shippingId) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 self.$shippings = null;
 
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_activate', function (result) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_activate', function(result) {
                     self.fireEvent('shippingActivate', [self, shippingId, result]);
                     resolve(result);
                 }, {
-                    'package' : 'quiqqer/shipping',
-                    onError   : reject,
+                    'package': 'quiqqer/shipping',
+                    onError: reject,
                     shippingId: shippingId
                 });
             });
@@ -192,18 +192,18 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @param {String|Number} shippingId
          * @return {Promise}
          */
-        deactivateShipping: function (shippingId) {
+        deactivateShipping: function(shippingId) {
             var self = this;
 
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 self.$shippings = null;
 
-                QUIAjax.post('package_quiqqer_shipping_ajax_backend_deactivate', function (result) {
+                QUIAjax.post('package_quiqqer_shipping_ajax_backend_deactivate', function(result) {
                     self.fireEvent('shippingDeactivate', [self, shippingId, result]);
                     resolve(result);
                 }, {
-                    'package' : 'quiqqer/shipping',
-                    onError   : reject,
+                    'package': 'quiqqer/shipping',
+                    onError: reject,
                     shippingId: shippingId
                 });
             });

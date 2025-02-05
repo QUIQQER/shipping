@@ -11,6 +11,7 @@ use QUI\ERP\Shipping\Shipping as ShippingHandler;
 
 use function array_merge;
 use function count;
+use function defined;
 use function dirname;
 use function implode;
 
@@ -70,7 +71,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $shippingList = $this->getValidShipping();
 
         // debugging logger
-        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled()) {
+        if (QUI\ERP\Shipping\Shipping::getInstance()->debuggingEnabled() && !defined('QUIQQER_AJAX')) {
             QUI\ERP\Shipping\Debug::clearLogStock();
 
             $debugStack = [];

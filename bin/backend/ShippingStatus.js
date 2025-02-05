@@ -7,7 +7,7 @@
  */
 define('package/quiqqer/shipping/bin/backend/ShippingStatus', [
     'package/quiqqer/shipping/bin/backend/classes/ShippingStatus'
-], function (ShippingStatus) {
-    "use strict";
+], function(ShippingStatus) {
+    'use strict';
     return new ShippingStatus();
 });

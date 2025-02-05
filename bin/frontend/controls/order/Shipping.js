@@ -12,20 +12,20 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
     'qui/QUI',
     'qui/controls/Control'
 
-], function (QUI, QUIControl) {
-    "use strict";
+], function(QUI, QUIControl) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/shipping/bin/frontend/controls/order/Shipping',
+        Type: 'package/quiqqer/shipping/bin/frontend/controls/order/Shipping',
 
         Binds: [
             '$onImport',
             '$onClick'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Input = null;
@@ -38,7 +38,7 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
         /**
          * event: on import
          */
-        $onImport: function () {
+        $onImport: function() {
             this.getElm().addEvent('click', this.$onClick);
 
             this.$Input = this.getElm().getElement('input');
@@ -51,15 +51,13 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
         /**
          * event: on click
          */
-        $onClick: function (event) {
+        $onClick: function(event) {
             if (event.target.nodeName !== 'INPUT') {
                 event.stop();
             }
 
-            this.getElm()
-                .getParent('.quiqqer-order-step-shipping-list')
-                .getElements('.quiqqer-order-step-shipping-list-entry')
-                .removeClass('selected');
+            this.getElm().getParent('.quiqqer-order-step-shipping-list').getElements(
+                '.quiqqer-order-step-shipping-list-entry').removeClass('selected');
 
             this.$Input.checked = true;
             this.getElm().addClass('selected');
