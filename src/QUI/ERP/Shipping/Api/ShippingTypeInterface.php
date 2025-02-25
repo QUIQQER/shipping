@@ -22,7 +22,7 @@ interface ShippingTypeInterface
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string;
+    public function getTitle(null | QUI\Locale $Locale = null): string;
 
     /**
      * @return string
@@ -35,5 +35,5 @@ interface ShippingTypeInterface
      * @param QUI\Locale|null $Locale
      * @return array
      */
-    public function toArray(QUI\Locale $Locale = null): array;
+    public function toArray(null | QUI\Locale $Locale = null): array;
 }

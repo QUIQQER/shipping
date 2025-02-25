@@ -239,7 +239,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @throws Exception
      */
-    public function getShippingEntry(int|string $shippingId): Types\ShippingEntry
+    public function getShippingEntry(int | string $shippingId): Types\ShippingEntry
     {
         try {
             return Factory::getInstance()->getChild($shippingId);
@@ -277,8 +277,10 @@ class Shipping extends QUI\Utils\Singleton
      * @param QUI\ERP\ErpEntityInterface|null $Entity - optional
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
-    public function getUserShipping(User $User = null, QUI\ERP\ErpEntityInterface $Entity = null): array
-    {
+    public function getUserShipping(
+        null | User $User = null,
+        null | QUI\ERP\ErpEntityInterface $Entity = null
+    ): array {
         if ($User === null) {
             $User = QUI::getUserBySession();
         }
@@ -302,8 +304,8 @@ class Shipping extends QUI\Utils\Singleton
      * @param QUI\ERP\ErpEntityInterface $Entity
      * @return PriceFactorInterface|ErpPriceFactor|null
      */
-    public function getShippingPriceFactor(QUI\ERP\ErpEntityInterface $Entity): ErpPriceFactor|PriceFactorInterface|null
-    {
+    public function getShippingPriceFactor(QUI\ERP\ErpEntityInterface $Entity
+    ): ErpPriceFactor | PriceFactorInterface | null {
         $PriceFactors = $Entity->getArticles()->getPriceFactors();
 
         foreach ($PriceFactors as $PriceFactor) {
@@ -321,7 +323,7 @@ class Shipping extends QUI\Utils\Singleton
      *
      * @deprecated use getShippingPriceFactor
      */
-    public function getShippingPriceFactorByOrder(AbstractOrder $Order): ErpPriceFactor|PriceFactorInterface|null
+    public function getShippingPriceFactorByOrder(AbstractOrder $Order): ErpPriceFactor | PriceFactorInterface | null
     {
         QUI\System\Log::addNotice(
             'Shipping->getShippingPriceFactorByOrder() is deprecated, use getShippingPriceFactor'
@@ -421,7 +423,7 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getShippingByObject(
         QUI\ERP\ErpEntityInterface $Entity
-    ): Types\ShippingEntry|Types\ShippingUnique|null {
+    ): Types\ShippingEntry | Types\ShippingUnique | null {
         $Shipping = null;
         $Delivery = $Entity->getDeliveryAddress();
 
@@ -440,7 +442,7 @@ class Shipping extends QUI\Utils\Singleton
      * @param $orderId
      * @return ShippingEntry|ShippingUnique|null
      */
-    public function getShippingByOrderId($orderId): ShippingEntry|ShippingUnique|null
+    public function getShippingByOrderId($orderId): ShippingEntry | ShippingUnique | null
     {
         try {
             $Order = QUI\ERP\Order\Handler::getInstance()->getOrderById($orderId);
@@ -551,7 +553,7 @@ class Shipping extends QUI\Utils\Singleton
     public function sendStatusChangeNotification(
         ErpEntityInterface $ErpEntity,
         int $statusId,
-        string $message = null
+        null | string $message = null
     ): void {
         $Customer = $ErpEntity->getCustomer();
         $customerEmail = $Customer->getAttribute('email');

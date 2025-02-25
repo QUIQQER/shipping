@@ -70,6 +70,7 @@ class Factory extends QUI\CRUD\Factory
     {
         // filter
         $allowed = array_flip([
+            'active',
             'title',
             'workingTitle',
             'date_from',

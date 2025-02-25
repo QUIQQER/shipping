@@ -18,7 +18,7 @@ interface ShippingInterface
     /**
      * @return int|string
      */
-    public function getId(): int|string;
+    public function getId(): int | string;
 
     /**
      * @param null|QUI\Locale $Locale
@@ -48,7 +48,7 @@ interface ShippingInterface
      *
      * @return float|int
      */
-    public function getPrice(): float|int;
+    public function getPrice(): float | int;
 
     /**
      * Return the price display

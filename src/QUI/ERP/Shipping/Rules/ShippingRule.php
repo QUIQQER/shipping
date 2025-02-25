@@ -191,7 +191,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -337,7 +337,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param Address|QUI\Users\Address|null $Address
      * @return bool
      */
-    public function canUsedWithAddress(QUI\ERP\Address|QUI\Users\Address $Address = null): bool
+    public function canUsedWithAddress(null | QUI\ERP\Address | QUI\Users\Address $Address = null): bool
     {
         if (!$Address) {
             return false;
@@ -365,7 +365,7 @@ class ShippingRule extends QUI\CRUD\Child
      * @param QUI\ERP\ErpEntityInterface|null $ErpEntity
      * @return bool
      */
-    public function canUsedIn(QUI\ERP\ErpEntityInterface $ErpEntity = null): bool
+    public function canUsedIn(null | QUI\ERP\ErpEntityInterface $ErpEntity = null): bool
     {
         if (!$this->isValid()) {
             Debug::addLog("{$this->getTitle()} :: is not valid");
@@ -819,7 +819,7 @@ class ShippingRule extends QUI\CRUD\Child
      *
      * @return bool|array
      */
-    public function getUnitTerms(): bool|array
+    public function getUnitTerms(): bool | array
     {
         $unitTerms = $this->getAttribute('unit_terms');
 
