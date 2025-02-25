@@ -92,7 +92,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    abstract public function getDescription(QUI\Locale $Locale = null): string;
+    abstract public function getDescription(null | QUI\Locale $Locale = null): string;
 
     /**
      * @return string
@@ -146,7 +146,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
      * @return string
      */
     public function getInvoiceInformationText(
-        QUI\ERP\Accounting\Invoice\Invoice|QUI\ERP\Accounting\Invoice\InvoiceTemporary|QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
+        QUI\ERP\Accounting\Invoice\Invoice | QUI\ERP\Accounting\Invoice\InvoiceTemporary | QUI\ERP\Accounting\Invoice\InvoiceView $Invoice
     ): string {
         return '';
     }

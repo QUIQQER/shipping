@@ -8,6 +8,8 @@ namespace QUI\ERP\Shipping\Types;
 
 use QUI;
 use QUI\CRUD\Factory;
+use QUI\ERP\ErpEntityInterface;
+use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Shipping\Api;
 use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Rules\Factory as RuleFactory;
@@ -42,7 +44,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * @var null|QUI\ERP\Address|QUI\Users\Address
      */
-    protected QUI\Users\Address|QUI\ERP\Address|null $Address = null;
+    protected QUI\Users\Address | QUI\ERP\Address | null $Address = null;
 
     /**
      * Shipping constructor.
@@ -258,7 +260,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      *
      * @return float|int
      */
-    public function getPrice(): float|int
+    public function getPrice(): float | int
     {
         $rules = $this->getShippingRules();
         $price = 0;
@@ -399,7 +401,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param null|Locale $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -414,10 +416,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the shipping description
      *
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription($Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -432,10 +434,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the shipping working title
      *
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return array|string
      */
-    public function getWorkingTitle($Locale = null): array|string
+    public function getWorkingTitle(null | QUI\Locale $Locale = null): array | string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -607,7 +609,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function addShippingRuleId(int $shippingRuleId): void
     {
-        /* @var $Rule ShippingRule */
         $Rule = RuleFactory::getInstance()->getChild($shippingRuleId);
         $this->addShippingRule($Rule);
     }
@@ -790,14 +791,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     }
 
     /**
-     * @param null $Locale
-     * @param QUI\ERP\ErpEntityInterface|null $ErpEntity
+     * @param Locale|null $Locale
+     * @param ErpEntityInterface|null $ErpEntity
      *
-     * @return QUI\ERP\Products\Utils\PriceFactor
+     * @return PriceFactor
      */
     public function toPriceFactor(
-        $Locale = null,
-        QUI\ERP\ErpEntityInterface $ErpEntity = null
+        null | QUI\Locale $Locale = null,
+        null | QUI\ERP\ErpEntityInterface $ErpEntity = null
     ): QUI\ERP\Products\Utils\PriceFactor {
         if ($ErpEntity === null) {
             $ErpEntity = $this->ErpEntity;
@@ -863,7 +864,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the address
      */
-    public function getAddress(): QUI\ERP\Address|QUI\Users\Address|null
+    public function getAddress(): QUI\ERP\Address | QUI\Users\Address | null
     {
         return $this->Address;
     }

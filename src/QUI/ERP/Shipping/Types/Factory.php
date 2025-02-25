@@ -44,7 +44,7 @@ class Factory extends QUI\CRUD\Factory
      * @throws QUI\ERP\Shipping\Exception
      * @throws QUI\Exception
      */
-    public function createChild(array $data = []): QUI\CRUD\Child
+    public function createChild(array $data = []): ShippingEntry
     {
         if (!isset($data['active']) || !is_integer($data['active'])) {
             $data['active'] = 0;
@@ -64,17 +64,17 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateBegin', [$data['shipping_type']]);
 
-        /* @var $NewChild ShippingEntry */
+        /* @var ShippingEntry $NewChild */
         $NewChild = parent::createChild($data);
 
         $this->createShippingLocale(
             'shipping.' . $NewChild->getId() . '.title',
-            $NewChild->getShippingType()->getTitle()
+            $NewChild->getShippingType()->getTitle() // @phpstan-ignore-line
         );
 
         $this->createShippingLocale(
             'shipping.' . $NewChild->getId() . '.workingTitle',
-            $NewChild->getShippingType()->getTitle() . ' - ' . $NewChild->getId()
+            $NewChild->getShippingType()->getTitle() . ' - ' . $NewChild->getId() // @phpstan-ignore-line
         );
 
         // description
@@ -88,6 +88,7 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateEnd', [$NewChild]);
 
+        // @phpstan-ignore-next-line
         return $NewChild;
     }
 
@@ -130,15 +131,16 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @param int $id
      *
-     * @return QUI\ERP\Shipping\Types\ShippingEntry
+     * @return ShippingEntry
      *
      * @throws QUI\Exception
      */
-    public function getChild($id): QUI\CRUD\Child
+    public function getChild($id): ShippingEntry
     {
-        /* @var QUI\ERP\Shipping\Types\ShippingEntry $Shipping */
+        /* @var ShippingEntry $Shipping */
         $Shipping = parent::getChild($id);
 
+        // @phpstan-ignore-next-line
         return $Shipping;
     }
 

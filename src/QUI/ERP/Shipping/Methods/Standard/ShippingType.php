@@ -80,7 +80,6 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         // Check if order contains only digital products
         $digitalProductsOnly = true;
 
-        /** @var QUI\ERP\Accounting\Article $Article */
         foreach ($ArticleList as $Article) {
             try {
                 // Do not parse coupon codes / discounts

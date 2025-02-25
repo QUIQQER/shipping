@@ -131,7 +131,7 @@ class Tracking
         );
 
         return array_filter($data, function ($entry) {
-            return (int)$entry['active'];
+            return (bool)(int)$entry['active'];
         });
     }
 
