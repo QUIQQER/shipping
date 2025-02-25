@@ -111,7 +111,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @throws Exception
      */
-    public function getShippingStatus(int $id): StatusUnknown|Status
+    public function getShippingStatus(int $id): StatusUnknown | Status
     {
         if ($id === 0) {
             return new StatusUnknown();
@@ -130,7 +130,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @todo permissions
      */
-    public function deleteShippingStatus(int|string $id): void
+    public function deleteShippingStatus(int | string $id): void
     {
         $Status = $this->getShippingStatus($id);
 
@@ -183,7 +183,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @todo permissions
      */
-    public function updateShippingStatus(int $id, int|string $color, array $title): void
+    public function updateShippingStatus(int $id, int | string $color, array $title): void
     {
         $Status = $this->getShippingStatus($id);
 
@@ -277,7 +277,7 @@ class Handler extends QUI\Utils\Singleton
     public function sendStatusChangeNotification(
         QUI\ERP\ErpEntityInterface $ErpEntity,
         int $statusId,
-        string $message = null
+        null | string $message = null
     ): void {
         $Customer = $ErpEntity->getCustomer();
         $customerEmail = $Customer->getAttribute('email');
