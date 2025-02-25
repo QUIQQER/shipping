@@ -9,6 +9,9 @@
  *
  * @return array
  */
+
+use QUI\System\Log;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_getRules',
     function ($ruleIds) {
@@ -25,28 +28,20 @@ QUI::$Ajax->registerFunction(
             try {
                 $result[] = $Rules->getChild($ruleId)->toArray();
             } catch (QUI\Exception $Exception) {
-                \QUI\System\Log::addDebug($Exception);
+                Log::addDebug($Exception);
             }
         }
 
         // sort by priority
         usort($result, function ($a, $b) {
-            if (!isset($a['priority'])) {
-                $a['priority'] = 0;
-            }
-
-            if (!isset($b['priority'])) {
-                $b['priority'] = 0;
-            }
-
-            $priorityA = (int)$a['priority'];
-            $priorityB = (int)$b['priority'];
+            $priorityA = $a['priority'] ?? 0;
+            $priorityB = $b['priority'] ?? 0;
 
             if ($priorityA === $priorityB) {
-                return $a['id'] > $b['priority'];
+                return $a['id'] <=> $b['id'];
             }
 
-            return $priorityA > $priorityB;
+            return $priorityB <=> $priorityA;
         });
 
         return $result;

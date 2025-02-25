@@ -9,6 +9,7 @@ namespace QUI\ERP\Shipping;
 use Exception;
 use QUI;
 use QUI\ERP\Accounting\ArticleList;
+use QUI\ERP\Accounting\ArticleListUnique;
 use QUI\ERP\Accounting\Invoice\InvoiceTemporary;
 use QUI\ERP\Accounting\Offers\AbstractOffer;
 use QUI\ERP\Order\AbstractOrder;
@@ -16,6 +17,7 @@ use QUI\ERP\Order\Controls\OrderProcess\Checkout as OrderCheckoutStepControl;
 use QUI\ERP\Products\Handler\Fields as ProductFields;
 use QUI\ERP\SalesOrders\SalesOrder;
 use QUI\ERP\Shipping\Shipping as ShippingHandler;
+use QUI\ExceptionStack;
 use QUI\Smarty\Collector;
 
 use function array_merge;
@@ -271,7 +273,10 @@ class EventHandler
             try {
                 $DeliveryAddress = $Customer->getAddress($addressId);
                 $Order->setDeliveryAddress($DeliveryAddress);
-                $Order->save(QUI::getUsers()->getSystemUser());
+
+                if (method_exists($Order, 'save')) {
+                    $Order->save(QUI::getUsers()->getSystemUser());
+                }
             } catch (Exception) {
             }
         }
@@ -283,6 +288,10 @@ class EventHandler
      * @param OrderCheckoutStepControl $Checkout
      * @param string $text
      * @return void
+     *
+     * @throws QUI\Database\Exception
+     * @throws QUI\Exception
+     * @throws ExceptionStack
      */
     public static function onQuiqqerOrderOrderProcessCheckoutOutput(
         OrderCheckoutStepControl $Checkout,
@@ -324,7 +333,10 @@ class EventHandler
                     );
 
                     $Order->setDeliveryAddress($ErpDeliveryAddress);
-                    $Order->save(QUI::getUsers()->getSystemUser());
+
+                    if (method_exists($Order, 'save')) {
+                        $Order->save(QUI::getUsers()->getSystemUser());
+                    }
                 } catch (Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
                 }
@@ -362,7 +374,10 @@ class EventHandler
         // same address like the invoice address
         if ((int)$_REQUEST['shipping-address'] === -1) {
             $Order->setDeliveryAddress($Order->getInvoiceAddress());
-            $Order->save();
+
+            if (method_exists($Order, 'save')) {
+                $Order->save();
+            }
             return;
         }
 
@@ -370,7 +385,10 @@ class EventHandler
             $Address = $User->getAddress($_REQUEST['shipping-address']);
         } catch (QUI\Exception) {
             $Order->clearAddressDelivery();
-            $Order->save();
+
+            if (method_exists($Order, 'save')) {
+                $Order->save();
+            }
             return;
         }
 
@@ -379,7 +397,10 @@ class EventHandler
         );
 
         $Order->setDeliveryAddress($ErpAddress);
-        $Order->save();
+
+        if (method_exists($Order, 'save')) {
+            $Order->save();
+        }
     }
 
     /**
@@ -499,9 +520,9 @@ class EventHandler
                     'titles' => $field['title'],
                     'workingtitles' => $field['title'],
                     'systemField' => 0,
-                    'standardField' => !empty($field['standard']) ? 1 : 0,
-                    'publicField' => !empty($field['public']) ? 1 : 0,
-                    'options' => !empty($field['options']) ? $field['options'] : null
+                    'standardField' => !empty($field['standard']) ? 1 : 0, // @phpstan-ignore-line
+                    'publicField' => !empty($field['public']) ? 1 : 0,  // @phpstan-ignore-line
+                    'options' => !empty($field['options']) ? $field['options'] : null  // @phpstan-ignore-line
                 ]);
             } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -610,7 +631,10 @@ class EventHandler
             if (count($Process->getEntities()) <= 1) {
                 self::addDefaultShipping($Offer->getArticles());
                 $Offer->addCustomDataEntry(self::DEFAULT_SHIPPING_TIME_KEY, time());
-                $Offer->update(QUI::getUsers()->getSystemUser());
+
+                if (method_exists($Offer, 'update')) {
+                    $Offer->update(QUI::getUsers()->getSystemUser());
+                }
             }
         } catch (Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
@@ -642,11 +666,11 @@ class EventHandler
     /**
      * event: addDefaultShipping
      *
-     * @param ArticleList $Articles
+     * @param ArticleList|ArticleListUnique $Articles
      * @return void
      * @throws QUI\Exception
      */
-    protected static function addDefaultShipping(ArticleList $Articles): void
+    protected static function addDefaultShipping(ArticleList | ArticleListUnique $Articles): void
     {
         if (!QUI::isBackend()) {
             return;
@@ -675,7 +699,11 @@ class EventHandler
 
             if (!$shippingFactor) {
                 $PriceFactor = Shipping::getInstance()->getDefaultPriceFactor();
-                $Articles->addPriceFactor($PriceFactor);
+
+                if (method_exists($Articles, 'addPriceFactor')) {
+                    $Articles->addPriceFactor($PriceFactor);
+                }
+
                 $Articles->recalculate();
             }
         } catch (QUI\Exception) {

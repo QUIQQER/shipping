@@ -66,7 +66,7 @@ class Factory extends QUI\CRUD\Factory
      *
      * @throws QUI\Exception
      */
-    public function createChild(array $data = []): QUI\CRUD\Child
+    public function createChild(array $data = []): ShippingRule
     {
         // filter
         $allowed = array_flip([
@@ -230,6 +230,7 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateEnd', [$NewChild]);
 
+        // @phpstan-ignore-next-line
         return $NewChild;
     }
 
@@ -294,6 +295,7 @@ class Factory extends QUI\CRUD\Factory
         /* @var ShippingRule $Shipping */
         $Shipping = parent::getChild($id);
 
+        // @phpstan-ignore-next-line
         return $Shipping;
     }
 

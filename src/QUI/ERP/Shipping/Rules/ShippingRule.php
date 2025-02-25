@@ -649,7 +649,12 @@ class ShippingRule extends QUI\CRUD\Child
 
 
         // quantity check
-        $count = $ErpEntity->count();
+        $count = 0;
+
+        if (method_exists($ErpEntity, 'count')) {
+            $count = $ErpEntity->count();
+        }
+
 
         if (!empty($quantityFrom) && $quantityFrom < $count) {
             QUI\ERP\Shipping\Debug::addLog(
