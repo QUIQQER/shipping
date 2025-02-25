@@ -1,0 +1,62 @@
+parameters:
+    ignoreErrors:
+        -
+            message: "#^Parameter \\$Invoice of method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry::getInvoiceInformationText\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\Invoice\\.$#"
+            path: src/QUI/ERP/Shipping/Api/AbstractShippingEntry.php
+        -
+            message: "#^Parameter \\$Invoice of method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry::getInvoiceInformationText\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/Api/AbstractShippingEntry.php
+        -
+            message: "#^Parameter \\$Invoice of method QUI\\\\ERP\\\\Shipping\\\\Api\\\\AbstractShippingEntry::getInvoiceInformationText\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceView\\.$#"
+            path: src/QUI/ERP/Shipping/Api/AbstractShippingEntry.php
+        -
+            message: "#^Parameter \\$TemporaryInvoice of method QUI\\\\ERP\\\\Shipping\\\\EventHandler::onQuiqqerInvoiceTemporaryInvoiceCreated\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getGlobalProcessId\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method addCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Invoice\\\\InvoiceTemporary\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Parameter \\$Offer of method QUI\\\\ERP\\\\Shipping\\\\EventHandler::onQuiqqerOffersCreated\\(\\) has invalid type QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getGlobalProcessId\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method addCustomDataEntry\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\Accounting\\\\Offers\\\\AbstractOffer\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Parameter \\$Sales of method QUI\\\\ERP\\\\Shipping\\\\EventHandler::onQuiqqerSalesOrdersCreated\\(\\) has invalid type QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getGlobalProcessId\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
+            path: src/QUI/ERP/Shipping/EventHandler.php
+        -
+            message: "#^Return type \\(QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimeFrontendView\\) of method QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimePeriod::getFrontendView\\(\\) should be compatible with return type \\(QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\UnitSelectFrontendView\\) of method QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\TimePeriod::getFrontendView\\(\\)\\.$#"
+            path: src/QUI/ERP/Shipping/Products/Fields/ShippingTimePeriod.php
