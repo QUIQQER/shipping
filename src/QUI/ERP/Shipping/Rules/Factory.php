@@ -285,13 +285,13 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @param int $id
      *
-     * @return QUI\ERP\Shipping\Api\AbstractShippingEntry
+     * @return ShippingRule
      *
      * @throws QUI\Exception
      */
-    public function getChild($id): QUI\CRUD\Child
+    public function getChild($id): ShippingRule
     {
-        /* @var QUI\ERP\Shipping\Api\AbstractShippingEntry $Shipping */
+        /* @var ShippingRule $Shipping */
         $Shipping = parent::getChild($id);
 
         return $Shipping;
@@ -300,10 +300,10 @@ class Factory extends QUI\CRUD\Factory
     /**
      * Creates a locale
      *
-     * @param $var
-     * @param $title
+     * @param string $var
+     * @param string $title
      */
-    protected function createShippingLocale($var, $title): void
+    protected function createShippingLocale(string $var, string $title): void
     {
         $current = QUI::getLocale()->getCurrent();
 

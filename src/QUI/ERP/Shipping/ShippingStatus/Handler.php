@@ -146,7 +146,7 @@ class Handler extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
-        $Config->del('shipping_status', $Status->getId());
+        $Config->del('shipping_status', (string)$Status->getId());
         $Config->save();
     }
 
@@ -168,7 +168,7 @@ class Handler extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
-        $Config->setValue('shipping_status_notification', $Status->getId(), $notify ? "1" : "0");
+        $Config->setValue('shipping_status_notification', (string)$Status->getId(), $notify ? "1" : "0");
         $Config->save();
     }
 
@@ -216,7 +216,7 @@ class Handler extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
-        $Config->setValue('shipping_status', $Status->getId(), $color);
+        $Config->setValue('shipping_status', (string)$Status->getId(), $color);
         $Config->save();
     }
 

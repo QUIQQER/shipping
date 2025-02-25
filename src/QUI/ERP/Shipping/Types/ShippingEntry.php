@@ -609,7 +609,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function addShippingRuleId(int $shippingRuleId): void
     {
-        /* @var $Rule ShippingRule */
         $Rule = RuleFactory::getInstance()->getChild($shippingRuleId);
         $this->addShippingRule($Rule);
     }

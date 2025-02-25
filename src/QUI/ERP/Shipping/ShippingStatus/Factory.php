@@ -32,7 +32,7 @@ class Factory extends QUI\Utils\Singleton
      *
      * @todo permissions
      */
-    public function createShippingStatus(int|string $id, string $color, array $title): void
+    public function createShippingStatus(int | string $id, string $color, array $title): void
     {
         $list = Handler::getInstance()->getList();
         $id = (int)$id;
@@ -49,7 +49,7 @@ class Factory extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
-        $Config->setValue('shipping_status', $id, $color);
+        $Config->setValue('shipping_status', (string)$id, $color);
         $Config->save();
 
         // translations
