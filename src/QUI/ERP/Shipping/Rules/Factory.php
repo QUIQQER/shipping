@@ -66,10 +66,11 @@ class Factory extends QUI\CRUD\Factory
      *
      * @throws QUI\Exception
      */
-    public function createChild(array $data = []): QUI\CRUD\Child
+    public function createChild(array $data = []): ShippingRule
     {
         // filter
         $allowed = array_flip([
+            'active',
             'title',
             'workingTitle',
             'date_from',
@@ -229,6 +230,7 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateEnd', [$NewChild]);
 
+        // @phpstan-ignore-next-line
         return $NewChild;
     }
 
@@ -284,25 +286,26 @@ class Factory extends QUI\CRUD\Factory
     /**
      * @param int $id
      *
-     * @return QUI\ERP\Shipping\Api\AbstractShippingEntry
+     * @return ShippingRule
      *
      * @throws QUI\Exception
      */
-    public function getChild($id): QUI\CRUD\Child
+    public function getChild($id): ShippingRule
     {
-        /* @var QUI\ERP\Shipping\Api\AbstractShippingEntry $Shipping */
+        /* @var ShippingRule $Shipping */
         $Shipping = parent::getChild($id);
 
+        // @phpstan-ignore-next-line
         return $Shipping;
     }
 
     /**
      * Creates a locale
      *
-     * @param $var
-     * @param $title
+     * @param string $var
+     * @param string $title
      */
-    protected function createShippingLocale($var, $title): void
+    protected function createShippingLocale(string $var, string $title): void
     {
         $current = QUI::getLocale()->getCurrent();
 

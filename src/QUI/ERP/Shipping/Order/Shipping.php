@@ -38,7 +38,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getName($Locale = null): string
+    public function getName(null | QUI\Locale $Locale = null): string
     {
         return 'Shipping';
     }
@@ -55,6 +55,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      * @return string
      *
      * @throws QUI\Exception
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function getBody(): string
     {
@@ -166,7 +167,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         if ($Shipping === null && count($shippingList) === 1) {
             try {
                 $Order->setShipping($shippingList[0]);
-                $Order->save();
+
+                if (method_exists($Order, 'save')) {
+                    $Order->save();
+                }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());
             }
@@ -260,11 +264,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             }
         } catch (QUI\ERP\Shipping\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
-
             return;
         }
 
         $Order->setShipping($ShippingEntry);
-        $Order->save();
+
+        if (method_exists($Order, 'save')) {
+            $Order->save();
+        }
     }
 }

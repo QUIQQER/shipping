@@ -29,8 +29,6 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
         $Engine = QUI::getTemplateManager()->getEngine();
         $L = QUI::getLocale();
         $lg = 'quiqqer/shipping';
-
-        /** @var ShippingTimePeriod $Field */
         $value = $this->getValue();
 
         if (empty($value)) {
@@ -113,7 +111,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
     /**
      * Return the current value
      *
-     * @return string|array
+     * @return mixed
      */
     public function getValue(): mixed
     {

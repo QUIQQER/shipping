@@ -18,19 +18,19 @@ interface ShippingInterface
     /**
      * @return int|string
      */
-    public function getId(): int|string;
+    public function getId(): int | string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string;
+    public function getTitle(null | QUI\Locale $Locale = null): string;
 
     /**
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string;
+    public function getDescription(null | QUI\Locale $Locale = null): string;
 
     /**
      * @return string
@@ -48,7 +48,7 @@ interface ShippingInterface
      *
      * @return float|int
      */
-    public function getPrice(): float|int;
+    public function getPrice(): float | int;
 
     /**
      * Return the price display
