@@ -58,5 +58,5 @@ parameters:
             message: "#^Call to method update\\(\\) on an unknown class QUI\\\\ERP\\\\SalesOrders\\\\SalesOrder\\.$#"
             path: src/QUI/ERP/Shipping/EventHandler.php
         -
-            message: "#^Return type \\(QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimeFrontendView\\) of method QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimePeriod::getFrontendView\\(\\) should be compatible with return type \\(QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\UnitSelectFrontendView\\) of method QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\TimePeriod::getFrontendView\\(\\)\\.$#"
+            message: "#^Return type \\(QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimeFrontendView\\) of method QUI\\\\ERP\\\\Shipping\\\\Products\\\\Fields\\\\ShippingTimePeriod::getFrontendView\\(\\) should be compatible with return type \\(QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\UnitSelectFrontendView\\) of method QUI\\\\ERP\\\\Products\\\\Field\\\\Types\\\\TimePeriod::getFrontendView\\(\\)\\s+🪪\\s+method\\.childReturnType$#"
             path: src/QUI/ERP/Shipping/Products/Fields/ShippingTimePeriod.php
