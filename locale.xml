@@ -571,6 +571,10 @@
             <de><![CDATA[Versendet]]></de>
             <en><![CDATA[Sent]]></en>
         </locale>
+        <locale name="shipping.status.unknown">
+            <de><![CDATA[Nicht bekannt]]></de>
+            <en><![CDATA[Unknown]]></en>
+        </locale>
 
         <locale name="shipping.plus">
             <de><![CDATA[zzgl.]]></de>
