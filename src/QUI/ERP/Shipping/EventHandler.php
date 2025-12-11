@@ -318,7 +318,7 @@ class EventHandler
 
         $DeliveryAddress = $Order->getDeliveryAddress();
 
-        if ($DeliveryAddress->getId() === 0 || $DeliveryAddress->getUUID() == 0) {
+        if (empty($DeliveryAddress->getUUID())) {
             $customerId = $Order->getCustomer()->getUUID();
             $Customer = QUI::getUsers()->get($customerId);
 
@@ -393,7 +393,10 @@ class EventHandler
         }
 
         $ErpAddress = new QUI\ERP\Address(
-            array_merge($Address->getAttributes(), ['uuid' => $Address->getUUID()])
+            array_merge($Address->getAttributes(), [
+                'uuid' => $Address->getUUID(),
+                'id' => $Address->getId()
+            ])
         );
 
         $Order->setDeliveryAddress($ErpAddress);
