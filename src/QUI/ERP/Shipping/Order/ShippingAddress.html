@@ -8,8 +8,8 @@
             {locale group="quiqqer/shipping" var="checkout.shipping.address.option.same"}
         </option>
         {foreach $addressList as $Address}
-        <option value="{$Address->getId()}"
-                {if $currentAddress=== $Address->getId()}selected="selected"{/if}
+        <option value="{$Address->getUUID()}"
+                {if $currentAddress === $Address->getUUID()}selected="selected"{/if}
             >
             {$Address->getText()}
         </option>
