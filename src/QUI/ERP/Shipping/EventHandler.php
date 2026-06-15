@@ -786,7 +786,7 @@ class EventHandler
             $data['articles'] = $Articles->toJSON();
         } elseif ($Shipping && !isset($index)) {
             $PriceFactors->addFactor($Shipping->toPriceFactor()->toErpPriceFactor());
-        } elseif (!$Shipping && isset($index) && $identifier === 'default') {
+        } elseif (!$Shipping && isset($index)) {
             self::onQuiqqerCustomerChange($Order);
         }
     }

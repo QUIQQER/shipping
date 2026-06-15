@@ -269,7 +269,7 @@
             <de><![CDATA[zzgl. Versand]]></de>
             <en><![CDATA[plus shipping]]></en>
         </locale>
-        <locale name="frontend.shippingInfo.popup.content">
+        <locale name="frontend.shippingInfo.popup.title">
             <de><![CDATA[Versandinformationen]]></de>
             <en><![CDATA[Shipping information]]></en>
         </locale>

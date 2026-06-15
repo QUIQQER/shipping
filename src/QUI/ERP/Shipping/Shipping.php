@@ -588,9 +588,7 @@ class Shipping extends QUI\Utils\Singleton
         try {
             $Mailer->send();
 
-            if (method_exists($ErpEntity, 'addStatusMail')) {
-                $ErpEntity->addStatusMail($message);
-            }
+            $ErpEntity->addStatusMail($message);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
