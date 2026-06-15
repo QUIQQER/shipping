@@ -18,7 +18,6 @@ use function array_map;
 use function explode;
 use function in_array;
 use function is_numeric;
-use function method_exists;
 use function trim;
 
 /**
@@ -209,20 +208,18 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
             return true;
         }
 
-        if (method_exists($Entity, 'getDeliveryAddress')) {
-            $Address = $Entity->getDeliveryAddress();
+        $Address = $Entity->getDeliveryAddress();
 
-            $areasValue = trim($areasValue);
-            $areasValue = trim($areasValue, ',');
-            $areasValue = explode(',', $areasValue);
-            $areasValue = array_filter($areasValue);
+        $areasValue = trim($areasValue);
+        $areasValue = trim($areasValue, ',');
+        $areasValue = explode(',', $areasValue);
+        $areasValue = array_filter($areasValue);
 
-            // not in area
-            if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
-                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
+        // not in area
+        if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
+            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
 
-                return false;
-            }
+            return false;
         }
 
         Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is in areas");
