@@ -352,6 +352,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             if (method_exists($ShippingType, 'canUsedIn')) {
                 return $ShippingType->canUsedIn($Entity, $this);
             }
+
+            if (method_exists($ShippingType, 'canUsedInOrder')) {
+                return $ShippingType->canUsedInOrder($Entity, $this);
+            }
         } catch (Exception) {
             return false;
         }
