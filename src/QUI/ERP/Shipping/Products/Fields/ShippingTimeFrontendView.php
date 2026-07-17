@@ -74,7 +74,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
                         'period' => $from
                     ]);
-                } elseif (empty($from) && !empty($to)) {
+                } elseif (empty($from)) {
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
                         'period' => $to
                     ]);
