@@ -30,6 +30,50 @@ class SimpleClassesTest extends TestCase
         }
     }
 
+    public function testBuiltInShippingTypesAcceptUsersThroughGroupAssignment(): void
+    {
+        $Group = $this->createMock(QUI\Groups\Group::class);
+        $Group->method('getId')->willReturn(4242);
+        $Group->method('getUUID')->willReturn('phpunit-group');
+        $User = $this->createMock(QUI\Interfaces\Users\User::class);
+        $User->method('getId')->willReturn(1001);
+        $User->method('getUUID')->willReturn('phpunit-user');
+        $User->method('getGroups')->willReturn([$Group]);
+        $Entry = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $Entry->method('isActive')->willReturn(true);
+        $Entry->method('getTitle')->willReturn('PHPUnit shipping');
+        $Entry->method('getAttribute')->willReturnCallback(
+            static fn (string $name): string => $name === 'user_groups' ? 'g4242' : ''
+        );
+        $Entity = $this->createMock(QUI\ERP\ErpEntityInterface::class);
+        $Entity->method('getDeliveryAddress')->willReturn($this->createMock(QUI\ERP\Address::class));
+
+        self::assertTrue((new StandardShippingType())->canUsedBy($User, $Entry, $Entity));
+        self::assertTrue((new DigitalShippingType())->canUsedBy($User, $Entry, $Entity));
+    }
+
+    public function testBuiltInShippingTypesRejectInactiveInvalidAndUnreadableOrders(): void
+    {
+        $Entity = $this->createMock(QUI\ERP\ErpEntityInterface::class);
+        $inactive = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $inactive->method('isActive')->willReturn(false);
+        self::assertFalse((new StandardShippingType())->canUsedInOrder($Entity, $inactive));
+        self::assertFalse((new DigitalShippingType())->canUsedInOrder($Entity, $inactive));
+
+        $invalid = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $invalid->method('isActive')->willReturn(true);
+        $invalid->method('isValid')->willReturn(false);
+        self::assertFalse((new StandardShippingType())->canUsedInOrder($Entity, $invalid));
+        self::assertFalse((new DigitalShippingType())->canUsedInOrder($Entity, $invalid));
+
+        $valid = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $valid->method('isActive')->willReturn(true);
+        $valid->method('isValid')->willReturn(true);
+        $unreadable = $this->createMock(QUI\ERP\ErpEntityInterface::class);
+        $unreadable->method('getArticles')->willThrowException(new \RuntimeException('Unreadable articles'));
+        self::assertFalse((new StandardShippingType())->canUsedInOrder($unreadable, $valid));
+    }
+
     public function testShippingUniqueProvidesImmutableSnapshotValues(): void
     {
         $language = QUI::getLocale()->getCurrent();
@@ -71,6 +115,14 @@ class SimpleClassesTest extends TestCase
         $Shipping->getShippingType();
     }
 
+    public function testShippingUniqueRejectsExistingNonShippingClass(): void
+    {
+        $Shipping = new ShippingUnique(['shipping_type' => \stdClass::class]);
+
+        $this->expectException(QUI\ERP\Shipping\Exception::class);
+        $Shipping->getShippingType();
+    }
+
     public function testDebugStackAndLoggers(): void
     {
         Debug::clearLogStock();
@@ -87,9 +139,46 @@ class SimpleClassesTest extends TestCase
         self::assertTrue(Debug::isRuleAlreadyDebugged('phpunit-rule'));
         self::assertNotNull(Debug::getLogger());
         self::assertNotNull(Debug::getLoggerWithoutFormatter());
+        self::assertSame(Debug::getLogger(), Debug::getLogger());
+        self::assertSame(Debug::getLoggerWithoutFormatter(), Debug::getLoggerWithoutFormatter());
 
         Debug::disable();
         Debug::clearLogStock();
+    }
+
+    public function testDebugEntryLogReturnsInAjaxAndEmptyShippingMailHandlesArticleFailure(): void
+    {
+        $Entry = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        Debug::generateShippingEntryDebuggingLog($Entry, [], []);
+
+        $Order = $this->createMock(QUI\ERP\Order\OrderInterface::class);
+        $Order->method('getArticles')->willThrowException(new QUI\Exception('Missing articles'));
+        Debug::sendAdminInfoMailAboutEmptyShipping($Order);
+
+        self::assertTrue(true);
+    }
+
+    public function testEmptyShippingMailReturnsWhenShippingIsDisabled(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->getValue('shipping', 'deactivated');
+        $Shipping = Shipping::getInstance();
+        $property = new \ReflectionProperty($Shipping, 'shippingDisabled');
+        $cached = $property->getValue($Shipping);
+
+        try {
+            $Config->setValue('shipping', 'deactivated', 1);
+            $Config->save();
+            $property->setValue($Shipping, null);
+            Debug::sendAdminInfoMailAboutEmptyShipping(
+                $this->createMock(QUI\ERP\Order\OrderInterface::class)
+            );
+            self::assertTrue(true);
+        } finally {
+            $Config->setValue('shipping', 'deactivated', $previous);
+            $Config->save();
+            $property->setValue($Shipping, $cached);
+        }
     }
 
     public function testUnknownStatusHasStableDefaults(): void

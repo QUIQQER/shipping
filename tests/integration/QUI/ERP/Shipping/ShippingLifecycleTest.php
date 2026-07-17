@@ -552,6 +552,21 @@ class ShippingLifecycleTest extends TestCase
             ]], JSON_THROW_ON_ERROR)
         ], $Rule, $table);
         self::assertTrue($Rule->canUsedIn($Order));
+
+        $this->updateRule([
+            'unit_terms' => json_encode([
+                'invalid-term',
+                ['id' => 9999, 'unit' => 'piece'],
+                ['id' => 9999, 'unit' => 'piece', 'value' => 1]
+            ], JSON_THROW_ON_ERROR)
+        ], $Rule, $table);
+        self::assertTrue($Rule->canUsedIn($Order));
+
+        $this->updateRule(['user_groups' => 'u-user-that-does-not-exist'], $Rule, $table);
+        self::assertFalse($Rule->canUsedIn($Order));
+
+        $this->updateRule(['active' => 0, 'user_groups' => null], $Rule, $table);
+        self::assertFalse($Rule->canUsedIn($Order));
     }
 
     public function testOrderingStepRendersValidatesAndSavesShipping(): void
@@ -579,6 +594,13 @@ class ShippingLifecycleTest extends TestCase
             'vat' => 19
         ]));
         $Order->getArticles()->calc();
+
+        $validShipping = Shipping::getInstance()->getValidShippingEntries($Order);
+        self::assertNotEmpty($validShipping);
+        self::assertCount(
+            count($validShipping),
+            Shipping::getInstance()->getValidShippingEntriesByOrder($Order)
+        );
 
         $Step = new ShippingStep([
             'Order' => $Order,
@@ -1042,6 +1064,48 @@ class ShippingLifecycleTest extends TestCase
         self::assertFalse($Entry->isValid());
         self::assertFalse($Entry->canUsedBy($SystemUser, $Order));
         self::assertFalse($Entry->canUsedInErpEntity($Order));
+    }
+
+    public function testShippingRuleDebuggingRecordsValidTerminalAndInactiveRules(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previousDebug = $Config->getValue('shipping', 'debug');
+        $Shipping = Shipping::getInstance();
+        $debuggingProperty = new ReflectionProperty($Shipping, 'debugging');
+        $previousCachedDebug = $debuggingProperty->getValue($Shipping);
+        $Rule = RuleFactory::getInstance()->getChild($this->ruleId);
+        $Entry = ShippingFactory::getInstance()->getChild($this->shippingId);
+        $table = RuleFactory::getInstance()->getDataBaseTableName();
+
+        try {
+            $Config->setValue('shipping', 'debug', 1);
+            $Config->save();
+            $debuggingProperty->setValue($Shipping, null);
+
+            $this->updateRule(['active' => 1, 'no_rule_after' => 1], $Rule, $table);
+            Debug::clearLogStock();
+            Debug::enable();
+            self::assertCount(1, $Entry->getShippingRules());
+            self::assertStringContainsString('no rules after', implode("\n", Debug::getLogStack()));
+
+            $this->updateRule(['active' => 0, 'no_rule_after' => 0], $Rule, $table);
+            Debug::clearLogStock();
+            self::assertSame([], $Entry->getShippingRules());
+            self::assertStringContainsString('is not valid', implode("\n", Debug::getLogStack()));
+        } finally {
+            Debug::disable();
+            Debug::clearLogStock();
+            $this->updateRule(['active' => 1, 'no_rule_after' => 0], $Rule, $table);
+
+            if ($previousDebug === null) {
+                $Config->del('shipping', 'debug');
+            } else {
+                $Config->setValue('shipping', 'debug', $previousDebug);
+            }
+
+            $Config->save();
+            $debuggingProperty->setValue($Shipping, $previousCachedDebug);
+        }
     }
 
     public function testPaymentEventAllowsConfiguredPaymentAndRejectsOthers(): void

@@ -62,6 +62,7 @@ class ShippingTimePeriodTest extends TestCase
             'option' => ShippingTimePeriod::OPTION_TIMEPERIOD
         ];
 
+        $Field->validate(null);
         $Field->validate($value);
         $Field->validate(json_encode($value, JSON_THROW_ON_ERROR));
 
@@ -70,6 +71,50 @@ class ShippingTimePeriodTest extends TestCase
             $Field->getJavaScriptControl()
         );
         self::assertInstanceOf(ShippingTimeFrontendView::class, $Field->getFrontendView());
+    }
+
+    public function testFrontendViewReturnsEmptyOutputForEmptyValue(): void
+    {
+        $View = new ShippingTimeFrontendView([
+            'id' => 91007,
+            'title' => 'Delivery time',
+            'value' => [],
+            'isPublic' => true
+        ]);
+
+        self::assertSame('', $View->create());
+    }
+
+    public function testFrontendViewWithoutPublicPermissionRendersNothing(): void
+    {
+        $View = new ShippingTimeFrontendView([
+            'id' => 91008,
+            'title' => 'Private delivery time',
+            'value' => [
+                'option' => ShippingTimePeriod::OPTION_UNAVAILABLE,
+                'from' => 0,
+                'to' => 0,
+                'unit' => 'day'
+            ],
+            'isPublic' => false
+        ]);
+
+        self::assertSame('', $View->create());
+    }
+
+    public function testEmptyConfiguredDefaultValueReturnsNull(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->get('shipping', 'deliveryTimeDefault');
+
+        try {
+            $Config->set('shipping', 'deliveryTimeDefault', '');
+            $Config->save();
+            self::assertNull((new ShippingTimePeriod(91009))->getDefaultValue());
+        } finally {
+            $Config->set('shipping', 'deliveryTimeDefault', $previous);
+            $Config->save();
+        }
     }
 
     public function testValidationRequiresShippingOption(): void
@@ -163,10 +208,23 @@ class ShippingTimePeriodTest extends TestCase
                 'unit' => 'day',
                 'text' => ['de' => 'Individuell', 'en' => 'Custom']
             ]],
+            'custom fallback language' => [[
+                'option' => ShippingTimePeriod::OPTION_CUSTOM_TEXT,
+                'from' => 0,
+                'to' => 0,
+                'unit' => 'day',
+                'text' => ['xx' => 'Fallback']
+            ]],
             'single period' => [[
                 'option' => ShippingTimePeriod::OPTION_TIMEPERIOD,
                 'from' => 2,
                 'to' => 2,
+                'unit' => 'day'
+            ]],
+            'empty period is unavailable' => [[
+                'option' => ShippingTimePeriod::OPTION_TIMEPERIOD,
+                'from' => 0,
+                'to' => 0,
                 'unit' => 'day'
             ]],
             'until period' => [[

@@ -47,6 +47,20 @@ class ControlsAndProviderTest extends TestCase
         self::assertInstanceOf(ShippingStep::class, $Steps->get(0));
     }
 
+    public function testOrderProcessProviderPassesExistingOrderToShippingStep(): void
+    {
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getId')->willReturn(123);
+        $Process = $this->createMock(QUI\ERP\Order\OrderProcess::class);
+        $Process->method('getOrder')->willReturn($Order);
+        $Steps = new QUI\ERP\Order\Utils\OrderProcessSteps();
+
+        (new OrderProcessProvider())->initSteps($Steps, $Process);
+
+        self::assertInstanceOf(ShippingStep::class, $Steps->get(0));
+        self::assertSame($Order, $Steps->get(0)->getOrder());
+    }
+
     public function testAdminFooterRegistersShippingBackendScript(): void
     {
         ob_start();
@@ -217,6 +231,51 @@ class ControlsAndProviderTest extends TestCase
         self::assertStringContainsString('quiqqer-shipping-address', $Collector->getContent());
     }
 
+    public function testShippingAddressUsesSavedUserAddressWhenOrderHasNoShipping(): void
+    {
+        $User = $this->createMock(QUI\Users\User::class);
+        $User->method('getAddressList')->willReturn([]);
+        $User->method('getAttribute')->with('quiqqer.delivery.address')->willReturn(91004);
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getDeliveryAddress')->willReturn($this->createMock(QUI\ERP\Address::class));
+        $Order->method('getShipping')->willReturn(null);
+        $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
+            'User' => $User,
+            'Order' => $Order
+        ]);
+
+        self::assertStringContainsString('quiqqer-shipping-address', $Control->create());
+    }
+
+    public function testShippingAddressFallsBackToSessionUser(): void
+    {
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getDeliveryAddress')->willReturn($this->createMock(QUI\ERP\Address::class));
+        $Order->method('getShipping')->willReturn(null);
+        $Control = new QUI\ERP\Shipping\Order\ShippingAddress(['Order' => $Order]);
+
+        self::assertStringContainsString('quiqqer-shipping-address', $Control->create());
+    }
+
+    public function testShippingAddressUsesAddressAttachedToShipping(): void
+    {
+        $User = $this->createMock(QUI\Users\User::class);
+        $User->method('getAddressList')->willReturn([]);
+        $Address = $this->createMock(QUI\ERP\Address::class);
+        $Address->method('getUUID')->willReturn('phpunit-shipping-address');
+        $Entry = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $Entry->method('getAddress')->willReturn($Address);
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getDeliveryAddress')->willReturn($Address);
+        $Order->method('getShipping')->willReturn($Entry);
+        $Control = new QUI\ERP\Shipping\Order\ShippingAddress([
+            'User' => $User,
+            'Order' => $Order
+        ]);
+
+        self::assertStringContainsString('quiqqer-shipping-address', $Control->create());
+    }
+
     public function testCheckoutBeforeStopsWhenSessionHasNoSavedDeliveryAddress(): void
     {
         $SessionUser = QUI::getUserBySession();
@@ -289,6 +348,24 @@ class ControlsAndProviderTest extends TestCase
         self::assertTrue(true);
     }
 
+    public function testTemplateHeaderIgnoresUnavailableSavedAddress(): void
+    {
+        $Users = QUI::getUsers();
+        $Session = new \ReflectionProperty($Users, 'Session');
+        $previousSession = $Session->getValue($Users);
+        $User = $this->createMock(QUI\Users\User::class);
+        $User->method('getAttribute')->with('quiqqer.delivery.address')->willReturn(91003);
+        $User->method('getAddress')->with(91003)->willThrowException(new QUI\Exception('Missing address'));
+
+        try {
+            $Session->setValue($Users, $User);
+            EventHandler::onTemplateGetHeader();
+            self::assertTrue(true);
+        } finally {
+            $Session->setValue($Users, $previousSession);
+        }
+    }
+
     public function testCheckoutEventsIgnoreMissingOrder(): void
     {
         $Checkout = $this->createMock(QUI\ERP\Order\Controls\OrderProcess\Checkout::class);
@@ -309,6 +386,53 @@ class ControlsAndProviderTest extends TestCase
 
         EventHandler::onQuiqqerOrderBasketToOrderEnd(null, $Order, $Products);
         EventHandler::onQuiqqerPaymentCanUsedInOrder($Payment, $Order);
+
+        self::assertTrue(true);
+    }
+
+    public function testBasketEventAddsPricedShippingFactorAndRecalculates(): void
+    {
+        $Factor = new QUI\ERP\Products\Utils\PriceFactor([
+            'identifier' => 'shipping-pricefactor-55',
+            'value' => 5
+        ]);
+        $Entry = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $Entry->method('getPrice')->willReturn(5);
+        $Entry->expects(self::once())->method('toPriceFactor')->willReturn($Factor);
+        $Articles = new QUI\ERP\Accounting\ArticleList();
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getShipping')->willReturn($Entry);
+        $Order->method('getArticles')->willReturn($Articles);
+        $Products = new QUI\ERP\Products\Product\ProductList();
+
+        EventHandler::onQuiqqerOrderBasketToOrderEnd(null, $Order, $Products);
+
+        self::assertSame(1, $Products->getPriceFactors()->count());
+        self::assertSame(
+            'shipping-pricefactor-55',
+            $Products->getPriceFactors()->getFactors()[0]->getIdentifier()
+        );
+    }
+
+    public function testOrderUpdateEventReturnsForEmptyPriceFactors(): void
+    {
+        $Articles = new QUI\ERP\Accounting\ArticleList();
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getArticles')->willReturn($Articles);
+        $data = [];
+
+        EventHandler::onQuiqqerOrderUpdateBegin($Order, $data);
+        self::assertSame([], $data);
+    }
+
+    public function testDefaultShippingInvoiceEventIgnoresAlreadyProcessedEntity(): void
+    {
+        $Invoice = $this->createMock(QUI\ERP\Accounting\Invoice\InvoiceTemporary::class);
+        $Invoice->method('getCustomDataEntry')
+            ->with(EventHandler::DEFAULT_SHIPPING_TIME_KEY)
+            ->willReturn(123456789);
+        $Invoice->expects(self::never())->method('getGlobalProcessId');
+        EventHandler::onQuiqqerInvoiceTemporaryInvoiceCreated($Invoice);
 
         self::assertTrue(true);
     }
@@ -334,6 +458,43 @@ class ControlsAndProviderTest extends TestCase
                 $Config->setValue('shipping', 'showShippingInfoAfterPrice', $previous);
             }
 
+            $Config->save();
+        }
+    }
+
+    public function testPriceEventDoesNotRenderWhenConfigurationIsDisabled(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->getValue('shipping', 'showShippingInfoAfterPrice');
+        $Collector = new Collector();
+        $Price = $this->createMock(QUI\ERP\Products\Controls\Price::class);
+
+        try {
+            $Config->setValue('shipping', 'showShippingInfoAfterPrice', 0);
+            $Config->save();
+            EventHandler::onQuiqqerProductsPriceEnd($Collector, $Price);
+            self::assertSame('', $Collector->getContent());
+        } finally {
+            $Config->setValue('shipping', 'showShippingInfoAfterPrice', $previous);
+            $Config->save();
+        }
+    }
+
+    public function testPriceEventRequiresVatTextWhenEnabled(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->getValue('shipping', 'showShippingInfoAfterPrice');
+        $Collector = new Collector();
+        $Price = $this->createMock(QUI\ERP\Products\Controls\Price::class);
+        $Price->method('getAttribute')->with('withVatText')->willReturn(false);
+
+        try {
+            $Config->setValue('shipping', 'showShippingInfoAfterPrice', 1);
+            $Config->save();
+            EventHandler::onQuiqqerProductsPriceEnd($Collector, $Price);
+            self::assertSame('', $Collector->getContent());
+        } finally {
+            $Config->setValue('shipping', 'showShippingInfoAfterPrice', $previous);
             $Config->save();
         }
     }

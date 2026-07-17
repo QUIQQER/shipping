@@ -80,6 +80,7 @@ class ShippingServiceTest extends TestCase
         $Shipping = new TestShippingService();
         $User = $this->createMock(User::class);
         $Entity = $this->createMock(ErpEntityInterface::class);
+        self::assertSame([], $Shipping->getUserShipping(null, $Entity));
         $inactive = $this->createMock(ShippingEntry::class);
         $rejected = $this->createMock(ShippingEntry::class);
         $accepted = $this->createMock(ShippingEntry::class);
@@ -142,6 +143,14 @@ class ShippingServiceTest extends TestCase
         self::assertSame($Entry, (new TestShippingService())->getShippingByObject($Entity));
     }
 
+    public function testShippingByObjectReturnsNullForGenericEntityWithoutShippingApi(): void
+    {
+        $Entity = $this->createMock(ErpEntityInterface::class);
+        $Entity->method('getDeliveryAddress')->willReturn($this->createMock(QUI\ERP\Address::class));
+
+        self::assertNull((new TestShippingService())->getShippingByObject($Entity));
+    }
+
     public function testStatusNotificationStopsForCustomerWithoutEmail(): void
     {
         $Customer = $this->createMock(QUI\ERP\User::class);
@@ -153,6 +162,37 @@ class ShippingServiceTest extends TestCase
 
         (new TestShippingService())->sendStatusChangeNotification($Entity, 1, 'Ignored');
         self::assertTrue(true);
+    }
+
+    public function testVatFallsBackForEmptyArticleLists(): void
+    {
+        $Articles = new ArticleList();
+        $EntityWithoutCustomer = $this->createMock(ErpEntityInterface::class);
+        $EntityWithoutCustomer->method('getArticles')->willReturn($Articles);
+        $EntityWithoutCustomer->method('getCustomer')->willReturn(null);
+
+        self::assertGreaterThanOrEqual(0, Shipping::getInstance()->getVat($EntityWithoutCustomer));
+
+        $Customer = $this->createMock(QUI\ERP\User::class);
+        $EntityWithCustomer = $this->createMock(ErpEntityInterface::class);
+        $EntityWithCustomer->method('getArticles')->willReturn($Articles);
+        $EntityWithCustomer->method('getCustomer')->willReturn($Customer);
+
+        self::assertGreaterThanOrEqual(0, Shipping::getInstance()->getVat($EntityWithCustomer));
+    }
+
+    public function testDeprecatedOrderPriceFactorLookupDelegatesToEntityLookup(): void
+    {
+        $Articles = new ArticleList();
+        $Factor = new PriceFactor(['identifier' => 'shipping-pricefactor-88', 'value' => 8]);
+        $Articles->addPriceFactor($Factor);
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getArticles')->willReturn($Articles);
+
+        self::assertSame(
+            'shipping-pricefactor-88',
+            Shipping::getInstance()->getShippingPriceFactorByOrder($Order)?->getIdentifier()
+        );
     }
 
     private function restoreConfigValue(object $Config, string $key, mixed $value): void

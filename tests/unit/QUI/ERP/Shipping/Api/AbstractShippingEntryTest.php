@@ -12,12 +12,16 @@ class AbstractShippingEntryTest extends TestCase
     {
         $Entry = new TestShippingEntry();
         $Locale = new QUI\Locale();
+        self::assertSame(QUI::getLocale(), $Entry->getLocale());
         $Entry->setLocale($Locale);
 
         self::assertSame($Locale, $Entry->getLocale());
         self::assertSame(TestShippingEntry::class, $Entry->getClass());
         self::assertSame(md5(TestShippingEntry::class), $Entry->getName());
-        self::assertSame('/default.svg', $Entry->getIcon());
+        self::assertStringEndsWith(
+            'quiqqer/shipping/bin/images/shipping/default.png',
+            $Entry->getIcon()
+        );
         self::assertSame(
             ['name' => $Entry->getName(), 'title' => 'Test shipping', 'description' => 'Test description'],
             $Entry->toArray()
@@ -57,11 +61,6 @@ class TestShippingEntry extends AbstractShippingEntry
     public function getWorkingTitle(): string
     {
         return 'Test working title';
-    }
-
-    public function getIcon(): string
-    {
-        return '/default.svg';
     }
 
     public function getShippingType(): ShippingTypeInterface
