@@ -9,7 +9,7 @@ use QUI\ERP\Shipping\ShippingStatus\Handler;
 /**
  * Create a new shipping status
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_get',
     function ($id) {
         return Handler::getInstance()->getShippingStatus($id)->toArray();

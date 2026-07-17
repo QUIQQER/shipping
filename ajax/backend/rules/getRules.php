@@ -12,7 +12,7 @@
 
 use QUI\System\Log;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_getRules',
     function ($ruleIds) {
         $ruleIds = json_decode($ruleIds, true);

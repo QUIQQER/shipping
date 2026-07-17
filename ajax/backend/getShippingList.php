@@ -12,7 +12,7 @@ use QUI\ERP\Shipping\Types\ShippingEntry;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_getShippingList',
     function () {
         $shippingEntries = Shipping::getInstance()->getShippingList();

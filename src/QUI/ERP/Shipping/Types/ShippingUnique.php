@@ -23,14 +23,14 @@ use function json_encode;
 class ShippingUnique implements ShippingInterface
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $attributes = [];
 
     /**
      * ShippingUnique constructor.
      *
-     * @param array $attributes - shipping data
+     * @param array<string, mixed> $attributes - shipping data
      */
     public function __construct(array $attributes = [])
     {
@@ -173,7 +173,7 @@ class ShippingUnique implements ShippingInterface
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -187,7 +187,7 @@ class ShippingUnique implements ShippingInterface
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        return (string)json_encode($this->toArray());
     }
 
     //endregion
@@ -205,7 +205,7 @@ class ShippingUnique implements ShippingInterface
     /**
      * Activate ths shipping entry
      */
-    public function activate()
+    public function activate(): void
     {
         // nothing
     }
@@ -213,7 +213,7 @@ class ShippingUnique implements ShippingInterface
     /**
      * Deactivate ths shipping entry
      */
-    public function deactivate()
+    public function deactivate(): void
     {
         // nothing
     }

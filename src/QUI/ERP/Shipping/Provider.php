@@ -16,7 +16,7 @@ use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 class Provider extends AbstractShippingProvider
 {
     /**
-     * @return array
+     * @return list<class-string<Api\ShippingTypeInterface>>
      */
     public function getShippingTypes(): array
     {

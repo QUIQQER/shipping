@@ -57,6 +57,11 @@ class Status
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
             $Config = $Package->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $result = $Config->getSection('shipping_status_notification');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -154,7 +159,13 @@ class Status
      * Status as array
      *
      * @param null|QUI\Locale $Locale - optional. if no locale, all translations would be returned
-     * @return array
+     * @return array{
+     *     id: int,
+     *     title: string|array<string, array<array-key, mixed>|string>,
+     *     color: string,
+     *     notification: bool,
+     *     statusChangeText: array<string, array<array-key, mixed>|string>
+     * }
      */
     public function toArray(null |QUI\Locale $Locale = null): array
     {

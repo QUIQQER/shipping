@@ -25,7 +25,7 @@ class Factory extends QUI\Utils\Singleton
      *
      * @param integer|string $id - shipping ID
      * @param string $color - color of the status
-     * @param array $title - title
+     * @param array<string, array<array-key, mixed>|string> $title - title
      *
      * @throws Exception
      * @throws QUI\Exception
@@ -48,6 +48,10 @@ class Factory extends QUI\Utils\Singleton
         // config
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
 
         $Config->setValue('shipping_status', (string)$id, $color);
         $Config->save();

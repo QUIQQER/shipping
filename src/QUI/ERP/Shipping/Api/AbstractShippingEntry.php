@@ -22,14 +22,14 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
     /**
      * shipping fields - extra fields for the shipping / accounting
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $shippingFields = [];
 
     /**
      * default settings
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $defaults = [];
 
@@ -115,7 +115,7 @@ abstract class AbstractShippingEntry extends QUI\CRUD\Child implements ShippingI
     /**
      * Return the shipping as an array
      *
-     * @return array
+     * @return array{name: string, title: string, description: string}
      */
     public function toArray(): array
     {

@@ -20,9 +20,9 @@ use function defined;
 class Debug
 {
     /**
-     * @var bool
+     * @var array<int|string, bool>
      */
-    protected static array|bool $shippingRuleDebugs = [];
+    protected static array $shippingRuleDebugs = [];
 
     /**
      * @var Logger|null
@@ -37,7 +37,7 @@ class Debug
     /**
      * Stack of log messages
      *
-     * @var array
+     * @var list<string>
      */
     protected static array $logStack = [];
 
@@ -71,7 +71,7 @@ class Debug
     }
 
     /**
-     * @param $ruleId
+     * @param int|string $ruleId
      * @return bool
      */
     public static function isRuleAlreadyDebugged($ruleId): bool
@@ -80,7 +80,7 @@ class Debug
     }
 
     /**
-     * @param $ruleId
+     * @param int|string $ruleId
      */
     public static function ruleIsDebugged($ruleId): void
     {
@@ -98,7 +98,7 @@ class Debug
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public static function getLogStack(): array
     {
@@ -115,8 +115,8 @@ class Debug
 
     /**
      * @param ShippingEntry $Entry
-     * @param $result
-     * @param $debuggingLog
+     * @param list<Rules\ShippingRule> $result
+     * @param list<array{id: int|string, title: string, reason: string, valid: bool}> $debuggingLog
      */
     public static function generateShippingEntryDebuggingLog(
         ShippingEntry $Entry,
@@ -152,7 +152,7 @@ class Debug
                 $Entry,
                 $result,
                 $debugMessage
-            ) {
+            ): void {
                 $log = [];
 
                 /* @var $ShippingRule QUI\ERP\Shipping\Rules\ShippingRule */
@@ -176,9 +176,9 @@ class Debug
     }
 
     /**
-     * @return Logger|null
+     * @return Logger
      */
-    public static function getLogger(): ?Logger
+    public static function getLogger(): Logger
     {
         if (self::$Logger !== null) {
             return self::$Logger;
@@ -199,9 +199,9 @@ class Debug
     }
 
     /**
-     * @return Logger|null
+     * @return Logger
      */
-    public static function getLoggerWithoutFormatter(): ?Logger
+    public static function getLoggerWithoutFormatter(): Logger
     {
         if (self::$FormatLogger !== null) {
             return self::$FormatLogger;

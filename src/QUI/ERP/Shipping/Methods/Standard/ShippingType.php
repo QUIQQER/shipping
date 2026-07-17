@@ -215,11 +215,19 @@ class ShippingType extends QUI\ERP\Shipping\Api\AbstractShippingType
         $areasValue = explode(',', $areasValue);
         $areasValue = array_filter($areasValue);
 
-        // not in area
-        if (!empty($areasValue) && !AreaUtils::isAddressInArea($Address, $areasValue)) {
-            Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
+        if (!empty($areasValue)) {
+            if ($Address === null) {
+                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User has no delivery address");
 
-            return false;
+                return false;
+            }
+
+            // not in area
+            if (!AreaUtils::isAddressInArea($Address, $areasValue)) {
+                Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is not in areas");
+
+                return false;
+            }
         }
 
         Debug::addLog("{$this->getTitle()} :: {$ShippingEntry->getTitle()} :: User is in areas");

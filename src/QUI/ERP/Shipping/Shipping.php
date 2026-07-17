@@ -27,6 +27,7 @@ use function explode;
 use function key;
 use function max;
 use function method_exists;
+use function is_string;
 use function trim;
 
 /**
@@ -57,7 +58,7 @@ class Shipping extends QUI\Utils\Singleton
     const NO_RULE_FOUND_ORDER_CANCEL = 0;
 
     /**
-     * @var array
+     * @var array<array-key, mixed>
      */
     protected array $shipping = [];
 
@@ -74,7 +75,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all available shipping provider
      *
-     * @return array
+     * @return list<AbstractShippingProvider>
      */
     public function getShippingProviders(): array
     {
@@ -140,6 +141,11 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $this->shippingDisabled = !!$Config->getValue('shipping', 'deactivated');
         } catch (QUI\Exception) {
             $this->shippingDisabled = false;
@@ -161,6 +167,11 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $this->debugging = !!$Config->getValue('shipping', 'debug');
         } catch (QUI\Exception) {
             $this->debugging = false;
@@ -172,7 +183,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all available Shipping methods
      *
-     * @return array
+     * @return array<string, Api\ShippingTypeInterface>
      */
     public function getShippingTypes(): array
     {
@@ -242,7 +253,7 @@ class Shipping extends QUI\Utils\Singleton
     public function getShippingEntry(int | string $shippingId): Types\ShippingEntry
     {
         try {
-            return Factory::getInstance()->getChild($shippingId);
+            return Factory::getInstance()->getChild((int)$shippingId);
         } catch (QUI\Exception) {
             throw new Exception([
                 'quiqqer/shipping',
@@ -254,7 +265,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all active shipping
      *
-     * @param array $queryParams
+     * @param array<string, mixed> $queryParams
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
     public function getShippingList(array $queryParams = []): array
@@ -264,8 +275,17 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         try {
-            return Factory::getInstance()->getChildren($queryParams);
-        } catch (QUi\Exception) {
+            $children = Factory::getInstance()->getChildren($queryParams);
+            $result = [];
+
+            foreach ($children as $Child) {
+                if ($Child instanceof Types\ShippingEntry) {
+                    $result[] = $Child;
+                }
+            }
+
+            return $result;
+        } catch (QUI\Exception) {
             return [];
         }
     }
@@ -342,6 +362,10 @@ class Shipping extends QUI\Utils\Singleton
     {
         $User = $Entity->getCustomer();
 
+        if ($User === null) {
+            $User = QUI::getUserBySession();
+        }
+
         $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Entity);
         $shippingList = [];
 
@@ -376,19 +400,23 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return the unit field ids, for the shipping rule definition
      *
-     * @return array
+     * @return list<int|string>
      */
     public function getShippingRuleUnitFieldIds(): array
     {
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
         } catch (QUI\Exception) {
             return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
         }
 
         $ids = $Config->getValue('shipping', 'ruleFields');
 
-        if (empty($ids)) {
+        if (empty($ids) || !is_string($ids)) {
             return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
         }
 
@@ -412,10 +440,17 @@ class Shipping extends QUI\Utils\Singleton
             }
         }
 
-        return trim(
-            $Project->getVHost(true, true),
-            '/'
-        );
+        if ($Project === null) {
+            return '';
+        }
+
+        $host = $Project->getVHost(true, true);
+
+        if (!is_string($host)) {
+            return '';
+        }
+
+        return trim($host, '/');
     }
 
     /**
@@ -440,7 +475,7 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
-     * @param $orderId
+     * @param int|string $orderId
      * @return ShippingEntry|ShippingUnique|null
      */
     public function getShippingByOrderId($orderId): ShippingEntry | ShippingUnique | null
@@ -460,11 +495,19 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getDefaultPriceFactor(): PriceFactor
     {
-        $price = QUI::getPackage('quiqqer/shipping')
-            ->getConfig()
-            ->getValue('shipping', 'defaultShippingPrice');
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
+        $price = $Config->getValue('shipping', 'defaultShippingPrice');
 
         $price = QUI\ERP\Money\Price::validatePrice($price);
+
+        if ($price === null) {
+            $price = 0;
+        }
 
         $PriceFactor = new PriceFactor([
             'identifier' => 'shipping-pricefactor-default',

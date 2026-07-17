@@ -12,7 +12,7 @@ use QUI\ERP\Shipping\Shipping;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_articleList_getShippingPriceFactor',
     function ($shippingId) {
         $Shipping = Shipping::getInstance()->getShippingEntry($shippingId);

@@ -25,7 +25,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * Shipping constructor.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -63,6 +63,11 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $User = QUI::getUserBySession();
 
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return '';
+        }
+
         $Order->recalculate();
 
         $SelectedShipping = $Order->getShipping();
@@ -110,6 +115,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $Package = QUI::getPackage('quiqqer/shipping');
             $Conf = $Package->getConfig();
 
+            if ($Conf === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             if ((int)$Conf->getValue('no_rules', 'behavior') === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
                 $message = QUI::getLocale()->get(
                     'quiqqer/shipping',
@@ -145,6 +154,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         $Order = $this->getOrder();
 
+        if ($Order === null) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/order',
+                'exception.order.not.found'
+            ]);
+        }
+
         $Shipping = $Order->getShipping();
         $User = $Order->getCustomer();
 
@@ -154,6 +170,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
             $Conf = $Package->getConfig();
+
+            if ($Conf === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
 
             $behavior = (int)$Conf->getValue('no_rules', 'behavior');
         } catch (QUI\Exception $Exception) {
@@ -206,6 +226,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             return;
         }
 
+        if ($Shipping === null) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/shipping',
+                'exception.no.shipping.selected'
+            ]);
+        }
+
         if (!$Shipping->canUsedBy($User, $Order)) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/shipping',
@@ -226,7 +253,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     protected function getValidShipping(): array
     {
-        return ShippingHandler::getInstance()->getValidShippingEntries($this->getOrder());
+        $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return [];
+        }
+
+        return ShippingHandler::getInstance()->getValidShippingEntries($Order);
     }
 
     /**
@@ -249,6 +282,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $User = QUI::getUserBySession();
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return;
+        }
 
         try {
             $Shipping = QUI\ERP\Shipping\Shipping::getInstance();
