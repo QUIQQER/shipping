@@ -4,6 +4,7 @@ namespace QUI\ERP\Shipping\Products\Fields;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use QUI;
 use QUI\ERP\Products\Field\Exception;
 
 class ShippingTimePeriodTest extends TestCase
@@ -80,6 +81,41 @@ class ShippingTimePeriodTest extends TestCase
             'to' => 2,
             'unit' => 'day'
         ]);
+    }
+
+    public function testFrontendViewResolvesConfiguredDefaultValue(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->get('shipping', 'deliveryTimeDefault');
+        $default = [
+            'option' => ShippingTimePeriod::OPTION_TIMEPERIOD,
+            'from' => 2,
+            'to' => 4,
+            'unit' => 'day'
+        ];
+
+        try {
+            $Config->set('shipping', 'deliveryTimeDefault', json_encode($default, JSON_THROW_ON_ERROR));
+            $Config->save();
+
+            $View = new ShippingTimeFrontendView([
+                'id' => 91006,
+                'title' => 'Delivery time',
+                'value' => ['option' => ShippingTimePeriod::OPTION_USE_DEFAULT],
+                'isPublic' => true
+            ]);
+
+            self::assertSame($default, $View->getValue());
+            self::assertStringContainsString('shipping-info', $View->create());
+        } finally {
+            if ($previous === null) {
+                $Config->del('shipping', 'deliveryTimeDefault');
+            } else {
+                $Config->set('shipping', 'deliveryTimeDefault', $previous);
+            }
+
+            $Config->save();
+        }
     }
 
     #[DataProvider('frontendValues')]

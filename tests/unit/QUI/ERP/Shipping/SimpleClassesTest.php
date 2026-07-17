@@ -7,6 +7,7 @@ use QUI;
 use QUI\ERP\Shipping\Methods\Digital\ShippingType as DigitalShippingType;
 use QUI\ERP\Shipping\Methods\Standard\ShippingType as StandardShippingType;
 use QUI\ERP\Shipping\ShippingStatus\StatusUnknown;
+use QUI\ERP\Shipping\Tracking\Tracking;
 use QUI\ERP\Shipping\Types\ShippingUnique;
 
 class SimpleClassesTest extends TestCase
@@ -100,5 +101,38 @@ class SimpleClassesTest extends TestCase
         self::assertFalse($Status->isAutoNotification());
         self::assertNotSame('', $Status->getTitle());
         self::assertSame(0, $Status->toArray()['id']);
+    }
+
+    public function testTrackingInstallationFilteringAndCarrierUrls(): void
+    {
+        $file = Tracking::getConfigFile();
+        $existed = file_exists($file);
+        $previous = $existed ? file_get_contents($file) : null;
+
+        try {
+            if ($existed) {
+                unlink($file);
+            }
+
+            Tracking::onPackageInstall();
+            self::assertFileExists($file);
+            $carriers = Tracking::getActiveCarriers();
+            self::assertArrayHasKey(0, $carriers);
+            self::assertStringEndsWith('123456', Tracking::getUrl('123456', 'ups', null));
+
+            $Country = $this->createMock(QUI\Countries\Country::class);
+            $Country->method('getCode')->willReturn('DE');
+            self::assertStringContainsString(
+                'tracking-id=123456',
+                Tracking::getUrl('123456', 'dhl', $Country)
+            );
+            self::assertSame('', Tracking::getUrl('123456', 'unknown-carrier', $Country));
+        } finally {
+            if ($previous !== null) {
+                file_put_contents($file, $previous);
+            } elseif (file_exists($file)) {
+                unlink($file);
+            }
+        }
     }
 }

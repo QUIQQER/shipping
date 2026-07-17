@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use QUI;
 use QUI\ERP\Shipping\ShippingStatus\Factory;
 use QUI\ERP\Shipping\ShippingStatus\Handler;
+use QUI\ERP\Products\Handler\Fields;
 
 class ShippingStatusLifecycleTest extends TestCase
 {
@@ -15,6 +16,19 @@ class ShippingStatusLifecycleTest extends TestCase
         $Handler = Handler::getInstance();
         $id = $Factory->getNextId();
         $titles = [];
+        $messageVars = [
+            'message.no.rule.found.order.continue',
+            'message.no.rule.found.order.cancel'
+        ];
+        $existingMessageVars = [];
+
+        foreach ($messageVars as $messageVar) {
+            $existingMessageVars[$messageVar] = QUI\Translator::getVarData(
+                'quiqqer/shipping',
+                $messageVar,
+                'quiqqer/shipping'
+            );
+        }
 
         foreach (QUI::availableLanguages() as $language) {
             $titles[$language] = 'PHPUnit shipping status ' . $language;
@@ -22,6 +36,21 @@ class ShippingStatusLifecycleTest extends TestCase
 
         try {
             $Factory->createShippingStatus($id, '#123456', $titles);
+            self::assertTrue($Handler->exists($id));
+
+            $FieldsList = new \ReflectionProperty(Fields::class, 'list');
+            $previousFields = $FieldsList->getValue();
+            $Field = $this->createMock(QUI\ERP\Products\Field\Field::class);
+
+            try {
+                $FieldsList->setValue(null, array_replace($previousFields, [
+                    Shipping::PRODUCT_FIELD_SHIPPING_TIME => $Field
+                ]));
+                EventHandler::onPackageSetup(QUI::getPackage('quiqqer/shipping'));
+            } finally {
+                $FieldsList->setValue(null, $previousFields);
+            }
+
             self::assertTrue($Handler->exists($id));
 
             $Handler->setShippingStatusNotification($id, false);
@@ -78,6 +107,13 @@ class ShippingStatusLifecycleTest extends TestCase
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
             $Config->del('shipping_status_notification', (string)$id);
             $Config->save();
+
+            foreach ($existingMessageVars as $messageVar => $existing) {
+                if (empty($existing)) {
+                    QUI\Translator::delete('quiqqer/shipping', $messageVar);
+                }
+            }
+
             QUI\Translator::publish('quiqqer/shipping');
         }
     }

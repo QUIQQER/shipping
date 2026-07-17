@@ -16,6 +16,9 @@ use QUI\ERP\Shipping\Order\Shipping as ShippingStep;
 use QUI\ERP\Shipping\Order\ShippingAddress;
 use QUI\ERP\Order\Controls\OrderProcess\Checkout;
 use QUI\ERP\Products\Product\ProductList;
+use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\AbstractType;
+use QUI\ERP\Products\Product\Types\DigitalProduct;
 use QUI\ERP\Accounting\Payments\Types\Payment;
 use QUI\Smarty\Collector;
 use QUI\ERP\Shipping\Types\Factory as ShippingFactory;
@@ -141,6 +144,9 @@ class ShippingLifecycleTest extends TestCase
         self::assertNotSame('', $Entry->getWorkingTitle());
         $Entry->setIcon('not-a-media-url');
         self::assertSame('', (string)$Entry->getAttribute('icon'));
+        $Entry->setIcon('/image.php?project=phpunit&id=999999');
+        self::assertSame('/image.php?project=phpunit&id=999999', $Entry->getAttribute('icon'));
+        self::assertSame('/phpunit-shipping.svg', $Entry->getIcon());
 
         $Entry->deactivate();
         self::assertFalse($Entry->isActive());
@@ -252,6 +258,35 @@ class ShippingLifecycleTest extends TestCase
 
         $Rule->activate();
         self::assertTrue($Rule->isActive());
+    }
+
+    public function testRuleSaveNormalizesEditableAttributes(): void
+    {
+        $Rule = RuleFactory::getInstance()->getChild($this->ruleId);
+        $Rule->setAttributes(array_merge($Rule->getAttributes(), [
+            'title' => [],
+            'workingTitle' => [],
+            'discount' => '12.5',
+            'discount_type' => 'PERCENTAGE_ORDER',
+            'articles_only' => true,
+            'no_rule_after' => true,
+            'unit_terms' => [['id' => 1, 'value' => 2]],
+            'purchase_quantity_from' => '',
+            'purchase_quantity_until' => '',
+            'purchase_value_from' => '',
+            'purchase_value_until' => ''
+        ]));
+
+        $Rule->update();
+        $Rule->refresh();
+
+        self::assertSame(12.5, $Rule->getDiscount());
+        self::assertSame(RuleFactory::DISCOUNT_TYPE_PC_ORDER, $Rule->getDiscountType());
+        self::assertTrue($Rule->noRulesAfter());
+        self::assertSame([['id' => 1, 'value' => 2]], $Rule->getUnitTerms());
+        self::assertSame(1, (int)$Rule->getAttribute('articles_only'));
+        self::assertNull($Rule->getAttribute('purchase_value_from'));
+        self::assertNull($Rule->getAttribute('purchase_value_until'));
     }
 
     public function testShippingServiceRejectsUnknownTypesAndEntries(): void
@@ -367,6 +402,30 @@ class ShippingLifecycleTest extends TestCase
         self::assertFalse($StandardType->canUsedInOrder($Order, $Standard));
         self::assertTrue($DigitalType->canUsedBy($SystemUser, $Digital, $Order));
         self::assertTrue($StandardType->canUsedBy($SystemUser, $Standard, $Order));
+
+        $this->getConnection()->update(
+            ShippingFactory::getInstance()->getDataBaseTableName(),
+            ['user_groups' => 'u' . $SystemUser->getId()],
+            ['id' => $Standard->getId()]
+        );
+        $Standard->refresh();
+        self::assertTrue($StandardType->canUsedBy($SystemUser, $Standard, $Order));
+
+        $this->getConnection()->update(
+            ShippingFactory::getInstance()->getDataBaseTableName(),
+            ['user_groups' => 'u-user-that-does-not-exist'],
+            ['id' => $Standard->getId()]
+        );
+        $Standard->refresh();
+        self::assertFalse($StandardType->canUsedBy($SystemUser, $Standard, $Order));
+
+        $this->getConnection()->update(
+            ShippingFactory::getInstance()->getDataBaseTableName(),
+            ['active' => 0],
+            ['id' => $Standard->getId()]
+        );
+        $Standard->refresh();
+        self::assertFalse($StandardType->canUsedBy($SystemUser, $Standard, $Order));
 
         $this->getConnection()->update(
             ShippingFactory::getInstance()->getDataBaseTableName(),
@@ -680,6 +739,397 @@ class ShippingLifecycleTest extends TestCase
             $Factors->getFactor(0)->getIdentifier()
         );
         self::assertArrayHasKey('articles', $data);
+    }
+
+    public function testCustomerChangeRevalidatesAndReplacesShippingFactor(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->getValue('shipping', 'considerCustomerCountry');
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-customer-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Order->setDeliveryAddress([
+            'id' => 91011,
+            'firstname' => 'PHPUnit',
+            'lastname' => 'Shipping',
+            'zip' => '10115',
+            'city' => 'Berlin',
+            'country' => 'DE'
+        ]);
+        $Order->getArticles()->addArticle(new Article([
+            'id' => 54321098,
+            'articleNo' => 'SHIPPING-CUSTOMER',
+            'title' => 'Customer change article',
+            'unitPrice' => 25,
+            'quantity' => 1,
+            'vat' => 19
+        ]));
+        $Order->getArticles()->calc();
+        $Entry = ShippingFactory::getInstance()->getChild($this->shippingId);
+        $Entry->setErpEntity($Order);
+        $Order->getArticles()->getPriceFactors()->addFactor(
+            $Entry->toPriceFactor(null, $Order)->toErpPriceFactor()
+        );
+
+        try {
+            $Config->setValue('shipping', 'considerCustomerCountry', 1);
+            $Config->save();
+
+            EventHandler::onQuiqqerCustomerChange($Order);
+
+            self::assertSame($this->shippingId, $Order->getShipping()?->getId());
+            self::assertSame($this->shippingId, $Order->getAttribute('__SHIPPING__')?->getId());
+            self::assertSame(
+                'shipping-pricefactor-' . $this->shippingId,
+                $Order->getArticles()->getPriceFactors()->getFactor(0)->getIdentifier()
+            );
+        } finally {
+            if ($previous === null) {
+                $Config->del('shipping', 'considerCustomerCountry');
+            } else {
+                $Config->setValue('shipping', 'considerCustomerCountry', $previous);
+            }
+
+            $Config->save();
+        }
+    }
+
+    public function testProductTypesAndUnitTermsUseRuntimeProductData(): void
+    {
+        $productId = 42424242;
+        $ProductsList = new ReflectionProperty(Products::class, 'list');
+        $previousProducts = $ProductsList->getValue();
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previousRuleFields = $Config->getValue('shipping', 'ruleFields');
+        $Field = $this->createMock(QUI\ERP\Products\Field\Field::class);
+        $Field->method('getValue')->willReturn(2);
+        $Field->method('getTitle')->willReturn('PHPUnit unit');
+        $Category = $this->createMock(QUI\ERP\Products\Category\Category::class);
+        $Category->method('getId')->willReturn(1);
+        $PhysicalProduct = $this->createMock(AbstractType::class);
+        $PhysicalProduct->method('getCategories')->willReturn([$Category]);
+        $PhysicalProduct->method('getField')->with(999)->willReturn($Field);
+        $DigitalProduct = $this->createMock(DigitalProduct::class);
+        $DigitalProduct->method('getCategories')->willReturn([$Category]);
+        $DigitalProduct->method('getField')->with(999)->willReturn($Field);
+
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-product-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Order->setDeliveryAddress([
+            'id' => 91012,
+            'firstname' => 'PHPUnit',
+            'lastname' => 'Shipping',
+            'zip' => '10115',
+            'city' => 'Berlin',
+            'country' => 'DE'
+        ]);
+        $Order->getArticles()->addArticle(new Article([
+            'id' => $productId,
+            'articleNo' => 'SHIPPING-PRODUCT',
+            'title' => 'Runtime product',
+            'unitPrice' => 20,
+            'quantity' => 2,
+            'vat' => 19
+        ]));
+        $Order->getArticles()->calc();
+
+        $Standard = $this->insertAdditionalShippingEntry(StandardShippingType::class);
+        $Digital = $this->insertAdditionalShippingEntry(DigitalShippingType::class);
+        $StandardType = new StandardShippingType();
+        $DigitalType = new DigitalShippingType();
+
+        try {
+            $Config->setValue('shipping', 'ruleFields', '999');
+            $Config->save();
+
+            $ProductsList->setValue(null, [$productId => $PhysicalProduct]);
+            self::assertTrue($StandardType->canUsedInOrder($Order, $Standard));
+            self::assertFalse($DigitalType->canUsedInOrder($Order, $Digital));
+
+            $this->getConnection()->update(
+                ShippingFactory::getInstance()->getDataBaseTableName(),
+                ['categories' => '1'],
+                ['id' => $Standard->getId()]
+            );
+            $Standard->refresh();
+            self::assertTrue($StandardType->canUsedInOrder($Order, $Standard));
+            $this->getConnection()->update(
+                ShippingFactory::getInstance()->getDataBaseTableName(),
+                ['categories' => '2'],
+                ['id' => $Standard->getId()]
+            );
+            $Standard->refresh();
+            self::assertFalse($StandardType->canUsedInOrder($Order, $Standard));
+
+            $ProductsList->setValue(null, [$productId => $DigitalProduct]);
+            self::assertFalse($StandardType->canUsedInOrder($Order, $Standard));
+            self::assertTrue($DigitalType->canUsedInOrder($Order, $Digital));
+
+            $previousShippingRequest = $_REQUEST['shipping'] ?? null;
+
+            try {
+                $_REQUEST['shipping'] = $Standard->getId();
+                (new ShippingStep(['Order' => $Order]))->save();
+                self::assertNull($Order->getShipping());
+            } finally {
+                if ($previousShippingRequest === null) {
+                    unset($_REQUEST['shipping']);
+                } else {
+                    $_REQUEST['shipping'] = $previousShippingRequest;
+                }
+            }
+
+            $this->getConnection()->update(
+                ShippingFactory::getInstance()->getDataBaseTableName(),
+                ['categories' => '1'],
+                ['id' => $Digital->getId()]
+            );
+            $Digital->refresh();
+            self::assertTrue($DigitalType->canUsedInOrder($Order, $Digital));
+            $this->getConnection()->update(
+                ShippingFactory::getInstance()->getDataBaseTableName(),
+                ['categories' => '2'],
+                ['id' => $Digital->getId()]
+            );
+            $Digital->refresh();
+            self::assertFalse($DigitalType->canUsedInOrder($Order, $Digital));
+
+            $Rule = RuleFactory::getInstance()->getChild($this->ruleId);
+            $this->updateRule([
+                'categories' => '1',
+                'unit_terms' => json_encode([[
+                    'id' => 999,
+                    'unit' => '',
+                    'value' => 3,
+                    'term' => 'gt'
+                ]], JSON_THROW_ON_ERROR)
+            ], $Rule, RuleFactory::getInstance()->getDataBaseTableName());
+            self::assertTrue($Rule->canUsedIn($Order));
+
+            $this->updateRule([
+                'unit_terms' => json_encode([[
+                    'id' => 999,
+                    'unit' => '',
+                    'value' => 5,
+                    'term' => 'gt'
+                ]], JSON_THROW_ON_ERROR)
+            ], $Rule, RuleFactory::getInstance()->getDataBaseTableName());
+            self::assertFalse($Rule->canUsedIn($Order));
+
+            $WeightField = $this->createMock(QUI\ERP\Products\Field\Field::class);
+            $WeightField->method('getId')->willReturn(22);
+            $WeightField->method('getValue')->willReturn(['quantity' => 2, 'id' => 'kg']);
+            $WeightField->method('getTitle')->willReturn('Weight');
+            $WeightedProduct = $this->createMock(AbstractType::class);
+            $WeightedProduct->method('getCategories')->willReturn([$Category]);
+            $WeightedProduct->method('getField')->with(22)->willReturn($WeightField);
+            $ProductsList->setValue(null, [$productId => $WeightedProduct]);
+            $Config->setValue('shipping', 'ruleFields', '22');
+            $Config->save();
+
+            $this->updateRule([
+                'unit_terms' => json_encode([[
+                    'id' => 22,
+                    'unit' => 'kg',
+                    'value' => 3,
+                    'term' => 'gt',
+                    'value2' => 5,
+                    'term2' => 'lt'
+                ]], JSON_THROW_ON_ERROR)
+            ], $Rule, RuleFactory::getInstance()->getDataBaseTableName());
+            self::assertTrue($Rule->canUsedIn($Order));
+
+            $this->updateRule([
+                'unit_terms' => json_encode([[
+                    'id' => 22,
+                    'unit' => 'kg',
+                    'value' => 5,
+                    'term' => 'gt'
+                ]], JSON_THROW_ON_ERROR)
+            ], $Rule, RuleFactory::getInstance()->getDataBaseTableName());
+            self::assertFalse($Rule->canUsedIn($Order));
+
+            $this->updateRule([
+                'unit_terms' => json_encode([[
+                    'id' => 22,
+                    'unit' => 'kg',
+                    'value' => 3,
+                    'term' => 'gt',
+                    'value2' => 3,
+                    'term2' => 'lt'
+                ]], JSON_THROW_ON_ERROR)
+            ], $Rule, RuleFactory::getInstance()->getDataBaseTableName());
+            self::assertFalse($Rule->canUsedIn($Order));
+        } finally {
+            $ProductsList->setValue(null, $previousProducts);
+
+            if ($previousRuleFields === null) {
+                $Config->del('shipping', 'ruleFields');
+            } else {
+                $Config->setValue('shipping', 'ruleFields', $previousRuleFields);
+            }
+
+            $Config->save();
+        }
+    }
+
+    public function testShippingEntryHandlesEmptyRulesInvalidTypesAndInactiveState(): void
+    {
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-entry-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Order->setDeliveryAddress([
+            'id' => 91013,
+            'firstname' => 'PHPUnit',
+            'lastname' => 'Shipping',
+            'zip' => '10115',
+            'city' => 'Berlin',
+            'country' => 'DE'
+        ]);
+        $table = ShippingFactory::getInstance()->getDataBaseTableName();
+        $Entry = $this->insertAdditionalShippingEntry(AlwaysAvailableShippingType::class);
+        $Entry->setErpEntity($Order);
+
+        self::assertSame([], $Entry->getShippingRules());
+        self::assertTrue($Entry->isValid());
+        self::assertSame(0, $Entry->getPrice());
+        self::assertSame('', $Entry->getPriceDisplay());
+
+        $this->getConnection()->update($table, ['shipping_rules' => '[]'], ['id' => $Entry->getId()]);
+        $Entry->refresh();
+        self::assertSame([], $Entry->getShippingRules());
+        self::assertFalse($Entry->isValid());
+
+        $this->getConnection()->update(
+            $table,
+            ['shipping_rules' => null, 'shipping_type' => 'Missing\\Shipping\\Type'],
+            ['id' => $Entry->getId()]
+        );
+        $Entry->refresh();
+
+        try {
+            $Entry->getShippingType();
+            self::fail('Missing shipping type must throw.');
+        } catch (ShippingException) {
+            self::assertFalse($Entry->canUsedBy($SystemUser, $Order));
+            self::assertFalse($Entry->canUsedInErpEntity($Order));
+        }
+
+        $this->getConnection()->update($table, ['shipping_type' => \stdClass::class], ['id' => $Entry->getId()]);
+        $Entry->refresh();
+        $this->expectException(ShippingException::class);
+        $Entry->getShippingType();
+    }
+
+    public function testInactiveShippingEntryIsRejectedBeforeTypeChecks(): void
+    {
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-inactive-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Entry = $this->insertAdditionalShippingEntry(AlwaysAvailableShippingType::class);
+        $this->getConnection()->update(
+            ShippingFactory::getInstance()->getDataBaseTableName(),
+            ['active' => 0],
+            ['id' => $Entry->getId()]
+        );
+        $Entry->refresh();
+
+        self::assertFalse($Entry->isValid());
+        self::assertFalse($Entry->canUsedBy($SystemUser, $Order));
+        self::assertFalse($Entry->canUsedInErpEntity($Order));
+    }
+
+    public function testPaymentEventAllowsConfiguredPaymentAndRejectsOthers(): void
+    {
+        $payments = array_values(array_filter(
+            QUI\ERP\Accounting\Payments\Payments::getInstance()->getPayments(),
+            static fn ($Payment): bool => $Payment instanceof Payment
+        ));
+
+        if ($payments === []) {
+            self::markTestSkipped('No persisted payment is available for the shipping payment flow.');
+        }
+
+        $AllowedPayment = $payments[0];
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-payment-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Order->getArticles()->addArticle(new Article([
+            'id' => 43210987,
+            'articleNo' => 'SHIPPING-PAYMENT',
+            'title' => 'Shipping payment article',
+            'unitPrice' => 10,
+            'quantity' => 1,
+            'vat' => 19
+        ]));
+        $Order->getArticles()->calc();
+        $Entry = ShippingFactory::getInstance()->getChild($this->shippingId);
+        $this->getConnection()->update(
+            ShippingFactory::getInstance()->getDataBaseTableName(),
+            ['payments' => (string)$AllowedPayment->getId()],
+            ['id' => $Entry->getId()]
+        );
+        $Entry->refresh();
+        $Order->setShipping($Entry);
+
+        EventHandler::onQuiqqerPaymentCanUsedInOrder($AllowedPayment, $Order);
+        self::assertTrue(true);
+
+        $DeniedPayment = $this->createMock(Payment::class);
+        $DeniedPayment->method('getId')->willReturn(PHP_INT_MAX);
+
+        $this->expectException(
+            QUI\ERP\Accounting\Payments\Exceptions\PaymentCanNotBeUsed::class
+        );
+        EventHandler::onQuiqqerPaymentCanUsedInOrder($DeniedPayment, $Order);
+    }
+
+    public function testFractionalShippingPriceUsesRoundedApproximateDisplay(): void
+    {
+        $fractionalRuleId = $this->insertAdditionalRule(
+            0.123456,
+            RuleFactory::DISCOUNT_TYPE_ABS,
+            5
+        );
+        $Entry = $this->insertAdditionalShippingEntry(AlwaysAvailableShippingType::class);
+        $this->getConnection()->update(
+            ShippingFactory::getInstance()->getDataBaseTableName(),
+            ['shipping_rules' => json_encode([$fractionalRuleId], JSON_THROW_ON_ERROR)],
+            ['id' => $Entry->getId()]
+        );
+        $Entry->refresh();
+
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-round-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Order->setDeliveryAddress([
+            'id' => 91014,
+            'firstname' => 'PHPUnit',
+            'lastname' => 'Shipping',
+            'zip' => '10115',
+            'city' => 'Berlin',
+            'country' => 'DE'
+        ]);
+        $Order->getArticles()->addArticle(new Article([
+            'id' => 32109876,
+            'articleNo' => 'SHIPPING-ROUND',
+            'title' => 'Fractional shipping article',
+            'unitPrice' => 10,
+            'quantity' => 1,
+            'vat' => 19
+        ]));
+        $Order->getArticles()->calc();
+        $Entry->setErpEntity($Order);
+
+        self::assertSame(0.123456, $Entry->getPrice());
+        self::assertStringContainsString('~', $Entry->getPriceDisplay());
     }
 
     public function testShippingSurvivesOrderPersistenceAndReload(): void
