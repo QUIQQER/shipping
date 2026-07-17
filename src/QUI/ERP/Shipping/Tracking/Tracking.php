@@ -16,9 +16,19 @@ use const JSON_PRETTY_PRINT;
 
 /**
  * Helper class for shipping tracking
+ *
+ * @phpstan-type Carrier array{
+ *     active: string,
+ *     type: string,
+ *     title: string,
+ *     image: string,
+ *     url: string,
+ *     country?: array<string, string>
+ * }
  */
 class Tracking
 {
+    /** @var list<Carrier> */
     protected static array $tracking = [
 
         //UPS - UNITED PARCEL SERVICE
@@ -121,14 +131,22 @@ class Tracking
     }
 
     /**
-     * @return array
+     * @return array<int, Carrier>
      */
     public static function getActiveCarriers(): array
     {
-        $data = json_decode(
-            file_get_contents(self::getConfigFile()),
-            true
-        );
+        $contents = file_get_contents(self::getConfigFile());
+
+        if ($contents === false) {
+            return [];
+        }
+
+        /** @var list<Carrier>|null $data */
+        $data = json_decode($contents, true);
+
+        if ($data === null) {
+            return [];
+        }
 
         return array_filter($data, function ($entry) {
             return (bool)(int)$entry['active'];

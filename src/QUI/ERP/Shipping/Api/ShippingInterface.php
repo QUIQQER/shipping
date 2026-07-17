@@ -66,7 +66,7 @@ interface ShippingInterface
     public function getAttribute(string $name): mixed;
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array;
 
@@ -89,12 +89,12 @@ interface ShippingInterface
     /**
      * Activate ths shipping entry
      */
-    public function activate();
+    public function activate(): void;
 
     /**
      * Deactivate ths shipping entry
      */
-    public function deactivate();
+    public function deactivate(): void;
 
     //endregion
 }
