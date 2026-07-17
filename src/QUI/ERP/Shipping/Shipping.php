@@ -275,8 +275,17 @@ class Shipping extends QUI\Utils\Singleton
         }
 
         try {
-            return Factory::getInstance()->getChildren($queryParams);
-        } catch (QUi\Exception) {
+            $children = Factory::getInstance()->getChildren($queryParams);
+            $result = [];
+
+            foreach ($children as $Child) {
+                if ($Child instanceof Types\ShippingEntry) {
+                    $result[] = $Child;
+                }
+            }
+
+            return $result;
+        } catch (QUI\Exception) {
             return [];
         }
     }

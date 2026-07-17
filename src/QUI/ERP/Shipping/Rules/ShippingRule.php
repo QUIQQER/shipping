@@ -164,7 +164,7 @@ class ShippingRule extends QUI\CRUD\Child
         $attributes = $this->getAttributes();
         $Locale = QUI::getLocale();
 
-        $availableLanguages = QUI\Translator::getAvailableLanguages();
+        $availableLanguages = QUI::availableLanguages();
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
@@ -200,11 +200,17 @@ class ShippingRule extends QUI\CRUD\Child
         $language = $Locale->getCurrent();
         $id = $this->getId();
 
-        return $Locale->getByLang(
+        $title = $Locale->getByLang(
             $language,
             'quiqqer/shipping',
             'shipping.' . $id . '.rule.title'
         );
+
+        if (is_array($title)) {
+            return '';
+        }
+
+        return $title;
     }
 
     /**
@@ -725,7 +731,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if ($purchaseUntil <= $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    "{$this->getTitle()} :: purchase from is not valid, $purchaseFrom > $sum"
+                    "{$this->getTitle()} :: purchase until is not valid, $purchaseUntil <= $sum"
                 );
 
                 return false;
@@ -803,7 +809,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if ($usageUntil < $time) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    $this->getTitle() . " :: usage from is not ok, $usageFrom < $time"
+                    $this->getTitle() . " :: usage until is not ok, $usageUntil < $time"
                 );
 
                 return false;

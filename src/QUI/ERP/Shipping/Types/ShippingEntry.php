@@ -92,7 +92,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $Locale = QUI::getLocale();
         $currentLang = $Locale->getCurrent();
 
-        $availableLanguages = QUI\Translator::getAvailableLanguages();
+        $availableLanguages = QUI::availableLanguages();
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
@@ -152,7 +152,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray()) ?: '';
     }
 
     /**
@@ -196,11 +196,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $PriceFactor = $this->toPriceFactor();
 
         $ErpEntity = $this->ErpEntity;
-        $isNetto = false;
+        $isNetto = QUI\ERP\Defaults::getBruttoNettoStatus() === QUI\ERP\Utils\User::IS_NETTO_USER;
 
         if ($ErpEntity) {
             $Customer = $ErpEntity->getCustomer();
-            $isNetto = $Customer->isNetto();
+
+            if ($Customer !== null) {
+                $isNetto = $Customer->isNetto();
+            }
         }
 
         // display is incl vat
@@ -277,7 +280,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
 
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $ErpEntity) {
-                $ErpEntity = $this->ErpEntity;
                 $Calculation = $ErpEntity->getPriceCalculation();
                 $nettoSum = $Calculation->getNettoSum()->get();
 

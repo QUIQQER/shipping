@@ -226,6 +226,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             return;
         }
 
+        if ($Shipping === null) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/shipping',
+                'exception.no.shipping.selected'
+            ]);
+        }
+
         if (!$Shipping->canUsedBy($User, $Order)) {
             throw new QUI\ERP\Order\Exception([
                 'quiqqer/shipping',

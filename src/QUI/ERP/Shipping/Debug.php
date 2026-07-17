@@ -22,7 +22,7 @@ class Debug
     /**
      * @var array<int|string, bool>
      */
-    protected static array|bool $shippingRuleDebugs = [];
+    protected static array $shippingRuleDebugs = [];
 
     /**
      * @var Logger|null
@@ -176,9 +176,9 @@ class Debug
     }
 
     /**
-     * @return Logger|null
+     * @return Logger
      */
-    public static function getLogger(): ?Logger
+    public static function getLogger(): Logger
     {
         if (self::$Logger !== null) {
             return self::$Logger;
@@ -199,9 +199,9 @@ class Debug
     }
 
     /**
-     * @return Logger|null
+     * @return Logger
      */
-    public static function getLoggerWithoutFormatter(): ?Logger
+    public static function getLoggerWithoutFormatter(): Logger
     {
         if (self::$FormatLogger !== null) {
             return self::$FormatLogger;

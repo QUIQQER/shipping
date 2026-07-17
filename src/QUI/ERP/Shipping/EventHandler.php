@@ -50,7 +50,7 @@ class EventHandler
         }
 
         // Translations
-        $languages = QUI\Translator::getAvailableLanguages();
+        $languages = QUI::availableLanguages();
         $StatusFactory = QUI\ERP\Shipping\ShippingStatus\Factory::getInstance();
 
         // create locale
@@ -792,15 +792,12 @@ class EventHandler
             $PriceFactors->removeFactor($index);
         } elseif ($Shipping && $id !== $Shipping->getId() && isset($index)) {
             // replace shipping
-            $Factor = $PriceFactors->getFactor($index);
-            $factor = $Factor->toArray();
-
-            $factor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
-            $factor['title'] = $Shipping->getTitle();
+            $shippingFactor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
+            $shippingFactor['title'] = $Shipping->getTitle();
 
             $PriceFactors->setFactor(
                 $index,
-                new QUI\ERP\Accounting\PriceFactors\Factor($factor)
+                new QUI\ERP\Accounting\PriceFactors\Factor($shippingFactor)
             );
 
             $data['articles'] = $Articles->toJSON();
