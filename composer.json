@@ -1,6 +1,6 @@
 {
     "name": "quiqqer/shipping",
-    "type": "quiqqer-plugin",
+    "type": "quiqqer-module",
     "description": "Provided the shipping management for QUIQQER. Can manage shipping methods",
     "license": [
         "GPL-3.0+",
@@ -24,15 +24,23 @@
         "email": "support@pcsg.de"
     },
     "require": {
-        "quiqqer/core": "^2",
-        "quiqqer/erp": "^3.2",
-        "quiqqer/areas": "^2",
-        "quiqqer/order": "^2",
-        "quiqqer/products": "^2"
+        "php": "^8.2",
+        "quiqqer/core": "^2.25.1",
+        "quiqqer/erp": "^4.0.3",
+        "quiqqer/areas": "^2.2",
+        "quiqqer/order": "^2.11",
+        "quiqqer/products": "^2.8.2"
     },
     "autoload": {
         "psr-4": {
             "QUI\\ERP\\Shipping\\": "src/QUI/ERP/Shipping"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "QUITests\\ERP\\Shipping\\Unit\\": "tests/unit",
+            "QUITests\\ERP\\Shipping\\Integration\\": "tests/integration",
+            "QUITests\\ERP\\Shipping\\Stubs\\": "tests/stubs"
         }
     },
     "scripts": {
