@@ -8,11 +8,13 @@ use QUI\ERP\Accounting\Article;
 use QUI\ERP\Accounting\ArticleList;
 use QUI\ERP\ErpEntityInterface;
 use QUI\ERP\Products\Utils\PriceFactor;
-use QUI\ERP\Shipping\Api\AbstractShippingProvider;
 use QUI\ERP\Shipping\Methods\Digital\ShippingType as DigitalShippingType;
 use QUI\ERP\Shipping\Methods\Standard\ShippingType as StandardShippingType;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 use QUI\Interfaces\Users\User;
+
+require_once __DIR__ . '/TestShippingProvider.php';
+require_once __DIR__ . '/TestShippingService.php';
 
 class ShippingServiceTest extends TestCase
 {
@@ -203,38 +205,5 @@ class ShippingServiceTest extends TestCase
         }
 
         $Config->setValue('shipping', $key, $value);
-    }
-
-}
-
-class TestShippingService extends Shipping
-{
-    public array $shippingList = [];
-
-    public function __construct()
-    {
-    }
-
-    public function getShippingProviders(): array
-    {
-        return [new TestShippingProvider()];
-    }
-
-    public function getShippingList(array $queryParams = []): array
-    {
-        return $this->shippingList;
-    }
-}
-
-class TestShippingProvider extends AbstractShippingProvider
-{
-    public function getShippingTypes(): array
-    {
-        return [
-            'Missing\\Shipping\\Type',
-            \stdClass::class,
-            StandardShippingType::class,
-            DigitalShippingType::class
-        ];
     }
 }

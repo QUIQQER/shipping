@@ -7,6 +7,8 @@ use QUI;
 use QUI\ERP\Order\AbstractOrder;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 
+require_once __DIR__ . '/TestableShippingStep.php';
+
 class ShippingStepTest extends TestCase
 {
     public function testValidateAcceptsSelectedUsableShipping(): void
@@ -164,15 +166,5 @@ class ShippingStepTest extends TestCase
 
             $Config->save();
         }
-    }
-}
-
-class TestableShippingStep extends Shipping
-{
-    public array $validShipping = [];
-
-    protected function getValidShipping(): array
-    {
-        return $this->validShipping;
     }
 }
