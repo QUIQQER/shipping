@@ -1,13 +1,11 @@
 <?php
 
-namespace QUITests\ERP\Shipping\Unit;
+namespace QUI\ERP\Shipping;
 
 use PHPUnit\Framework\TestCase;
 use QUI;
-use QUI\ERP\Shipping\Debug;
 use QUI\ERP\Shipping\Methods\Digital\ShippingType as DigitalShippingType;
 use QUI\ERP\Shipping\Methods\Standard\ShippingType as StandardShippingType;
-use QUI\ERP\Shipping\Provider;
 use QUI\ERP\Shipping\ShippingStatus\StatusUnknown;
 use QUI\ERP\Shipping\Types\ShippingUnique;
 

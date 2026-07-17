@@ -38,9 +38,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "QUITests\\ERP\\Shipping\\Unit\\": "tests/unit",
-            "QUITests\\ERP\\Shipping\\Integration\\": "tests/integration",
-            "QUITests\\ERP\\Shipping\\Stubs\\": "tests/stubs"
+            "QUI\\ERP\\Shipping\\Tests\\Stubs\\": "tests/stubs/QUI/ERP/Shipping"
         }
     },
     "scripts": {

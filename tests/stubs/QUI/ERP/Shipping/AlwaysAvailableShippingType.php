@@ -1,6 +1,6 @@
 <?php
 
-namespace QUITests\ERP\Shipping\Stubs;
+namespace QUI\ERP\Shipping\Tests\Stubs;
 
 use QUI\ERP\ErpEntityInterface;
 use QUI\ERP\Shipping\Api\AbstractShippingType;
