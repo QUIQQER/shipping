@@ -20,7 +20,7 @@ QUI::getAjax()->registerFunction(
 
         foreach ($ids as $id) {
             try {
-                $Field = Fields::getField($id);
+                $Field = Fields::getField((int)$id);
 
                 if ($Field->getType() === Fields::TYPE_UNITSELECT) {
                     $result[] = $Field->getAttributes();

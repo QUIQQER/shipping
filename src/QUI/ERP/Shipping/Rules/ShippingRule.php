@@ -377,8 +377,16 @@ class ShippingRule extends QUI\CRUD\Child
             return true;
         }
 
-        if (!$this->canUsedBy($ErpEntity->getCustomer())) {
-            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getUUID()}");
+        $User = $ErpEntity->getCustomer();
+
+        if ($User === null) {
+            Debug::addLog("{$this->getTitle()} :: can not be used without customer");
+
+            return false;
+        }
+
+        if (!$this->canUsedBy($User)) {
+            Debug::addLog("{$this->getTitle()} :: can not be used by {$User->getUUID()}");
 
             return false;
         }

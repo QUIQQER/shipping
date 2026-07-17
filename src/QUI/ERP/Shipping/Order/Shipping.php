@@ -63,6 +63,11 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         $User = QUI::getUserBySession();
 
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return '';
+        }
+
         $Order->recalculate();
 
         $SelectedShipping = $Order->getShipping();
@@ -145,6 +150,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     {
         $Order = $this->getOrder();
 
+        if ($Order === null) {
+            throw new QUI\ERP\Order\Exception([
+                'quiqqer/order',
+                'exception.order.not.found'
+            ]);
+        }
+
         $Shipping = $Order->getShipping();
         $User = $Order->getCustomer();
 
@@ -226,7 +238,13 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
      */
     protected function getValidShipping(): array
     {
-        return ShippingHandler::getInstance()->getValidShippingEntries($this->getOrder());
+        $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return [];
+        }
+
+        return ShippingHandler::getInstance()->getValidShippingEntries($Order);
     }
 
     /**
@@ -249,6 +267,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
 
         $User = QUI::getUserBySession();
         $Order = $this->getOrder();
+
+        if ($Order === null) {
+            return;
+        }
 
         try {
             $Shipping = QUI\ERP\Shipping\Shipping::getInstance();

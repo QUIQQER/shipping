@@ -311,7 +311,10 @@ class Factory extends QUI\CRUD\Factory
 
         if (QUI::getLocale()->isLocaleString($title)) {
             $parts = QUI::getLocale()->getPartsOfLocaleString($title);
-            $title = QUI::getLocale()->get($parts[0], $parts[1]);
+
+            if (isset($parts[0], $parts[1])) {
+                $title = QUI::getLocale()->get($parts[0], $parts[1]);
+            }
         }
 
         try {

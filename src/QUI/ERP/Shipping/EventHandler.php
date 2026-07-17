@@ -368,6 +368,11 @@ class EventHandler
 
         // save shipping address
         $Order = $CustomerData->getOrder();
+
+        if ($Order === null) {
+            return;
+        }
+
         $Customer = $Order->getCustomer();
 
         try {

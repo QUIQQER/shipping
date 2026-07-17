@@ -44,7 +44,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @return array<int, string>
      */
-    public function getList(): ?array
+    public function getList(): array
     {
         if ($this->list !== null) {
             return $this->list;
@@ -76,7 +76,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @return array<int, string>
      */
-    public function refreshList(): ?array
+    public function refreshList(): array
     {
         $this->list = null;
 
@@ -132,7 +132,7 @@ class Handler extends QUI\Utils\Singleton
      */
     public function deleteShippingStatus(int | string $id): void
     {
-        $Status = $this->getShippingStatus($id);
+        $Status = $this->getShippingStatus((int)$id);
 
         // remove translation
         QUI\Translator::delete(

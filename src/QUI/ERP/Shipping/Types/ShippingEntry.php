@@ -218,7 +218,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         if ($UserCurrency && $DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
             try {
-                $price = $DefaultCurrency->convert($price, $UserCurrency);
+                $price = (float)$DefaultCurrency->convert($price, $UserCurrency);
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
             } catch (Exception) {
                 $Price = new QUI\ERP\Money\Price($price, $DefaultCurrency);
@@ -799,6 +799,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param ErpEntityInterface|null $ErpEntity
      *
      * @return PriceFactor
+     *
+     * @throws QUI\Exception
      */
     public function toPriceFactor(
         null | QUI\Locale $Locale = null,
@@ -806,6 +808,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     ): QUI\ERP\Products\Utils\PriceFactor {
         if ($ErpEntity === null) {
             $ErpEntity = $this->ErpEntity;
+        }
+
+        if ($ErpEntity === null) {
+            throw new QUI\Exception('Missing ERP entity for shipping price factor');
         }
 
         $price = $this->getPrice();
@@ -836,9 +842,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             'currency' => $EntityCurrency->getCode()
         ]);
 
-        $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser(
-            $ErpEntity->getCustomer()
-        );
+        $Customer = $ErpEntity->getCustomer();
+        $isEuVatUser = $Customer !== null && QUI\ERP\Tax\Utils::isUserEuVatUser($Customer);
 
         if ($isEuVatUser) {
             return $PriceFactor;

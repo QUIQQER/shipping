@@ -27,6 +27,7 @@ use function explode;
 use function key;
 use function max;
 use function method_exists;
+use function is_string;
 use function trim;
 
 /**
@@ -242,7 +243,7 @@ class Shipping extends QUI\Utils\Singleton
     public function getShippingEntry(int | string $shippingId): Types\ShippingEntry
     {
         try {
-            return Factory::getInstance()->getChild($shippingId);
+            return Factory::getInstance()->getChild((int)$shippingId);
         } catch (QUI\Exception) {
             throw new Exception([
                 'quiqqer/shipping',
@@ -342,6 +343,10 @@ class Shipping extends QUI\Utils\Singleton
     {
         $User = $Entity->getCustomer();
 
+        if ($User === null) {
+            $User = QUI::getUserBySession();
+        }
+
         $userShipping = QUI\ERP\Shipping\Shipping::getInstance()->getUserShipping($User, $Entity);
         $shippingList = [];
 
@@ -388,7 +393,7 @@ class Shipping extends QUI\Utils\Singleton
 
         $ids = $Config->getValue('shipping', 'ruleFields');
 
-        if (empty($ids)) {
+        if (empty($ids) || !is_string($ids)) {
             return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
         }
 
@@ -412,10 +417,17 @@ class Shipping extends QUI\Utils\Singleton
             }
         }
 
-        return trim(
-            $Project->getVHost(true, true),
-            '/'
-        );
+        if ($Project === null) {
+            return '';
+        }
+
+        $host = $Project->getVHost(true, true);
+
+        if (!is_string($host)) {
+            return '';
+        }
+
+        return trim($host, '/');
     }
 
     /**
@@ -465,6 +477,10 @@ class Shipping extends QUI\Utils\Singleton
             ->getValue('shipping', 'defaultShippingPrice');
 
         $price = QUI\ERP\Money\Price::validatePrice($price);
+
+        if ($price === null) {
+            $price = 0;
+        }
 
         $PriceFactor = new PriceFactor([
             'identifier' => 'shipping-pricefactor-default',
