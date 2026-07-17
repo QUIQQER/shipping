@@ -53,6 +53,11 @@ class Handler extends QUI\Utils\Singleton
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
             $Config = $Package->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $result = $Config->getSection('shipping_status');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -146,6 +151,10 @@ class Handler extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $Config->del('shipping_status', (string)$Status->getId());
         $Config->save();
     }
@@ -167,6 +176,10 @@ class Handler extends QUI\Utils\Singleton
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
 
         $Config->setValue('shipping_status_notification', (string)$Status->getId(), $notify ? "1" : "0");
         $Config->save();
@@ -215,6 +228,10 @@ class Handler extends QUI\Utils\Singleton
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
 
         $Config->setValue('shipping_status', (string)$Status->getId(), $color);
         $Config->save();

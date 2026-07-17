@@ -141,6 +141,11 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $this->shippingDisabled = !!$Config->getValue('shipping', 'deactivated');
         } catch (QUI\Exception) {
             $this->shippingDisabled = false;
@@ -162,6 +167,11 @@ class Shipping extends QUI\Utils\Singleton
 
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $this->debugging = !!$Config->getValue('shipping', 'debug');
         } catch (QUI\Exception) {
             $this->debugging = false;
@@ -387,6 +397,10 @@ class Shipping extends QUI\Utils\Singleton
     {
         try {
             $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
         } catch (QUI\Exception) {
             return [QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT];
         }
@@ -472,9 +486,13 @@ class Shipping extends QUI\Utils\Singleton
      */
     public function getDefaultPriceFactor(): PriceFactor
     {
-        $price = QUI::getPackage('quiqqer/shipping')
-            ->getConfig()
-            ->getValue('shipping', 'defaultShippingPrice');
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
+        $price = $Config->getValue('shipping', 'defaultShippingPrice');
 
         $price = QUI\ERP\Money\Price::validatePrice($price);
 

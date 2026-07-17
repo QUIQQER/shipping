@@ -560,6 +560,11 @@ class EventHandler
     public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price): void
     {
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $enableShippingInfo = !!$Config->getValue('shipping', 'showShippingInfoAfterPrice');
 
         if (!$enableShippingInfo || !$Price->getAttribute('withVatText')) {
@@ -690,6 +695,11 @@ class EventHandler
         }
 
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $add = $Config->getValue('shipping', 'addDefaultShipping');
 
         if (empty($add)) {
@@ -807,7 +817,13 @@ class EventHandler
     public static function onQuiqqerCustomerChange(QUI\ERP\ErpEntityInterface $ErpEntity): void
     {
         try {
-            if (!QUI::getPackage('quiqqer/shipping')->getConfig()->get('shipping', 'considerCustomerCountry')) {
+            $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
+            if (!$Config->get('shipping', 'considerCustomerCountry')) {
                 return;
             }
         } catch (Exception) {

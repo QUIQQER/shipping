@@ -149,6 +149,10 @@ class ShippingTimePeriod extends TimePeriod
     {
         try {
             $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Conf === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return null;

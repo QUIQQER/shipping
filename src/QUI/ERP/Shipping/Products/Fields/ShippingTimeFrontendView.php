@@ -118,6 +118,10 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
         if (!empty($this->value['option']) && $this->value['option'] === ShippingTimePeriod::OPTION_USE_DEFAULT) {
             try {
                 $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+                if ($Conf === null) {
+                    throw new QUI\Exception('Missing quiqqer/shipping config');
+                }
             } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 return null;

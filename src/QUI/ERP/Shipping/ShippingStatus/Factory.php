@@ -49,6 +49,10 @@ class Factory extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $Config->setValue('shipping_status', (string)$id, $color);
         $Config->save();
 

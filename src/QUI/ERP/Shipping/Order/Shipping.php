@@ -115,6 +115,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
             $Package = QUI::getPackage('quiqqer/shipping');
             $Conf = $Package->getConfig();
 
+            if ($Conf === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             if ((int)$Conf->getValue('no_rules', 'behavior') === ShippingHandler::NO_RULE_FOUND_ORDER_CANCEL) {
                 $message = QUI::getLocale()->get(
                     'quiqqer/shipping',
@@ -166,6 +170,10 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
             $Conf = $Package->getConfig();
+
+            if ($Conf === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
 
             $behavior = (int)$Conf->getValue('no_rules', 'behavior');
         } catch (QUI\Exception $Exception) {

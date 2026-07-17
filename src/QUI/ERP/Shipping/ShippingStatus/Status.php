@@ -57,6 +57,11 @@ class Status
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
             $Config = $Package->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $result = $Config->getSection('shipping_status_notification');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
