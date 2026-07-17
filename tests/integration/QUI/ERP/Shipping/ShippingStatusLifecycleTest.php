@@ -31,6 +31,20 @@ class ShippingStatusLifecycleTest extends TestCase
             self::assertSame('#123456', $Status->getColor());
             self::assertFalse($Status->isAutoNotification());
 
+            $Customer = $this->createMock(QUI\ERP\User::class);
+            $Customer->method('getName')->willReturn('PHPUnit Customer');
+            $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+            $Order->method('getCustomer')->willReturn($Customer);
+            $Order->method('getPrefixedId')->willReturn('ORDER-1');
+            $Order->method('getCreateDate')->willReturn('2026-07-17 12:00:00');
+            $Locale = $this->createMock(QUI\Locale::class);
+            $Locale->method('get')->willReturn('Rendered status message');
+            $Locale->method('formatDate')->willReturn('17.07.2026');
+            self::assertSame(
+                'Rendered status message',
+                $Status->getStatusChangeNotificationText($Order, $Locale)
+            );
+
             $Handler->setShippingStatusNotification($id, true);
             self::assertTrue($Handler->getShippingStatus($id)->isAutoNotification());
 

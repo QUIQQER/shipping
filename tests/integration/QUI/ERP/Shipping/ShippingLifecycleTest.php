@@ -635,6 +635,53 @@ class ShippingLifecycleTest extends TestCase
         self::assertSame(16.5, $Entry->toPriceFactor(null, $Order)->getValue());
     }
 
+    public function testOrderUpdateEventRemovesAndReplacesStaleShippingFactors(): void
+    {
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $Order = OrderFactory::getInstance()->create($SystemUser, false, null, uniqid('shipping-factor-', true));
+        $this->orderHash = $Order->getUUID();
+        $Order->setCustomer($SystemUser);
+        $Order->setDeliveryAddress([
+            'id' => 91010,
+            'firstname' => 'PHPUnit',
+            'lastname' => 'Shipping',
+            'zip' => '10115',
+            'city' => 'Berlin',
+            'country' => 'DE'
+        ]);
+        $Order->getArticles()->addArticle(new Article([
+            'id' => 65432109,
+            'articleNo' => 'SHIPPING-FACTOR',
+            'title' => 'Shipping factor article',
+            'unitPrice' => 20,
+            'quantity' => 1,
+            'vat' => 19
+        ]));
+        $Order->getArticles()->calc();
+
+        $Entry = ShippingFactory::getInstance()->getChild($this->shippingId);
+        $Entry->setErpEntity($Order);
+        $Factors = $Order->getArticles()->getPriceFactors();
+        $Factors->addFactor($Entry->toPriceFactor(null, $Order)->toErpPriceFactor());
+        self::assertSame(1, $Factors->count());
+
+        $data = [];
+        EventHandler::onQuiqqerOrderUpdateBegin($Order, $data);
+        self::assertSame(0, $Factors->count());
+
+        $Factors->addFactor($Entry->toPriceFactor(null, $Order)->toErpPriceFactor());
+        $Replacement = $this->insertAdditionalShippingEntry(AlwaysAvailableShippingType::class);
+        $Replacement->setErpEntity($Order);
+        $Order->setShipping($Replacement);
+        EventHandler::onQuiqqerOrderUpdateBegin($Order, $data);
+
+        self::assertSame(
+            'shipping-pricefactor-' . $Replacement->getId(),
+            $Factors->getFactor(0)->getIdentifier()
+        );
+        self::assertArrayHasKey('articles', $data);
+    }
+
     public function testShippingSurvivesOrderPersistenceAndReload(): void
     {
         $SystemUser = QUI::getUsers()->getSystemUser();

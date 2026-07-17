@@ -4,6 +4,8 @@ namespace QUI\ERP\Shipping\ShippingStatus;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use QUI;
+use QUI\ERP\Shipping\Shipping;
 
 class ShippingStatusTest extends TestCase
 {
@@ -45,5 +47,20 @@ class ShippingStatusTest extends TestCase
 
         $this->expectException(Exception::class);
         Handler::getInstance()->getShippingStatus($missing);
+    }
+
+    public function testNotificationServicesReturnWhenCustomerHasNoEmail(): void
+    {
+        $Customer = $this->createMock(QUI\ERP\User::class);
+        $Customer->method('getAttribute')->with('email')->willReturn(null);
+        $Customer->method('getUUID')->willReturn('phpunit-customer');
+        $Entity = $this->createMock(QUI\ERP\ErpEntityInterface::class);
+        $Entity->method('getCustomer')->willReturn($Customer);
+        $Entity->method('getPrefixedNumber')->willReturn('ENTITY-1');
+
+        Handler::getInstance()->sendStatusChangeNotification($Entity, 0);
+        Shipping::getInstance()->sendStatusChangeNotification($Entity, 0);
+
+        self::assertTrue(true);
     }
 }

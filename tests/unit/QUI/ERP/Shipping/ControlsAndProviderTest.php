@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use QUI;
 use QUI\ERP\Shipping\FrontendUsers\ShippingAddressSelect;
 use QUI\ERP\Shipping\Order\Shipping as ShippingStep;
+use QUI\Smarty\Collector;
 
 class ControlsAndProviderTest extends TestCase
 {
@@ -54,5 +55,51 @@ class ControlsAndProviderTest extends TestCase
 
         self::assertStringContainsString('quiqqer/shipping/bin/backend/load.js', $output);
         self::assertStringStartsWith('<script', $output);
+    }
+
+    public function testFrontendAddressEventRendersForRegularUser(): void
+    {
+        $User = $this->createMock(QUI\Users\User::class);
+        $User->method('getAddressList')->willReturn([]);
+        $User->method('getAttribute')->willReturn(null);
+        $Collector = new Collector();
+
+        EventHandler::onFrontendUsersAddressTop($Collector, $User);
+
+        self::assertStringContainsString('quiqqer-shipping-user-address', $Collector->getContent());
+    }
+
+    public function testUserSaveEventReturnsCleanlyWithoutShippingSubmission(): void
+    {
+        $User = $this->createMock(QUI\Users\User::class);
+
+        EventHandler::onUserSaveBegin($User);
+
+        self::assertTrue(true);
+    }
+
+    public function testPriceEventHonorsConfigurationAndVatText(): void
+    {
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previous = $Config->getValue('shipping', 'showShippingInfoAfterPrice');
+        $Collector = new Collector();
+        $Price = $this->createMock(QUI\ERP\Products\Controls\Price::class);
+        $Price->method('getAttribute')->with('withVatText')->willReturn(true);
+
+        try {
+            $Config->setValue('shipping', 'showShippingInfoAfterPrice', 1);
+            $Config->save();
+
+            EventHandler::onQuiqqerProductsPriceEnd($Collector, $Price);
+            self::assertNotSame('', $Collector->getContent());
+        } finally {
+            if ($previous === null) {
+                $Config->del('shipping', 'showShippingInfoAfterPrice');
+            } else {
+                $Config->setValue('shipping', 'showShippingInfoAfterPrice', $previous);
+            }
+
+            $Config->save();
+        }
     }
 }
