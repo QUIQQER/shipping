@@ -23,6 +23,7 @@ use QUI\ERP\Accounting\Payments\Types\Payment;
 use QUI\Smarty\Collector;
 use QUI\ERP\Shipping\Types\Factory as ShippingFactory;
 use QUI\ERP\Shipping\Types\ShippingEntry;
+use QUI\ERP\Shipping\Tests\Stubs\DefaultTaxEnvironment;
 use ReflectionProperty;
 use Throwable;
 use QUI\ERP\Shipping\Tests\Stubs\AlwaysAvailableShippingType;
@@ -308,6 +309,7 @@ class ShippingLifecycleTest extends TestCase
 
     public function testDefaultPriceFactorUsesConfiguredShippingPrice(): void
     {
+        DefaultTaxEnvironment::ensure();
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
         $previous = $Config->getValue('shipping', 'defaultShippingPrice');
 
@@ -328,6 +330,7 @@ class ShippingLifecycleTest extends TestCase
             }
 
             $Config->save();
+            DefaultTaxEnvironment::cleanup();
         }
     }
 

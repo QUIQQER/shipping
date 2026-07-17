@@ -10,6 +10,7 @@ use QUI\ERP\ErpEntityInterface;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Shipping\Methods\Digital\ShippingType as DigitalShippingType;
 use QUI\ERP\Shipping\Methods\Standard\ShippingType as StandardShippingType;
+use QUI\ERP\Shipping\Tests\Stubs\DefaultTaxEnvironment;
 use QUI\ERP\Shipping\Types\ShippingEntry;
 use QUI\Interfaces\Users\User;
 
@@ -168,19 +169,25 @@ class ShippingServiceTest extends TestCase
 
     public function testVatFallsBackForEmptyArticleLists(): void
     {
-        $Articles = new ArticleList();
-        $EntityWithoutCustomer = $this->createMock(ErpEntityInterface::class);
-        $EntityWithoutCustomer->method('getArticles')->willReturn($Articles);
-        $EntityWithoutCustomer->method('getCustomer')->willReturn(null);
+        DefaultTaxEnvironment::ensure();
 
-        self::assertGreaterThanOrEqual(0, Shipping::getInstance()->getVat($EntityWithoutCustomer));
+        try {
+            $Articles = new ArticleList();
+            $EntityWithoutCustomer = $this->createMock(ErpEntityInterface::class);
+            $EntityWithoutCustomer->method('getArticles')->willReturn($Articles);
+            $EntityWithoutCustomer->method('getCustomer')->willReturn(null);
 
-        $Customer = $this->createMock(QUI\ERP\User::class);
-        $EntityWithCustomer = $this->createMock(ErpEntityInterface::class);
-        $EntityWithCustomer->method('getArticles')->willReturn($Articles);
-        $EntityWithCustomer->method('getCustomer')->willReturn($Customer);
+            self::assertGreaterThanOrEqual(0, Shipping::getInstance()->getVat($EntityWithoutCustomer));
 
-        self::assertGreaterThanOrEqual(0, Shipping::getInstance()->getVat($EntityWithCustomer));
+            $Customer = $this->createMock(QUI\ERP\User::class);
+            $EntityWithCustomer = $this->createMock(ErpEntityInterface::class);
+            $EntityWithCustomer->method('getArticles')->willReturn($Articles);
+            $EntityWithCustomer->method('getCustomer')->willReturn($Customer);
+
+            self::assertGreaterThanOrEqual(0, Shipping::getInstance()->getVat($EntityWithCustomer));
+        } finally {
+            DefaultTaxEnvironment::cleanup();
+        }
     }
 
     public function testDeprecatedOrderPriceFactorLookupDelegatesToEntityLookup(): void
