@@ -272,7 +272,12 @@ class EventHandler
         if ($addressId) {
             try {
                 $DeliveryAddress = $Customer->getAddress($addressId);
-                $Order->setDeliveryAddress($DeliveryAddress);
+                $Order->setDeliveryAddress(new QUI\ERP\Address(
+                    array_merge($DeliveryAddress->getAttributes(), [
+                        'uuid' => $DeliveryAddress->getUUID(),
+                        'id' => $DeliveryAddress->getId()
+                    ])
+                ));
 
                 if (method_exists($Order, 'save')) {
                     $Order->save(QUI::getUsers()->getSystemUser());

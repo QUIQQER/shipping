@@ -298,6 +298,16 @@ class ControlsAndProviderTest extends TestCase
         $previousSession = $Session->getValue($Users);
         $Address = $this->createMock(QUI\Users\Address::class);
         $Address->method('getId')->willReturn(91002);
+        $Address->method('getUUID')->willReturn('phpunit-checkout-address');
+        $Address->method('getAttributes')->willReturn([
+            'firstname' => 'PHPUnit',
+            'lastname' => 'Shipping',
+            'street' => 'Test Street',
+            'street_no' => '1',
+            'zip' => '10115',
+            'city' => 'Berlin',
+            'country' => 'DE'
+        ]);
         $SessionUser = $this->createMock(QUI\Users\User::class);
         $SessionUser->method('getUUID')->willReturn('phpunit-session-user');
         $SessionUser->method('getAttribute')->with('quiqqer.delivery.address')->willReturn(91002);
@@ -307,7 +317,12 @@ class ControlsAndProviderTest extends TestCase
         $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
         $Order->method('hasDeliveryAddress')->willReturn(false);
         $Order->method('getCustomer')->willReturn($Customer);
-        $Order->expects(self::once())->method('setDeliveryAddress')->with($Address);
+        $Order->expects(self::once())->method('setDeliveryAddress')->with(
+            self::callback(static function (QUI\ERP\Address $ErpAddress) use ($Address): bool {
+                return $ErpAddress->getId() === $Address->getId()
+                    && $ErpAddress->getUUID() === $Address->getUUID();
+            })
+        );
         $Checkout = $this->createMock(QUI\ERP\Order\Controls\OrderProcess\Checkout::class);
         $Checkout->method('getOrder')->willReturn($Order);
 

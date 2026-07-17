@@ -73,7 +73,7 @@ class ShippingRule extends QUI\CRUD\Child
             $id = $this->getId();
             $attributes = $this->getAttributes();
 
-            if (is_array($attributes['title'])) {
+            if (isset($attributes['title']) && is_array($attributes['title'])) {
                 QUI\Translator::edit(
                     'quiqqer/shipping',
                     'shipping.' . $id . '.rule.title',
@@ -82,7 +82,7 @@ class ShippingRule extends QUI\CRUD\Child
                 );
             }
 
-            if (is_array($attributes['workingTitle'])) {
+            if (isset($attributes['workingTitle']) && is_array($attributes['workingTitle'])) {
                 QUI\Translator::edit(
                     'quiqqer/shipping',
                     'shipping.' . $id . '.rule.workingTitle',
