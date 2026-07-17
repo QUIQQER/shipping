@@ -9,9 +9,9 @@ use function dirname;
 use function json_decode;
 
 /**
- * Class UnitSelectFrontendView
+ * Class ShippingTimeFrontendView
  *
- * View control for showing UnitSelect values in the product frontend
+ * View control for showing shipping time values in the product frontend
  */
 class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
 {
