@@ -81,7 +81,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the shipping as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -439,7 +439,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Return the shipping working title
      *
      * @param Locale|null $Locale
-     * @return array|string
+     * @return array<array-key, mixed>|string
      */
     public function getWorkingTitle(null | QUI\Locale $Locale = null): array | string
     {
@@ -485,7 +485,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Set the title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setTitle(array $titles): void
     {
@@ -498,7 +498,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Set the description
      *
-     * @param array $descriptions
+     * @param array<string, string> $descriptions
      */
     public function setDescription(array $descriptions): void
     {
@@ -511,7 +511,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Set the working title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setWorkingTitle(array $titles): void
     {
@@ -543,7 +543,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Creates a locale
      *
      * @param string $var
-     * @param array $title
+     * @param array<string, string> $title
      */
     protected function setShippingLocale(string $var, array $title): void
     {
@@ -858,7 +858,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     //region address
 
     /**
-     * @param $Address
+     * @param QUI\ERP\Address|QUI\Users\Address|null $Address
      */
     public function setAddress($Address): void
     {

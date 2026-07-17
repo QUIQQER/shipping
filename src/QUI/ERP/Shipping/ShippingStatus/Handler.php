@@ -22,7 +22,7 @@ use function is_array;
 class Handler extends QUI\Utils\Singleton
 {
     /**
-     * @var array|null
+     * @var array<int, string>|null
      */
     protected ?array $list = null;
 
@@ -42,7 +42,7 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Return all shipping status entries from the config
      *
-     * @return array|null
+     * @return array<int, string>
      */
     public function getList(): ?array
     {
@@ -74,7 +74,7 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Refresh the internal list
      *
-     * @return array|null
+     * @return array<int, string>
      */
     public function refreshList(): ?array
     {
@@ -177,7 +177,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @param int $id
      * @param int|string $color
-     * @param array $title
+     * @param array<string, array<array-key, mixed>|string> $title
      *
      * @throws QUI\Exception
      *

@@ -71,7 +71,7 @@ class ShippingTimePeriod extends TimePeriod
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function cleanup(mixed $value): mixed
     {

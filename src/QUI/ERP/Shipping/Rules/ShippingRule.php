@@ -154,7 +154,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Return the payment as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -822,7 +822,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Return the unit terms
      *
-     * @return bool|array
+     * @return array<array-key, mixed>|false
      */
     public function getUnitTerms(): bool | array
     {
@@ -884,7 +884,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Set the title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setTitle(array $titles): void
     {
@@ -897,7 +897,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Set the working title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setWorkingTitle(array $titles): void
     {
@@ -911,7 +911,7 @@ class ShippingRule extends QUI\CRUD\Child
      * Creates a locale
      *
      * @param string $var
-     * @param array $title
+     * @param array<string, string> $title
      */
     protected function setLocaleVar(string $var, array $title): void
     {

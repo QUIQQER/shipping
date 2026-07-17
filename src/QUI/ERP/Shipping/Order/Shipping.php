@@ -25,7 +25,7 @@ class Shipping extends QUI\ERP\Order\Controls\AbstractOrderingStep
     /**
      * Shipping constructor.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {

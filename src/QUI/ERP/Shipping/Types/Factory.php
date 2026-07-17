@@ -37,7 +37,7 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      *
      * @return ShippingEntry
      *
@@ -109,7 +109,7 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getChildAttributes(): array
     {
@@ -147,8 +147,8 @@ class Factory extends QUI\CRUD\Factory
     /**
      * Creates a locale
      *
-     * @param $var
-     * @param $title
+     * @param string $var
+     * @param string $title
      */
     protected function createShippingLocale($var, $title): void
     {

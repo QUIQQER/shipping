@@ -130,7 +130,7 @@ class EventHandler
     /**
      * event - on price factor init
      *
-     * @param $Basket
+     * @param mixed $Basket
      * @param AbstractOrder $Order
      * @param QUI\ERP\Products\Product\ProductList $Products
      */
@@ -217,9 +217,9 @@ class EventHandler
 
     /**
      * @param Collector $Collector
-     * @param $User
-     * @param $Address
-     * @param $Order
+     * @param QUI\Interfaces\Users\User $User
+     * @param QUI\ERP\Address|null $Address
+     * @param AbstractOrder $Order
      */
     public static function onOrderProcessCustomerDataEnd(
         Collector $Collector,
@@ -722,7 +722,7 @@ class EventHandler
 
     /**
      * @param AbstractOrder $Order
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws QUI\ERP\Exception
      * @throws QUI\Exception

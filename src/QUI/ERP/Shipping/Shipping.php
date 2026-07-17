@@ -57,7 +57,7 @@ class Shipping extends QUI\Utils\Singleton
     const NO_RULE_FOUND_ORDER_CANCEL = 0;
 
     /**
-     * @var array
+     * @var array<array-key, mixed>
      */
     protected array $shipping = [];
 
@@ -74,7 +74,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all available shipping provider
      *
-     * @return array
+     * @return list<AbstractShippingProvider>
      */
     public function getShippingProviders(): array
     {
@@ -172,7 +172,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all available Shipping methods
      *
-     * @return array
+     * @return array<string, Api\ShippingTypeInterface>
      */
     public function getShippingTypes(): array
     {
@@ -254,7 +254,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return all active shipping
      *
-     * @param array $queryParams
+     * @param array<string, mixed> $queryParams
      * @return QUI\ERP\Shipping\Types\ShippingEntry[]
      */
     public function getShippingList(array $queryParams = []): array
@@ -376,7 +376,7 @@ class Shipping extends QUI\Utils\Singleton
     /**
      * Return the unit field ids, for the shipping rule definition
      *
-     * @return array
+     * @return list<int|string>
      */
     public function getShippingRuleUnitFieldIds(): array
     {
@@ -440,7 +440,7 @@ class Shipping extends QUI\Utils\Singleton
     }
 
     /**
-     * @param $orderId
+     * @param int|string $orderId
      * @return ShippingEntry|ShippingUnique|null
      */
     public function getShippingByOrderId($orderId): ShippingEntry | ShippingUnique | null

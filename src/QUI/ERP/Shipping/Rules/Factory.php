@@ -61,7 +61,7 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return ShippingRule
      *
      * @throws QUI\Exception
@@ -251,7 +251,7 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getChildAttributes(): array
     {
