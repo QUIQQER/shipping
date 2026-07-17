@@ -12,7 +12,7 @@ use QUI\ERP\Shipping\Types\Factory;
  * @param integer $shippingId - Shipping ID
  * @param array $data - Shipping Data
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_update',
     function ($shippingId, $data) {
         $Factory = new Factory();

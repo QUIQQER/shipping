@@ -14,7 +14,7 @@ use QUI\ERP\Shipping\ShippingStatus\Handler;
  * @param int $orderId - Order ID
  * @return string
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_getNotificationText',
     function ($shippingId, $orderId) {
         try {

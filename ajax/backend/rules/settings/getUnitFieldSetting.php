@@ -11,7 +11,7 @@ use QUI\ERP\Products\Handler\Fields;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_settings_getUnitFieldSetting',
     function () {
         $result = [];

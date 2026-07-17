@@ -11,7 +11,7 @@ use QUI\ERP\Shipping\Rules\Factory;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_update',
     function ($ruleId, $data) {
         $data = json_decode($data, true);

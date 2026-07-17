@@ -13,7 +13,7 @@ use QUI\ERP\Shipping\Types\Factory;
  * @return array
  */
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_activate',
     function ($shippingId) {
         $Shipping = new Factory();

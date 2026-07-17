@@ -15,7 +15,7 @@ use QUI\Utils\Security\Orthos;
  * @param array $title - (multilingual) title
  * @param bool $notification - send auto-notification on status change
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_update',
     function ($id, $color, $title, $notification) {
         $id = (int)$id;
