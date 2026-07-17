@@ -56,7 +56,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     {
         parent::__construct($id, $Factory);
 
-        $this->Events->addEvent('onDeleteBegin', function () {
+        $this->Events->addEvent('onDeleteBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.delete');
 
             // delete locale
@@ -73,7 +73,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
         });
 
-        $this->Events->addEvent('onSaveBegin', function () {
+        $this->Events->addEvent('onSaveBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.edit');
         });
     }

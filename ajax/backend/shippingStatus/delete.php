@@ -13,7 +13,7 @@ use QUI\ERP\Shipping\ShippingStatus\Handler;
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_delete',
-    function ($id) {
+    function ($id): void {
         Handler::getInstance()->deleteShippingStatus($id);
     },
     ['id'],

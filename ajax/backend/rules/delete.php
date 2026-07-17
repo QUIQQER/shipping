@@ -13,7 +13,7 @@ use QUI\ERP\Shipping\Rules\Factory;
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_delete',
-    function ($ruleIds) {
+    function ($ruleIds): void {
         $ruleIds = json_decode($ruleIds, true);
         $Factory = new Factory();
 

@@ -18,7 +18,7 @@ use QUI\Utils\Security\Orthos;
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_create',
-    function ($id, $color, $title, $notification) {
+    function ($id, $color, $title, $notification): void {
         $id = (int)$id;
 
         Factory::getInstance()->createShippingStatus(

@@ -152,7 +152,7 @@ class Debug
                 $Entry,
                 $result,
                 $debugMessage
-            ) {
+            ): void {
                 $log = [];
 
                 /* @var $ShippingRule QUI\ERP\Shipping\Rules\ShippingRule */

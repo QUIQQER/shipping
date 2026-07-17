@@ -50,12 +50,12 @@ class Factory extends QUI\CRUD\Factory
     {
         parent::__construct();
 
-        $this->Events->addEvent('onCreateBegin', function () {
+        $this->Events->addEvent('onCreateBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.rule.create');
         });
 
         // create new translation var for the area
-        $this->Events->addEvent('onCreateEnd', function () {
+        $this->Events->addEvent('onCreateEnd', function (): void {
             QUI\Translator::publish('quiqqer/shipping');
         });
     }

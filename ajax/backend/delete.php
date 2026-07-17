@@ -13,7 +13,7 @@ use QUI\ERP\Shipping\Types\Factory;
  */
 QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_delete',
-    function ($shippingId) {
+    function ($shippingId): void {
         $Factory = new Factory();
         $Factory->getChild($shippingId)->delete();
     },
