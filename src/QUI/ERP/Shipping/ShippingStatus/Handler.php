@@ -22,7 +22,7 @@ use function is_array;
 class Handler extends QUI\Utils\Singleton
 {
     /**
-     * @var array|null
+     * @var array<int, string>|null
      */
     protected ?array $list = null;
 
@@ -42,9 +42,9 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Return all shipping status entries from the config
      *
-     * @return array|null
+     * @return array<int, string>
      */
-    public function getList(): ?array
+    public function getList(): array
     {
         if ($this->list !== null) {
             return $this->list;
@@ -53,6 +53,11 @@ class Handler extends QUI\Utils\Singleton
         try {
             $Package = QUI::getPackage('quiqqer/shipping');
             $Config = $Package->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
             $result = $Config->getSection('shipping_status');
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -74,9 +79,9 @@ class Handler extends QUI\Utils\Singleton
     /**
      * Refresh the internal list
      *
-     * @return array|null
+     * @return array<int, string>
      */
-    public function refreshList(): ?array
+    public function refreshList(): array
     {
         $this->list = null;
 
@@ -132,7 +137,7 @@ class Handler extends QUI\Utils\Singleton
      */
     public function deleteShippingStatus(int | string $id): void
     {
-        $Status = $this->getShippingStatus($id);
+        $Status = $this->getShippingStatus((int)$id);
 
         // remove translation
         QUI\Translator::delete(
@@ -145,6 +150,10 @@ class Handler extends QUI\Utils\Singleton
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
 
         $Config->del('shipping_status', (string)$Status->getId());
         $Config->save();
@@ -168,6 +177,10 @@ class Handler extends QUI\Utils\Singleton
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
 
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $Config->setValue('shipping_status_notification', (string)$Status->getId(), $notify ? "1" : "0");
         $Config->save();
     }
@@ -177,7 +190,7 @@ class Handler extends QUI\Utils\Singleton
      *
      * @param int $id
      * @param int|string $color
-     * @param array $title
+     * @param array<string, array<array-key, mixed>|string> $title
      *
      * @throws QUI\Exception
      *
@@ -215,6 +228,10 @@ class Handler extends QUI\Utils\Singleton
         // update config
         $Package = QUI::getPackage('quiqqer/shipping');
         $Config = $Package->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
 
         $Config->setValue('shipping_status', (string)$Status->getId(), $color);
         $Config->save();

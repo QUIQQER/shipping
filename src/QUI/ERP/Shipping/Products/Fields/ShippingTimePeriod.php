@@ -71,7 +71,7 @@ class ShippingTimePeriod extends TimePeriod
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return array|null
+     * @return array<string, mixed>|null
      */
     public function cleanup(mixed $value): mixed
     {
@@ -149,6 +149,10 @@ class ShippingTimePeriod extends TimePeriod
     {
         try {
             $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Conf === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return null;

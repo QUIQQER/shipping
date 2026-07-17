@@ -57,7 +57,7 @@ class ShippingRule extends QUI\CRUD\Child
     {
         parent::__construct($id, $Factory);
 
-        $this->Events->addEvent('onDeleteBegin', function () {
+        $this->Events->addEvent('onDeleteBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.delete');
 
             // delete locale
@@ -67,13 +67,13 @@ class ShippingRule extends QUI\CRUD\Child
             QUI\Translator::delete('quiqqer/shipping', 'shipping.' . $id . '.rule.workingTitle');
         });
 
-        $this->Events->addEvent('onSaveBegin', function () {
+        $this->Events->addEvent('onSaveBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.edit');
 
             $id = $this->getId();
             $attributes = $this->getAttributes();
 
-            if (is_array($attributes['title'])) {
+            if (isset($attributes['title']) && is_array($attributes['title'])) {
                 QUI\Translator::edit(
                     'quiqqer/shipping',
                     'shipping.' . $id . '.rule.title',
@@ -82,7 +82,7 @@ class ShippingRule extends QUI\CRUD\Child
                 );
             }
 
-            if (is_array($attributes['workingTitle'])) {
+            if (isset($attributes['workingTitle']) && is_array($attributes['workingTitle'])) {
                 QUI\Translator::edit(
                     'quiqqer/shipping',
                     'shipping.' . $id . '.rule.workingTitle',
@@ -154,7 +154,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Return the payment as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -164,7 +164,7 @@ class ShippingRule extends QUI\CRUD\Child
         $attributes = $this->getAttributes();
         $Locale = QUI::getLocale();
 
-        $availableLanguages = QUI\Translator::getAvailableLanguages();
+        $availableLanguages = QUI::availableLanguages();
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
@@ -200,11 +200,17 @@ class ShippingRule extends QUI\CRUD\Child
         $language = $Locale->getCurrent();
         $id = $this->getId();
 
-        return $Locale->getByLang(
+        $title = $Locale->getByLang(
             $language,
             'quiqqer/shipping',
             'shipping.' . $id . '.rule.title'
         );
+
+        if (is_array($title)) {
+            return '';
+        }
+
+        return $title;
     }
 
     /**
@@ -377,8 +383,16 @@ class ShippingRule extends QUI\CRUD\Child
             return true;
         }
 
-        if (!$this->canUsedBy($ErpEntity->getCustomer())) {
-            Debug::addLog("{$this->getTitle()} :: can not be used by {$ErpEntity->getCustomer()->getUUID()}");
+        $User = $ErpEntity->getCustomer();
+
+        if ($User === null) {
+            Debug::addLog("{$this->getTitle()} :: can not be used without customer");
+
+            return false;
+        }
+
+        if (!$this->canUsedBy($User)) {
+            Debug::addLog("{$this->getTitle()} :: can not be used by {$User->getUUID()}");
 
             return false;
         }
@@ -717,7 +731,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if ($purchaseUntil <= $sum) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    "{$this->getTitle()} :: purchase from is not valid, $purchaseFrom > $sum"
+                    "{$this->getTitle()} :: purchase until is not valid, $purchaseUntil <= $sum"
                 );
 
                 return false;
@@ -795,7 +809,7 @@ class ShippingRule extends QUI\CRUD\Child
 
             if ($usageUntil < $time) {
                 QUI\ERP\Shipping\Debug::addLog(
-                    $this->getTitle() . " :: usage from is not ok, $usageFrom < $time"
+                    $this->getTitle() . " :: usage until is not ok, $usageUntil < $time"
                 );
 
                 return false;
@@ -822,7 +836,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Return the unit terms
      *
-     * @return bool|array
+     * @return array<array-key, mixed>|false
      */
     public function getUnitTerms(): bool | array
     {
@@ -884,7 +898,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Set the title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setTitle(array $titles): void
     {
@@ -897,7 +911,7 @@ class ShippingRule extends QUI\CRUD\Child
     /**
      * Set the working title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setWorkingTitle(array $titles): void
     {
@@ -911,7 +925,7 @@ class ShippingRule extends QUI\CRUD\Child
      * Creates a locale
      *
      * @param string $var
-     * @param array $title
+     * @param array<string, string> $title
      */
     protected function setLocaleVar(string $var, array $title): void
     {

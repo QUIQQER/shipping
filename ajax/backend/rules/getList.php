@@ -11,7 +11,7 @@ use QUI\Utils\Grid;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_rules_getList',
     function ($options) {
         $options = json_decode($options, true);
@@ -57,7 +57,7 @@ QUI::$Ajax->registerFunction(
         $result = [];
 
         foreach ($rules as $Rule) {
-            /* @var $Rule \QUI\ERP\Shipping\Rules\ShippingRule */
+            /** @var QUI\ERP\Shipping\Rules\ShippingRule $Rule */
             $result[] = $Rule->toArray();
         }
 

@@ -16,7 +16,7 @@ abstract class AbstractShippingProvider
     /**
      * Return the shipping types of the provider
      *
-     * @return array
+     * @return list<class-string<ShippingTypeInterface>>
      */
     abstract public function getShippingTypes(): array;
 }

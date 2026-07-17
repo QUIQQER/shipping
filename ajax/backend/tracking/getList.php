@@ -6,7 +6,7 @@
 
 use QUI\ERP\Shipping\Tracking;
 
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_tracking_getList',
     function () {
         return Tracking\Tracking::getActiveCarriers();

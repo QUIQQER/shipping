@@ -12,7 +12,7 @@ use QUI\ERP\Shipping\Types\Factory;
  * @param integer $shippingId
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_deactivate',
     function ($shippingId) {
         $factory = new Factory();

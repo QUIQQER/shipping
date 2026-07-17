@@ -20,7 +20,7 @@ class ShippingAddress extends QUI\Control
     /**
      * Shipping constructor.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes = [])
     {
@@ -48,6 +48,11 @@ class ShippingAddress extends QUI\Control
 
         try {
             $Project = QUI::getRewrite()->getProject();
+
+            if ($Project === null) {
+                return '';
+            }
+
             $sites = $Project->getSites([
                 'where' => [
                     'type' => 'quiqqer/frontend-users:types/profile'
@@ -69,7 +74,11 @@ class ShippingAddress extends QUI\Control
         $currentAddress = '';
 
         $Shipping = QUI\ERP\Shipping\Shipping::getInstance()->getShippingByObject($Order);
-        $ShippingAddress = $Shipping?->getAddress();
+        $ShippingAddress = null;
+
+        if ($Shipping instanceof QUI\ERP\Shipping\Types\ShippingEntry) {
+            $ShippingAddress = $Shipping->getAddress();
+        }
 
         if ($ShippingAddress) {
             $currentAddress = $ShippingAddress->getUUID();

@@ -3,49 +3,51 @@
 
     <global>
         <table name="shipping">
-            <field type="INT(11) NOT NULL">id</field>
-            <field type="INT(1) NOT NULL DEFAULT 0">active</field>
-            <field type="VARCHAR(255) NOT NULL">shipping_type</field>
-            <field type="VARCHAR(255) NOT NULL">icon</field>
-            <field type="TEXT">shipping_rules</field>
-            <field type="INT(4) NULL">priority</field>
+            <field type="integer" autoincrement="true" primary="true">id</field>
+            <field type="boolean" default="0">active</field>
+            <field type="string" length="255">shipping_type</field>
+            <field type="string" length="255">icon</field>
+            <field type="text" nullable="true" default="null">shipping_rules</field>
+            <field type="integer" nullable="true" default="null">priority</field>
 
-            <field type="text NULL">areas</field>
-            <field type="text NULL">articles</field>
-            <field type="text NULL">categories</field>
-            <field type="text NULL">user_groups</field>
-            <field type="text NULL">payments</field>
+            <field type="text" nullable="true" default="null">areas</field>
+            <field type="text" nullable="true" default="null">articles</field>
+            <field type="text" nullable="true" default="null">categories</field>
+            <field type="text" nullable="true" default="null">user_groups</field>
+            <field type="text" nullable="true" default="null">payments</field>
 
-            <primary>id</primary>
-            <auto_increment>id</auto_increment>
+            <index>active</index>
+            <index>shipping_type</index>
+            <index>priority</index>
         </table>
 
         <table name="shipping_rules">
-            <field type="INT(11) NOT NULL">id</field>
-            <field type="INT(1) NOT NULL DEFAULT 0">active</field>
-            <field type="DOUBLE NOT NULL">discount</field>
-            <field type="INT(1) NOT NULL">discount_type</field>
+            <field type="integer" autoincrement="true" primary="true">id</field>
+            <field type="boolean" default="0">active</field>
+            <field type="float" default="0">discount</field>
+            <field type="integer" default="0">discount_type</field>
 
-            <field type="text NULL">unit_terms</field>
-            <field type="INT(4) NULL">priority</field>
-            <field type="INT(1) NULL">no_rule_after</field>
+            <field type="text" nullable="true" default="null">unit_terms</field>
+            <field type="integer" nullable="true" default="null">priority</field>
+            <field type="boolean" nullable="true" default="0">no_rule_after</field>
 
-            <field type="text NULL">date_from</field>
-            <field type="text NULL">date_until</field>
-            <field type="INT(10) NULL">purchase_quantity_from</field>
-            <field type="INT(10) NULL">purchase_quantity_until</field>
-            <field type="text NULL">purchase_value_from</field>
-            <field type="text NULL">purchase_value_until</field>
+            <field type="text" nullable="true" default="null">date_from</field>
+            <field type="text" nullable="true" default="null">date_until</field>
+            <field type="integer" nullable="true" default="0">purchase_quantity_from</field>
+            <field type="integer" nullable="true" default="0">purchase_quantity_until</field>
+            <field type="text" nullable="true" default="null">purchase_value_from</field>
+            <field type="text" nullable="true" default="null">purchase_value_until</field>
 
-            <field type="text NULL">areas</field>
-            <field type="text NULL">categories</field>
-            <field type="text NULL">user_groups</field>
+            <field type="text" nullable="true" default="null">areas</field>
+            <field type="text" nullable="true" default="null">categories</field>
+            <field type="text" nullable="true" default="null">user_groups</field>
 
-            <field type="text NULL">articles</field>
-            <field type="INT(1) NOT NULL DEFAULT 0">articles_only</field>
+            <field type="text" nullable="true" default="null">articles</field>
+            <field type="boolean" default="0">articles_only</field>
 
-            <primary>id</primary>
-            <auto_increment>id</auto_increment>
+            <index>active</index>
+            <index>priority</index>
+            <index>discount_type</index>
         </table>
     </global>
 

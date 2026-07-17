@@ -9,9 +9,9 @@ use function dirname;
 use function json_decode;
 
 /**
- * Class UnitSelectFrontendView
+ * Class ShippingTimeFrontendView
  *
- * View control for showing UnitSelect values in the product frontend
+ * View control for showing shipping time values in the product frontend
  */
 class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
 {
@@ -74,8 +74,7 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
                         'period' => $from
                     ]);
-                    /* @@phpstan-ignore-next-line */
-                } elseif (empty($from) && !empty($to)) {
+                } elseif (empty($from)) {
                     $valueText = $L->get($lg, 'fields.ShippingTimeFrontendView.timeperiod.period', [
                         'period' => $to
                     ]);
@@ -118,6 +117,10 @@ class ShippingTimeFrontendView extends QUI\ERP\Products\Field\View
         if (!empty($this->value['option']) && $this->value['option'] === ShippingTimePeriod::OPTION_USE_DEFAULT) {
             try {
                 $Conf = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+                if ($Conf === null) {
+                    throw new QUI\Exception('Missing quiqqer/shipping config');
+                }
             } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 return null;

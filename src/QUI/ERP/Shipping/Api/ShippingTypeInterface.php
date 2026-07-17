@@ -33,7 +33,7 @@ interface ShippingTypeInterface
 
     /**
      * @param QUI\Locale|null $Locale
-     * @return array
+     * @return array{title: string, type: string}
      */
     public function toArray(null | QUI\Locale $Locale = null): array;
 }

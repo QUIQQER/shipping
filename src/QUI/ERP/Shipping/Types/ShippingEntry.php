@@ -56,7 +56,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     {
         parent::__construct($id, $Factory);
 
-        $this->Events->addEvent('onDeleteBegin', function () {
+        $this->Events->addEvent('onDeleteBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.delete');
 
             // delete locale
@@ -73,7 +73,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
         });
 
-        $this->Events->addEvent('onSaveBegin', function () {
+        $this->Events->addEvent('onSaveBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.edit');
         });
     }
@@ -81,7 +81,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Return the shipping as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -92,7 +92,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $Locale = QUI::getLocale();
         $currentLang = $Locale->getCurrent();
 
-        $availableLanguages = QUI\Translator::getAvailableLanguages();
+        $availableLanguages = QUI::availableLanguages();
 
         foreach ($availableLanguages as $language) {
             $attributes['title'][$language] = $Locale->getByLang(
@@ -152,7 +152,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      */
     public function toJSON(): string
     {
-        return json_encode($this->toArray());
+        return json_encode($this->toArray()) ?: '';
     }
 
     /**
@@ -196,11 +196,14 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
         $PriceFactor = $this->toPriceFactor();
 
         $ErpEntity = $this->ErpEntity;
-        $isNetto = false;
+        $isNetto = QUI\ERP\Defaults::getBruttoNettoStatus() === QUI\ERP\Utils\User::IS_NETTO_USER;
 
         if ($ErpEntity) {
             $Customer = $ErpEntity->getCustomer();
-            $isNetto = $Customer->isNetto();
+
+            if ($Customer !== null) {
+                $isNetto = $Customer->isNetto();
+            }
         }
 
         // display is incl vat
@@ -218,7 +221,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
 
         if ($UserCurrency && $DefaultCurrency->getCode() !== $UserCurrency->getCode()) {
             try {
-                $price = $DefaultCurrency->convert($price, $UserCurrency);
+                $price = (float)$DefaultCurrency->convert($price, $UserCurrency);
                 $Price = new QUI\ERP\Money\Price($price, $UserCurrency);
             } catch (Exception) {
                 $Price = new QUI\ERP\Money\Price($price, $DefaultCurrency);
@@ -277,7 +280,6 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             }
 
             if ($type === QUI\ERP\Shipping\Rules\Factory::DISCOUNT_TYPE_PC_ORDER && $ErpEntity) {
-                $ErpEntity = $this->ErpEntity;
                 $Calculation = $ErpEntity->getPriceCalculation();
                 $nettoSum = $Calculation->getNettoSum()->get();
 
@@ -439,7 +441,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Return the shipping working title
      *
      * @param Locale|null $Locale
-     * @return array|string
+     * @return array<array-key, mixed>|string
      */
     public function getWorkingTitle(null | QUI\Locale $Locale = null): array | string
     {
@@ -485,7 +487,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Set the title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setTitle(array $titles): void
     {
@@ -498,7 +500,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Set the description
      *
-     * @param array $descriptions
+     * @param array<string, string> $descriptions
      */
     public function setDescription(array $descriptions): void
     {
@@ -511,7 +513,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     /**
      * Set the working title
      *
-     * @param array $titles
+     * @param array<string, string> $titles
      */
     public function setWorkingTitle(array $titles): void
     {
@@ -543,7 +545,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * Creates a locale
      *
      * @param string $var
-     * @param array $title
+     * @param array<string, string> $title
      */
     protected function setShippingLocale(string $var, array $title): void
     {
@@ -799,6 +801,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
      * @param ErpEntityInterface|null $ErpEntity
      *
      * @return PriceFactor
+     *
+     * @throws QUI\Exception
      */
     public function toPriceFactor(
         null | QUI\Locale $Locale = null,
@@ -806,6 +810,10 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     ): QUI\ERP\Products\Utils\PriceFactor {
         if ($ErpEntity === null) {
             $ErpEntity = $this->ErpEntity;
+        }
+
+        if ($ErpEntity === null) {
+            throw new QUI\Exception('Missing ERP entity for shipping price factor');
         }
 
         $price = $this->getPrice();
@@ -836,9 +844,8 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
             'currency' => $EntityCurrency->getCode()
         ]);
 
-        $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser(
-            $ErpEntity->getCustomer()
-        );
+        $Customer = $ErpEntity->getCustomer();
+        $isEuVatUser = $Customer !== null && QUI\ERP\Tax\Utils::isUserEuVatUser($Customer);
 
         if ($isEuVatUser) {
             return $PriceFactor;
@@ -858,7 +865,7 @@ class ShippingEntry extends QUI\CRUD\Child implements Api\ShippingInterface
     //region address
 
     /**
-     * @param $Address
+     * @param QUI\ERP\Address|QUI\Users\Address|null $Address
      */
     public function setAddress($Address): void
     {

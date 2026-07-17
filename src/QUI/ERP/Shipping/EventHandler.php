@@ -50,7 +50,7 @@ class EventHandler
         }
 
         // Translations
-        $languages = QUI\Translator::getAvailableLanguages();
+        $languages = QUI::availableLanguages();
         $StatusFactory = QUI\ERP\Shipping\ShippingStatus\Factory::getInstance();
 
         // create locale
@@ -130,7 +130,7 @@ class EventHandler
     /**
      * event - on price factor init
      *
-     * @param $Basket
+     * @param mixed $Basket
      * @param AbstractOrder $Order
      * @param QUI\ERP\Products\Product\ProductList $Products
      */
@@ -217,9 +217,9 @@ class EventHandler
 
     /**
      * @param Collector $Collector
-     * @param $User
-     * @param $Address
-     * @param $Order
+     * @param QUI\Interfaces\Users\User $User
+     * @param QUI\ERP\Address|null $Address
+     * @param AbstractOrder $Order
      */
     public static function onOrderProcessCustomerDataEnd(
         Collector $Collector,
@@ -272,7 +272,12 @@ class EventHandler
         if ($addressId) {
             try {
                 $DeliveryAddress = $Customer->getAddress($addressId);
-                $Order->setDeliveryAddress($DeliveryAddress);
+                $Order->setDeliveryAddress(new QUI\ERP\Address(
+                    array_merge($DeliveryAddress->getAttributes(), [
+                        'uuid' => $DeliveryAddress->getUUID(),
+                        'id' => $DeliveryAddress->getId()
+                    ])
+                ));
 
                 if (method_exists($Order, 'save')) {
                     $Order->save(QUI::getUsers()->getSystemUser());
@@ -363,6 +368,11 @@ class EventHandler
 
         // save shipping address
         $Order = $CustomerData->getOrder();
+
+        if ($Order === null) {
+            return;
+        }
+
         $Customer = $Order->getCustomer();
 
         try {
@@ -550,6 +560,11 @@ class EventHandler
     public static function onQuiqqerProductsPriceEnd(Collector $Collector, QUI\ERP\Products\Controls\Price $Price): void
     {
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $enableShippingInfo = !!$Config->getValue('shipping', 'showShippingInfoAfterPrice');
 
         if (!$enableShippingInfo || !$Price->getAttribute('withVatText')) {
@@ -680,6 +695,11 @@ class EventHandler
         }
 
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+        if ($Config === null) {
+            throw new QUI\Exception('Missing quiqqer/shipping config');
+        }
+
         $add = $Config->getValue('shipping', 'addDefaultShipping');
 
         if (empty($add)) {
@@ -717,7 +737,7 @@ class EventHandler
 
     /**
      * @param AbstractOrder $Order
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws QUI\ERP\Exception
      * @throws QUI\Exception
@@ -772,15 +792,12 @@ class EventHandler
             $PriceFactors->removeFactor($index);
         } elseif ($Shipping && $id !== $Shipping->getId() && isset($index)) {
             // replace shipping
-            $Factor = $PriceFactors->getFactor($index);
-            $factor = $Factor->toArray();
-
-            $factor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
-            $factor['title'] = $Shipping->getTitle();
+            $shippingFactor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
+            $shippingFactor['title'] = $Shipping->getTitle();
 
             $PriceFactors->setFactor(
                 $index,
-                new QUI\ERP\Accounting\PriceFactors\Factor($factor)
+                new QUI\ERP\Accounting\PriceFactors\Factor($shippingFactor)
             );
 
             $data['articles'] = $Articles->toJSON();
@@ -797,7 +814,13 @@ class EventHandler
     public static function onQuiqqerCustomerChange(QUI\ERP\ErpEntityInterface $ErpEntity): void
     {
         try {
-            if (!QUI::getPackage('quiqqer/shipping')->getConfig()->get('shipping', 'considerCustomerCountry')) {
+            $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+
+            if ($Config === null) {
+                throw new QUI\Exception('Missing quiqqer/shipping config');
+            }
+
+            if (!$Config->get('shipping', 'considerCustomerCountry')) {
                 return;
             }
         } catch (Exception) {

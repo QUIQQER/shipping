@@ -12,7 +12,7 @@ use QUI\ERP\Shipping\Types\Factory;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_create',
     function ($shippingType) {
         $Type = Shipping::getInstance()->getShippingType($shippingType);

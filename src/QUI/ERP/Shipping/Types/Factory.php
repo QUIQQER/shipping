@@ -26,18 +26,18 @@ class Factory extends QUI\CRUD\Factory
     {
         parent::__construct();
 
-        $this->Events->addEvent('onCreateBegin', function () {
+        $this->Events->addEvent('onCreateBegin', function (): void {
             Permission::checkPermission('quiqqer.shipping.create');
         });
 
         // create new translation var for the area
-        $this->Events->addEvent('onCreateEnd', function () {
+        $this->Events->addEvent('onCreateEnd', function (): void {
             QUI\Translator::publish('quiqqer/shipping');
         });
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      *
      * @return ShippingEntry
      *
@@ -109,7 +109,7 @@ class Factory extends QUI\CRUD\Factory
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     public function getChildAttributes(): array
     {
@@ -147,14 +147,17 @@ class Factory extends QUI\CRUD\Factory
     /**
      * Creates a locale
      *
-     * @param $var
-     * @param $title
+     * @param string $var
+     * @param string $title
      */
     protected function createShippingLocale($var, $title): void
     {
         if (QUI::getLocale()->isLocaleString($title)) {
             $parts = QUI::getLocale()->getPartsOfLocaleString($title);
-            $title = QUI::getLocale()->get($parts[0], $parts[1]);
+
+            if (isset($parts[0], $parts[1])) {
+                $title = QUI::getLocale()->get($parts[0], $parts[1]);
+            }
         }
 
         $data = [];

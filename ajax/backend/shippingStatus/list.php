@@ -11,7 +11,7 @@ use QUI\ERP\Shipping\ShippingStatus\Handler;
  *
  * @return array
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_list',
     function () {
         $Grid = new QUI\Utils\Grid();

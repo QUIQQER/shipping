@@ -9,7 +9,7 @@ use QUI\ERP\Shipping\ShippingStatus\Factory;
 /**
  * Return next available ID
  */
-QUI::$Ajax->registerFunction(
+QUI::getAjax()->registerFunction(
     'package_quiqqer_shipping_ajax_backend_shippingStatus_getNextId',
     function () {
         return Factory::getInstance()->getNextId();
