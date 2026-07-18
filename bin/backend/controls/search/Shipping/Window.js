@@ -17,7 +17,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
 ], function(QUI, QUIControl, QUIConfirm, Handler, QUILocale) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
 
@@ -61,7 +61,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Window', [
          * @returns {HTMLDivElement}
          */
         $onOpen: function(Win) {
-            var self = this,
+            const self = this,
                 Content = Win.getContent();
 
             Win.Loader.show();

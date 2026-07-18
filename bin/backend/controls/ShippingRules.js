@@ -14,7 +14,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingRules', [
 ], function(QUI, QUIPanel, ShippingRuleList, QUILocale) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
 
@@ -47,7 +47,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingRules', [
          * event: on create
          */
         $onCreate: function() {
-            var self = this;
+            const self = this;
 
             this.$List = new ShippingRuleList({
                 events: {

@@ -38,7 +38,7 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
          * event: on import
          */
         $onImport: function() {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             Elm.addEventListener('click', this.$onClick);
             this.$Input = Elm.querySelector('[data-name="shipping-option"]');
@@ -57,7 +57,7 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
                 event.stopPropagation();
             }
 
-            var List = this.getElm().closest('[data-name="shipping-list"]');
+            const List = this.getElm().closest('[data-name="shipping-list"]');
 
             if (List) {
                 List.querySelectorAll('[data-name="shipping-entry"]').forEach(function(Entry) {

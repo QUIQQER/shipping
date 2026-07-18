@@ -56,7 +56,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
          * event: on inject
          */
         $onOpen: function() {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
             this.getContent().set('html', '');
@@ -75,7 +75,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/RuleWindow',
          * event: on submit
          */
         $onSubmit: function() {
-            var self = this;
+            const self = this;
 
             this.fireEvent('updateBegin', [this]);
 

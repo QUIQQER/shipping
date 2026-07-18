@@ -24,7 +24,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 ) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
 
@@ -151,7 +151,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * event : on inject
          */
         $onInject: function() {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
@@ -171,13 +171,13 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * event: on refresh
          */
         $onRefresh: function() {
-            var data = this.getAttribute('data');
+            const data = this.getAttribute('data');
 
             if (!data || !('active' in data)) {
                 return;
             }
 
-            var status = parseInt(data.active),
+            const status = parseInt(data.active),
                 Status = this.getButtons('status');
 
             if (status) {
@@ -237,11 +237,11 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * Reload the shipping data
          */
         reload: function() {
-            var self = this,
+            const self = this,
                 shippingId = this.getAttribute('shippingId');
 
             return Shipping.getShippingEntry(shippingId).then(function(result) {
-                var current = QUILocale.getCurrent();
+                const current = QUILocale.getCurrent();
 
                 self.setAttribute('title', result.title[current]);
                 self.setAttribute('icon', 'fa fa-credit-card-alt');
@@ -264,7 +264,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * @return {Promise}
          */
         save: function() {
-            var self = this,
+            const self = this,
                 shippingId = this.getAttribute('shippingId');
 
             this.Loader.show();
@@ -273,7 +273,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
             this.$__storageData = {};
             this.$__running = false;
 
-            var data = this.getAttribute('data');
+            const data = this.getAttribute('data');
 
             return new Promise(function(resolve, reject) {
                 Shipping.updateShipping(shippingId, data).then(function() {
@@ -292,7 +292,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * Activate the shipping
          */
         activate: function() {
-            var self = this,
+            const self = this,
                 shippingId = this.getAttribute('shippingId');
 
             self.Loader.show();
@@ -308,7 +308,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * Deactivate the shipping
          */
         deactivate: function() {
-            var self = this,
+            const self = this,
                 shippingId = this.getAttribute('shippingId');
 
             Shipping.deactivateShipping(shippingId).then(function(data) {
@@ -322,7 +322,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * Toggle the active status of the shipping
          */
         toggleStatus: function() {
-            var data = this.getAttribute('data');
+            const data = this.getAttribute('data');
 
             if (!('active' in data)) {
                 return;
@@ -339,7 +339,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * Show the information
          */
         showInformation: function() {
-            var self = this,
+            const self = this,
                 data = self.getAttribute('data');
 
             this.$hideContainer().then(function(Container) {
@@ -433,13 +433,13 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * SHow the description
          */
         showDescription: function() {
-            var self = this;
+            const self = this;
 
             Promise.all([
                 this.$hideContainer(),
                 this.$getTranslationData('description')
             ]).then(function(result) {
-                var Container = result[0],
+                const Container = result[0],
                     description = result[1];
 
                 return new Promise(function(resolve) {
@@ -466,7 +466,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * Opens the delete dialog
          */
         openDeleteDialog: function() {
-            var self = this,
+            const self = this,
                 shippingId = this.getAttribute('shippingId');
 
             new QUIConfirm({
@@ -507,7 +507,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * @return {Promise}
          */
         $showContainer: function() {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve) {
                 QUI.parse(self.$Container).then(function() {
@@ -531,7 +531,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * @return {Promise}
          */
         $hideContainer: function() {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
@@ -582,7 +582,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * The data is not saved
          */
         $unloadContainerData: function() {
-            var Form = this.$Container.getElement('form');
+            const Form = this.$Container.getElement('form');
 
             if (this.$DataDescription) {
                 this.$setData('description', this.$DataDescription.getData());
@@ -601,9 +601,9 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
             }
 
             if (Form) {
-                var formData = FormUtils.getFormData(Form);
+                const formData = FormUtils.getFormData(Form);
 
-                for (var key in formData) {
+                for (const key in formData) {
                     if (formData.hasOwnProperty(key)) {
                         this.$setData(key, formData[key]);
                     }
@@ -620,7 +620,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * @param {String} value
          */
         $setData: function(name, value) {
-            var data = this.getAttribute('data');
+            const data = this.getAttribute('data');
             data[name] = value;
 
             this.setAttribute('data', data);
@@ -632,7 +632,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * @param {String} name
          */
         $getData: function(name) {
-            var data = this.getAttribute('data');
+            const data = this.getAttribute('data');
 
             if (name in data) {
                 return data[name];
@@ -648,18 +648,18 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
          * @return {Promise}
          */
         $getTranslationData: function(name) {
-            var shippingId = this.getAttribute('shippingId');
+            const shippingId = this.getAttribute('shippingId');
 
-            var title = 'shipping.' + shippingId + '.title';
-            var description = 'shipping.' + shippingId + '.description';
-            var workingTitle = 'shipping.' + shippingId + '.workingTitle';
+            const title = 'shipping.' + shippingId + '.title';
+            const description = 'shipping.' + shippingId + '.description';
+            const workingTitle = 'shipping.' + shippingId + '.workingTitle';
 
             if (typeof this.$__running === 'undefined') {
                 this.$__storageData = {};
                 this.$__running = false;
             }
 
-            var getData = function() {
+            const getData = function() {
                 return new Promise(function(resolve, reject) {
                     if ('title' in this.$__storageData) {
                         resolve();
@@ -694,17 +694,17 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
 
             return getData().then(function() {
-                var data = this.$__storageData;
+                const data = this.$__storageData;
 
-                var result = {};
-                var value = data[name];
+                const result = {};
+                let value = data[name];
 
                 if (this.$getData(name)) {
                     value = this.$getData(name);
                 }
 
                 data.languages.each(function(language) {
-                    var val = value[language];
+                    let val = value[language];
 
                     if (value[language + '_edit'] !== '' && value[language + '_edit']) {
                         val = value[language + '_edit'];

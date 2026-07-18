@@ -52,7 +52,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
          * event: on inject
          */
         $onOpen: function() {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
             this.getContent().set('html', '');
@@ -70,7 +70,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
          * event: on submit
          */
         $onSubmit: function() {
-            var self = this;
+            const self = this;
 
             this.Loader.hide();
             this.$Create.submit().then(function() {

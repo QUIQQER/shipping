@@ -89,7 +89,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
 
             Shipping.getShippingList().then(function(result) {
                 const toggle = function(Btn) {
-                    let data = Btn.getAttribute('data'),
+                    const data = Btn.getAttribute('data'),
                         shippingId = data.id,
                         status = parseInt(data.active);
 
@@ -359,7 +359,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         }).inject(Container);
 
                         Shipping.getShippingTypes().then(function(result) {
-                            for (let i in result) {
+                            for (const i in result) {
                                 if (!result.hasOwnProperty(i)) {
                                     continue;
                                 }
@@ -403,8 +403,8 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
             }
 
             const self = this;
-            let shipping = selected[0].title,
-                shippingId = selected[0].id;
+            const shippingId = selected[0].id;
+            let shipping = selected[0].title;
 
             if (shipping === '') {
                 shipping = shippingId;
