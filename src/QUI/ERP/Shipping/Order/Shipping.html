@@ -4,31 +4,33 @@
     </header>
 
     {if isset($shippingEmptyMessage)}
-    <div class="message-error">{$shippingEmptyMessage}</div>
+    <div class="message-error">{$shippingEmptyMessage|escape:'html'}</div>
     {/if}
 
-    <div class="quiqqer-order-step-shipping-list">
+    <div class="quiqqer-order-step-shipping-list" data-name="shipping-list">
         {foreach $shippingList as $Shipping}
         <div class="quiqqer-order-step-shipping-list-entry"
+             data-name="shipping-entry"
              data-qui="package/quiqqer/shipping/bin/frontend/controls/order/Shipping"
         >
             <div class="quiqqer-order-step-shipping-list-entry-select">
-                <input id="shipping-{$Shipping->getId()}"
+                <input id="shipping-{$Shipping->getId()|escape:'html'}"
                        type="radio"
                        name="shipping"
-                       value="{$Shipping->getId()}"
+                       data-name="shipping-option"
+                       value="{$Shipping->getId()|escape:'html'}"
                        {if $SelectedShipping && $SelectedShipping->getId() === $Shipping->getId()}checked="checked"{/if}
                 />
             </div>
             <div class="quiqqer-order-step-shipping-list-entry-icon">
-                <img src="{$Shipping->getIcon()}" alt=""/>
+                <img src="{$Shipping->getIcon()|escape:'html'}" alt=""/>
             </div>
             <div class="quiqqer-order-step-shipping-list-entry-text">
-                <label for="shipping-{$Shipping->getId()}">
-                    {$Shipping->getTitle()}
+                <label for="shipping-{$Shipping->getId()|escape:'html'}">
+                    {$Shipping->getTitle()|escape:'html'}
                 </label>
                 <div class="quiqqer-order-step-shipping-list-entry-text-description">
-                    {$Shipping->getDescription()}
+                    {$Shipping->getDescription()|escape:'html'}
                 </div>
             </div>
             <div class="quiqqer-order-step-shipping-list-entry-price">
@@ -40,7 +42,7 @@
 
     {if isset($debug)}
     <div class="shipping-debug-console">
-        <pre>{$debug}</pre>
+        <pre>{$debug|escape:'html'}</pre>
     </div>
     {/if}
 </section>

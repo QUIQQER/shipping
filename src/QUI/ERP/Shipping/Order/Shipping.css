@@ -1,7 +1,7 @@
 .quiqqer-order-step-shipping {
     --_shipping-order-listEntry-padding: var(--shipping-order-listEntry-padding, var(--_order-listEntry-padding, 1rem));
     --_shipping-order-listEntry-bg: var(--shipping-order-listEntry-bg, var(--_order-listEntry-bg, transparent));
-    --_shipping-order-listEntry-bg--hover: var(--shipping-order-listEntry-bg--hover, var(--_order-listEntry-bg--hover, #f8f8f8));
+    --_shipping-order-listEntry-bg--hover: var(--shipping-order-listEntry-bg--hover, var(--_order-listEntry-bg--hover, var(--qui-colors-gray-50)));
     --_shipping-order-listEntry-radius: var(--shipping-order-listEntry-radius, var(--_order-listEntry-radius, 0.25rem));
     --_shipping-order-listEntry-gap: var(--shipping-order-listEntry-gap, var(--_order-listEntry-gap, 2rem));
     --_shipping-order-listEntry-spacing: var(--shipping-order-listEntry-spacing, var(--_order-listEntry-spacing, .5rem));
@@ -86,8 +86,8 @@
 }
 
 .shipping-debug-console {
-    border: 1px solid #999;
-    background: #fff;
+    border: 1px solid var(--qui-colors-gray-400);
+    background: var(--qui-colors-white);
     bottom: 10px;
     height: 400px;
     max-width: 100%;

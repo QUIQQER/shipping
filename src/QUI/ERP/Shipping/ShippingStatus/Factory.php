@@ -7,6 +7,7 @@
 namespace QUI\ERP\Shipping\ShippingStatus;
 
 use QUI;
+use QUI\Permissions\Permission;
 
 use function array_keys;
 use function count;
@@ -29,11 +30,11 @@ class Factory extends QUI\Utils\Singleton
      *
      * @throws Exception
      * @throws QUI\Exception
-     *
-     * @todo permissions
      */
     public function createShippingStatus(int | string $id, string $color, array $title): void
     {
+        Permission::checkPermission('quiqqer.shipping.create');
+
         $list = Handler::getInstance()->getList();
         $id = (int)$id;
         $data = [];

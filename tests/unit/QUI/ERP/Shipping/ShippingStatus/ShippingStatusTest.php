@@ -32,12 +32,45 @@ class ShippingStatusTest extends TestCase
         }
     }
 
+    public function testHandlerReturnsEmptyListForMissingConfigurationSection(): void
+    {
+        $Handler = Handler::getInstance();
+        $List = new ReflectionProperty($Handler, 'list');
+        $previousList = $List->getValue($Handler);
+        $Config = QUI::getPackage('quiqqer/shipping')->getConfig();
+        $previousSection = $Config->getSection('shipping_status');
+
+        try {
+            $Config->del('shipping_status');
+            $List->setValue($Handler, null);
+
+            self::assertSame([], $Handler->getList());
+        } finally {
+            $Config->set('shipping_status', $previousSection);
+            $List->setValue($Handler, $previousList);
+        }
+    }
+
     public function testStatusFactoryCalculatesUnusedNextId(): void
     {
         $list = Handler::getInstance()->getList();
         $expected = $list === [] ? 1 : max(array_map('intval', array_keys($list))) + 1;
 
         self::assertSame($expected, Factory::getInstance()->getNextId());
+    }
+
+    public function testStatusFactoryStartsAtOneForEmptyList(): void
+    {
+        $Handler = Handler::getInstance();
+        $List = new ReflectionProperty($Handler, 'list');
+        $previous = $List->getValue($Handler);
+
+        try {
+            $List->setValue($Handler, []);
+            self::assertSame(1, Factory::getInstance()->getNextId());
+        } finally {
+            $List->setValue($Handler, $previous);
+        }
     }
 
     public function testUnknownConfiguredStatusThrows(): void

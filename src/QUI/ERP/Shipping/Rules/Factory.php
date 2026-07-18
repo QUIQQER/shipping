@@ -51,7 +51,7 @@ class Factory extends QUI\CRUD\Factory
         parent::__construct();
 
         $this->Events->addEvent('onCreateBegin', function (): void {
-            Permission::checkPermission('quiqqer.shipping.rule.create');
+            Permission::checkPermission('quiqqer.shipping.create');
         });
 
         // create new translation var for the area
@@ -170,8 +170,11 @@ class Factory extends QUI\CRUD\Factory
         // start creating
         QUI::getEvents()->fireEvent('shippingRuleCreateBegin', [$data]);
 
-        /* @var $NewChild ShippingRule */
         $NewChild = parent::createChild($data);
+
+        if (!$NewChild instanceof ShippingRule) {
+            throw new \LogicException();
+        }
 
         $localeTitle = 'shipping.' . $NewChild->getId() . '.rule.title';
         $localeWTitle = 'shipping.' . $NewChild->getId() . '.rule.workingTitle';
@@ -230,7 +233,6 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateEnd', [$NewChild]);
 
-        // @phpstan-ignore-next-line
         return $NewChild;
     }
 
@@ -277,9 +279,7 @@ class Factory extends QUI\CRUD\Factory
             'articles_only',
 
             'discount',
-            'discount_type',
-            'articles',
-            'user_groups'
+            'discount_type'
         ];
     }
 
@@ -292,10 +292,12 @@ class Factory extends QUI\CRUD\Factory
      */
     public function getChild($id): ShippingRule
     {
-        /* @var ShippingRule $Shipping */
         $Shipping = parent::getChild($id);
 
-        // @phpstan-ignore-next-line
+        if (!$Shipping instanceof ShippingRule) {
+            throw new \LogicException();
+        }
+
         return $Shipping;
     }
 

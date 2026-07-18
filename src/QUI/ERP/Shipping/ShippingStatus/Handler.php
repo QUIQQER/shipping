@@ -8,6 +8,7 @@ namespace QUI\ERP\Shipping\ShippingStatus;
 
 use QUI;
 use QUI\ERP\Order\AbstractOrder;
+use QUI\Permissions\Permission;
 
 use function is_array;
 
@@ -132,11 +133,11 @@ class Handler extends QUI\Utils\Singleton
      *
      * @throws Exception
      * @throws QUI\Exception
-     *
-     * @todo permissions
      */
     public function deleteShippingStatus(int | string $id): void
     {
+        Permission::checkPermission('quiqqer.shipping.delete');
+
         $Status = $this->getShippingStatus((int)$id);
 
         // remove translation
@@ -171,6 +172,8 @@ class Handler extends QUI\Utils\Singleton
      */
     public function setShippingStatusNotification(int $id, bool $notify): void
     {
+        Permission::checkPermission('quiqqer.shipping.edit');
+
         $Status = $this->getShippingStatus($id);
 
         // update config
@@ -193,11 +196,11 @@ class Handler extends QUI\Utils\Singleton
      * @param array<string, array<array-key, mixed>|string> $title
      *
      * @throws QUI\Exception
-     *
-     * @todo permissions
      */
     public function updateShippingStatus(int $id, int | string $color, array $title): void
     {
+        Permission::checkPermission('quiqqer.shipping.edit');
+
         $Status = $this->getShippingStatus($id);
 
         // update translation

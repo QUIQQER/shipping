@@ -102,6 +102,28 @@ class ShippingTimePeriodTest extends TestCase
         self::assertSame('', $View->create());
     }
 
+    public function testFrontendViewEscapesTitleAndCustomText(): void
+    {
+        $attack = '"><script>alert(1)</script>';
+        $View = new ShippingTimeFrontendView([
+            'id' => 91010,
+            'title' => $attack,
+            'value' => [
+                'option' => ShippingTimePeriod::OPTION_CUSTOM_TEXT,
+                'from' => 0,
+                'to' => 0,
+                'unit' => 'day',
+                'text' => ['xx' => $attack]
+            ],
+            'isPublic' => true
+        ]);
+
+        $html = $View->create();
+
+        self::assertStringNotContainsString($attack, $html);
+        self::assertStringContainsString('&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+    }
+
     public function testEmptyConfiguredDefaultValueReturnsNull(): void
     {
         $Config = QUI::getPackage('quiqqer/shipping')->getConfig();

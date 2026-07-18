@@ -4,14 +4,12 @@
  */
 define('package/quiqqer/shipping/bin/backend/controls/settings/RuleFields', [
 
-    'qui/QUI',
     'qui/controls/Control',
-    'Locale',
     'Ajax',
 
     'css!package/quiqqer/shipping/bin/backend/controls/settings/RuleFields.css'
 
-], function(QUI, QUIControl, QUILocale, QUIAjax) {
+], function(QUIControl, QUIAjax) {
     'use strict';
 
     return new Class({
@@ -37,39 +35,50 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/RuleFields', [
          */
         $onImport: function() {
             this.$Input = this.getElm();
-            this.$Elm = new Element('div', {
-                'class': 'quiqqer-shipping-settings-ruleFields field-container-field'
-            }).wraps(this.$Input);
+            this.$Elm = document.createElement('div');
+            this.$Elm.className = 'quiqqer-shipping-settings-ruleFields field-container-field';
+            this.$Input.parentNode.insertBefore(this.$Elm, this.$Input);
+            this.$Elm.appendChild(this.$Input);
 
-            new Element('span', {
-                html: '<span class="fa fa-spinner fa-spin"></span>'
-            }).inject(this.$Elm);
+            var Spinner = document.createElement('span'),
+                SpinnerIcon = document.createElement('span');
+
+            SpinnerIcon.className = 'fa fa-spinner fa-spin';
+            SpinnerIcon.setAttribute('aria-hidden', 'true');
+            Spinner.appendChild(SpinnerIcon);
+            this.$Elm.appendChild(Spinner);
 
             var self = this,
                 Container = this.$Elm;
 
-            this.$Elm.getParent('.field-container').getElement('.field-container-item').addEvent(
-                'click',
-                function(event) {
-                    event.stop();
-                }
-            );
+            var FieldContainer = this.$Elm.closest('.field-container'),
+                FieldContainerItem = FieldContainer && FieldContainer.querySelector('.field-container-item');
+
+            if (FieldContainerItem) {
+                FieldContainerItem.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+            }
 
             QUIAjax.get('package_quiqqer_shipping_ajax_backend_rules_settings_getUnitFields', function(unitFields) {
-                Container.getChildren().forEach(function(Node) {
+                Array.from(Container.children).forEach(function(Node) {
                     if (Node.nodeName !== 'INPUT') {
-                        Node.destroy();
+                        Node.remove();
                     }
                 });
 
                 for (var i = 0, len = unitFields.length; i < len; i++) {
-                    new Element('label', {
-                        'class': 'quiqqer-shipping-settings-ruleFields-entry',
-                        html: '<input type="checkbox" value="' + unitFields[i].id + '" />' + unitFields[i].title,
-                        events: {
-                            change: self.$updateInput
-                        }
-                    }).inject(Container);
+                    var Label = document.createElement('label'),
+                        Checkbox = document.createElement('input');
+
+                    Label.className = 'quiqqer-shipping-settings-ruleFields-entry';
+                    Checkbox.type = 'checkbox';
+                    Checkbox.value = unitFields[i].id;
+                    Checkbox.dataset.name = 'rule-field';
+                    Checkbox.addEventListener('change', self.$updateInput);
+                    Label.appendChild(Checkbox);
+                    Label.appendChild(document.createTextNode(unitFields[i].title));
+                    Container.appendChild(Label);
                 }
 
                 // check active fields
@@ -79,11 +88,11 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/RuleFields', [
                     return;
                 }
 
-                value = value.split(',');
+                value = new Set(value.split(','));
 
-                for (i = 0, len = value.length; i < len; i++) {
-                    Container.getElements('[value="' + value[i] + '"]').set('checked', true);
-                }
+                Container.querySelectorAll('[data-name="rule-field"]').forEach(function(Checkbox) {
+                    Checkbox.checked = value.has(Checkbox.value);
+                });
             }, {
                 'package': 'quiqqer/shipping'
             });
@@ -93,7 +102,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/RuleFields', [
          * Refresh the input value
          */
         $updateInput: function() {
-            var checkboxes = this.getElm().getElements('[type="checkbox"]');
+            var checkboxes = Array.from(this.$Elm.querySelectorAll('[data-name="rule-field"]'));
 
             checkboxes = checkboxes.filter(function(Node) {
                 return Node.checked;

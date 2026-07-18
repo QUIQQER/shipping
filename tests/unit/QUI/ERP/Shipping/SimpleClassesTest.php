@@ -8,6 +8,7 @@ use QUI\ERP\Shipping\Methods\Digital\ShippingType as DigitalShippingType;
 use QUI\ERP\Shipping\Methods\Standard\ShippingType as StandardShippingType;
 use QUI\ERP\Shipping\ShippingStatus\StatusUnknown;
 use QUI\ERP\Shipping\Tracking\Tracking;
+use QUI\ERP\Shipping\Types\Factory as ShippingFactory;
 use QUI\ERP\Shipping\Types\ShippingUnique;
 
 class SimpleClassesTest extends TestCase
@@ -121,6 +122,15 @@ class SimpleClassesTest extends TestCase
 
         $this->expectException(QUI\ERP\Shipping\Exception::class);
         $Shipping->getShippingType();
+    }
+
+    public function testShippingFactoryRejectsUnknownShippingClass(): void
+    {
+        $this->expectException(QUI\ERP\Shipping\Exception::class);
+
+        ShippingFactory::getInstance()->createChild([
+            'shipping_type' => 'PHPUnit\\MissingShippingType'
+        ]);
     }
 
     public function testDebugStackAndLoggers(): void
