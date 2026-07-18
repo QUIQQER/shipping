@@ -21,12 +21,60 @@ class ControlsAndProviderTest extends TestCase
         self::assertStringContainsString('quiqqer-shipping-user-address', $WithUser->create());
     }
 
+    public function testAddressControlsEscapeAddressOutput(): void
+    {
+        $attack = '"><script>alert(1)</script>';
+        $Address = $this->createMock(QUI\Users\Address::class);
+        $Address->method('getId')->willReturn(91011);
+        $Address->method('getUUID')->willReturn($attack);
+        $Address->method('getText')->willReturn($attack);
+        $User = $this->createMock(QUI\Users\User::class);
+        $User->method('getAddressList')->willReturn([$Address]);
+        $User->method('getAttribute')->willReturn(null);
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getShipping')->willReturn(null);
+        $Order->method('getDeliveryAddress')->willReturn($this->createMock(QUI\ERP\Address::class));
+
+        $Select = new ShippingAddressSelect(['User' => $User]);
+        $Checkout = new QUI\ERP\Shipping\Order\ShippingAddress([
+            'User' => $User,
+            'Order' => $Order
+        ]);
+
+        foreach ([$Select->create(), $Checkout->create()] as $html) {
+            self::assertStringNotContainsString($attack, $html);
+            self::assertStringContainsString('&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+        }
+    }
+
+    public function testRuleFieldsCreatesApiTitlesAsTextNodes(): void
+    {
+        $source = file_get_contents(
+            dirname(__DIR__, 5) . '/bin/backend/controls/settings/RuleFields.js'
+        );
+
+        self::assertIsString($source);
+        self::assertStringContainsString('document.createTextNode(unitFields[i].title)', $source);
+        self::assertStringNotContainsString('innerHTML', $source);
+        self::assertStringNotContainsString("html: '<input", $source);
+    }
+
     public function testOrderingStepProvidesStableMetadata(): void
     {
         $Step = new ShippingStep();
 
         self::assertSame('Shipping', $Step->getName());
         self::assertSame('fa-truck', $Step->getIcon());
+    }
+
+    public function testOrderingStepWithoutOrderCannotRenderOrValidate(): void
+    {
+        $Step = new ShippingStep();
+
+        self::assertSame('', $Step->getBody());
+
+        $this->expectException(QUI\ERP\Order\Exception::class);
+        $Step->validate();
     }
 
     public function testOrderProcessProviderDisplayIsIntentionallyEmpty(): void

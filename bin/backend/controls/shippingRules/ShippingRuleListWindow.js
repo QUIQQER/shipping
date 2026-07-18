@@ -44,7 +44,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
          * event: on inject
          */
         $onOpen: function() {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
             this.getContent().set('html', '');

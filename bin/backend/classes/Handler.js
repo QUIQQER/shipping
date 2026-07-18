@@ -38,7 +38,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
                 return window.Promise.resolve(this.$shippings);
             }
 
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 QUIAjax.get('package_quiqqer_shipping_ajax_backend_getShippingList', function(result) {
@@ -88,7 +88,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @return {Promise}
          */
         createShipping: function(shippingType) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_create', function(shippingId) {
@@ -118,7 +118,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @return {Promise}
          */
         updateShipping: function(shippingId, data) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_update', function(result) {
@@ -147,7 +147,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @return {Promise}
          */
         deleteShipping: function(shippingId) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 self.$shippings = null;
@@ -170,7 +170,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @return {Promise}
          */
         activateShipping: function(shippingId) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 self.$shippings = null;
@@ -193,7 +193,7 @@ define('package/quiqqer/shipping/bin/backend/classes/Handler', [
          * @return {Promise}
          */
         deactivateShipping: function(shippingId) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 self.$shippings = null;

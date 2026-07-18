@@ -57,7 +57,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingWindow', [
 
             Shipping.getShippingList().then((result) => {
                 const toggle = function(Btn) {
-                    let data = Btn.getAttribute('data'),
+                    const data = Btn.getAttribute('data'),
                         shippingId = data.id,
                         status = parseInt(data.active);
 

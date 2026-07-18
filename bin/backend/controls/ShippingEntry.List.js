@@ -93,7 +93,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                     'package/quiqqer/shipping/bin/backend/ShippingRules',
                     'package/quiqqer/shipping/bin/backend/utils/ShippingUtils'
                 ], (Shipping, ShippingRules, Utils) => {
-                    let shippingRules = this.$Grid.getData().map(function(entry) {
+                    const shippingRules = this.$Grid.getData().map(function(entry) {
                         return entry.id;
                     });
 
@@ -207,7 +207,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         shippingRules = [];
                     }
 
-                    let data = shippingRules.map(function(entry) {
+                    const data = shippingRules.map(function(entry) {
                         return {
                             id: entry
                         };

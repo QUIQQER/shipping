@@ -16,6 +16,10 @@ form[name="create-rule"] .product-table .field-container-field {
     padding: 0.5rem 0;
 }
 
+.quiqqer-shipping-rule-discountInput {
+    border-top: 1px solid var(--qui-colors-gray-200);
+}
+
 .quiqqer-shipping-rule-andText {
     display: inline-block;
     overflow: hidden;

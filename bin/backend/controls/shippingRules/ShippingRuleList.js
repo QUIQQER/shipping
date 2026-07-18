@@ -167,8 +167,8 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
             this.$Grid.addEvents({
                 onRefresh: this.refresh,
                 onClick: () => {
-                    let buttons = this.$Grid.getButtons();
-                    let selected = this.$Grid.getSelectedData();
+                    const buttons = this.$Grid.getButtons();
+                    const selected = this.$Grid.getSelectedData();
 
                     const Edit = buttons.filter(function(Btn) {
                         return Btn.getAttribute('name') === 'edit';
@@ -204,7 +204,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                 result.data = ShippingUtils.parseRulesDataForGrid(result.data);
                 this.$Grid.setData(result);
 
-                let buttons = this.$Grid.getButtons();
+                const buttons = this.$Grid.getButtons();
 
                 buttons.filter(function(Btn) {
                     return Btn.getAttribute('name') === 'delete';
@@ -299,13 +299,13 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
          * event: open delete dialog
          */
         $openDeleteDialog: function() {
-            let selected = this.$Grid.getSelectedData();
+            const selected = this.$Grid.getSelectedData();
 
             if (!selected.length) {
                 return;
             }
 
-            let ruleIds = selected.map(function(entry) {
+            const ruleIds = selected.map(function(entry) {
                 return entry.id;
             });
 

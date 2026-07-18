@@ -9,10 +9,9 @@
  */
 define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
 
-    'qui/QUI',
     'qui/controls/Control'
 
-], function(QUI, QUIControl) {
+], function(QUIControl) {
     'use strict';
 
     return new Class({
@@ -39,12 +38,13 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
          * event: on import
          */
         $onImport: function() {
-            this.getElm().addEvent('click', this.$onClick);
+            const Elm = this.getElm();
 
-            this.$Input = this.getElm().getElement('input');
+            Elm.addEventListener('click', this.$onClick);
+            this.$Input = Elm.querySelector('[data-name="shipping-option"]');
 
             if (this.$Input.checked) {
-                this.getElm().addClass('selected');
+                Elm.classList.add('selected');
             }
         },
 
@@ -53,14 +53,20 @@ define('package/quiqqer/shipping/bin/frontend/controls/order/Shipping', [
          */
         $onClick: function(event) {
             if (event.target.nodeName !== 'INPUT') {
-                event.stop();
+                event.preventDefault();
+                event.stopPropagation();
             }
 
-            this.getElm().getParent('.quiqqer-order-step-shipping-list').getElements(
-                '.quiqqer-order-step-shipping-list-entry').removeClass('selected');
+            const List = this.getElm().closest('[data-name="shipping-list"]');
+
+            if (List) {
+                List.querySelectorAll('[data-name="shipping-entry"]').forEach(function(Entry) {
+                    Entry.classList.remove('selected');
+                });
+            }
 
             this.$Input.checked = true;
-            this.getElm().addClass('selected');
+            this.getElm().classList.add('selected');
         }
     });
 });

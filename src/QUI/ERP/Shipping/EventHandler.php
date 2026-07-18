@@ -512,7 +512,8 @@ class EventHandler
                 ],
                 'type' => Shipping::PRODUCT_FIELD_TYPE_SHIPPING_TIME,
                 'public' => true,
-                'standard' => true
+                'standard' => true,
+                'options' => null
             ]
         ];
 
@@ -533,9 +534,9 @@ class EventHandler
                     'titles' => $field['title'],
                     'workingtitles' => $field['title'],
                     'systemField' => 0,
-                    'standardField' => !empty($field['standard']) ? 1 : 0, // @phpstan-ignore-line
-                    'publicField' => !empty($field['public']) ? 1 : 0,  // @phpstan-ignore-line
-                    'options' => !empty($field['options']) ? $field['options'] : null  // @phpstan-ignore-line
+                    'standardField' => (int)$field['standard'],
+                    'publicField' => (int)$field['public'],
+                    'options' => $field['options']
                 ]);
             } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -572,6 +573,7 @@ class EventHandler
         }
 
         $Engine = QUI::getTemplateManager()->getEngine();
+        $Price->addCSSFile(dirname(__FILE__) . '/templates/shippingInformation.css');
         $html = $Engine->fetch(dirname(__FILE__) . '/templates/shippingInformation.html');
 
         $Collector->append($html);

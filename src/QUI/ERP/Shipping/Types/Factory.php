@@ -64,17 +64,20 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateBegin', [$data['shipping_type']]);
 
-        /* @var ShippingEntry $NewChild */
         $NewChild = parent::createChild($data);
+
+        if (!$NewChild instanceof ShippingEntry) {
+            throw new \LogicException();
+        }
 
         $this->createShippingLocale(
             'shipping.' . $NewChild->getId() . '.title',
-            $NewChild->getShippingType()->getTitle() // @phpstan-ignore-line
+            $NewChild->getShippingType()->getTitle()
         );
 
         $this->createShippingLocale(
             'shipping.' . $NewChild->getId() . '.workingTitle',
-            $NewChild->getShippingType()->getTitle() . ' - ' . $NewChild->getId() // @phpstan-ignore-line
+            $NewChild->getShippingType()->getTitle() . ' - ' . $NewChild->getId()
         );
 
         // description
@@ -88,7 +91,6 @@ class Factory extends QUI\CRUD\Factory
 
         QUI::getEvents()->fireEvent('shippingCreateEnd', [$NewChild]);
 
-        // @phpstan-ignore-next-line
         return $NewChild;
     }
 
@@ -137,10 +139,12 @@ class Factory extends QUI\CRUD\Factory
      */
     public function getChild($id): ShippingEntry
     {
-        /* @var ShippingEntry $Shipping */
         $Shipping = parent::getChild($id);
 
-        // @phpstan-ignore-next-line
+        if (!$Shipping instanceof ShippingEntry) {
+            throw new \LogicException();
+        }
+
         return $Shipping;
     }
 
