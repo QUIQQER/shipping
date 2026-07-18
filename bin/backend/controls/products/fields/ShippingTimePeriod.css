@@ -1,5 +1,5 @@
 .quiqqer-shipping-fields-shippingtimeperiod {
-    border-bottom: 1px solid #dedede;
+    border-bottom: 1px solid var(--qui-colors-gray-200);
     flex-basis: 100%;
     margin: 0 0 10px 0;
     padding: 0 0 10px 0;

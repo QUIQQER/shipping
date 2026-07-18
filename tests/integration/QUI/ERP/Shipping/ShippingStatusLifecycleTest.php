@@ -38,6 +38,13 @@ class ShippingStatusLifecycleTest extends TestCase
             $Factory->createShippingStatus($id, '#123456', $titles);
             self::assertTrue($Handler->exists($id));
 
+            try {
+                $Factory->createShippingStatus($id, '#654321', $titles);
+                self::fail('Creating a duplicate shipping status must fail.');
+            } catch (QUI\ERP\Shipping\ShippingStatus\Exception) {
+                self::assertTrue($Handler->exists($id));
+            }
+
             $FieldsList = new \ReflectionProperty(Fields::class, 'list');
             $previousFields = $FieldsList->getValue();
             $Field = $this->createMock(QUI\ERP\Products\Field\Field::class);
@@ -73,6 +80,24 @@ class ShippingStatusLifecycleTest extends TestCase
                 'Rendered status message',
                 $Status->getStatusChangeNotificationText($Order, $Locale)
             );
+
+            $FallbackLocale = $this->createMock(QUI\Locale::class);
+            $FallbackLocale->method('get')->willReturnCallback(
+                static function (string $group, string $var) use ($id): string {
+                    return match ($var) {
+                        'shipping.status.notification.' . $id => '[quiqqer/shipping] missing.notification',
+                        'shipping.status.notification.template' => 'Fallback status message',
+                        default => 'PHPUnit shipping status'
+                    };
+                }
+            );
+            $FallbackLocale->method('formatDate')->willReturn('17.07.2026');
+
+            self::assertSame(
+                'Fallback status message',
+                $Status->getStatusChangeNotificationText($Order, $FallbackLocale)
+            );
+            self::assertNotSame('', $Status->getStatusChangeNotificationText($Order));
 
             $Handler->setShippingStatusNotification($id, true);
             self::assertTrue($Handler->getShippingStatus($id)->isAutoNotification());

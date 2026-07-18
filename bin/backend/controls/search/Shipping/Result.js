@@ -18,7 +18,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
 ], function(QUI, QUIControl, QUIButton, Grid, QUILocale) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
         Extends: QUIControl,
@@ -47,7 +47,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
          * @returns {HTMLDivElement}
          */
         create: function() {
-            var Elm = this.parent();
+            const Elm = this.parent();
 
             Elm.set('html', '');
 
@@ -57,7 +57,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
                 'width': '100%'
             });
 
-            var Container = new Element('div').inject(Elm);
+            const Container = new Element('div').inject(Elm);
 
             this.$Grid = new Grid(Container, {
                 filterInput: true,
@@ -116,7 +116,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
                 return;
             }
 
-            for (var i = 0, len = data.length; i < len; i++) {
+            for (let i = 0, len = data.length; i < len; i++) {
                 if ('shippingType' in data[i] && data[i].shippingType) {
                     data[i].shippingType_display = data[i].shippingType.title;
                 }
@@ -146,7 +146,7 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
          * @return {Promise}
          */
         resize: function() {
-            var size = this.getElm().getSize();
+            const size = this.getElm().getSize();
 
             this.$Grid.setWidth(size.x);
             this.$Grid.setHeight(size.y);

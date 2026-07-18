@@ -18,7 +18,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
 ], function(QUI, QUIControl, QUIConfirm, ShippingStatus, Grid, QUILocale, Mustache, template) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
 
@@ -52,10 +52,10 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * Refresh
          */
         refresh: function() {
-            var self = this;
+            const self = this;
 
             ShippingStatus.getList().then(function(result) {
-                for (var i = 0, len = result.data.length; i < len; i++) {
+                for (let i = 0, len = result.data.length; i < len; i++) {
                     result.data[i].colorNode = new Element('span', {
                         html: result.data[i].color,
                         'class': 'quiqqer-shipping-shipping-status-color',
@@ -96,9 +96,9 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                 width: '100%'
             });
 
-            var w = this.$Elm.getSize().x;
+            const w = this.$Elm.getSize().x;
 
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 styles: {
                     height: 300,
                     width: w
@@ -173,13 +173,13 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * Refresh the grid button status (disabled/enabled)
          */
         $refreshButtonStatus: function() {
-            var selected = this.$Grid.getSelectedIndices();
+            const selected = this.$Grid.getSelectedIndices();
 
-            var Edit = this.$Grid.getButtons().filter(function(Button) {
+            const Edit = this.$Grid.getButtons().filter(function(Button) {
                 return Button.getAttribute('name') === 'edit';
             })[0];
 
-            var Delete = this.$Grid.getButtons().filter(function(Button) {
+            const Delete = this.$Grid.getButtons().filter(function(Button) {
                 return Button.getAttribute('name') === 'delete';
             })[0];
 
@@ -200,7 +200,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * - Create a Shipping Status
          */
         openCreateDialog: function() {
-            var self = this;
+            const self = this;
 
             new QUIConfirm({
                 icon: 'fa fa-plus',
@@ -210,11 +210,11 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                 autoclose: false,
                 events: {
                     onOpen: function(Win) {
-                        var Content = Win.getContent();
+                        const Content = Win.getContent();
 
                         Win.Loader.show();
 
-                        var lgPrefix = 'dialog.shippingStatus.template.';
+                        const lgPrefix = 'dialog.shippingStatus.template.';
 
                         Content.addClass('quiqqer-shipping-shipping-status-window');
                         Content.set('html', Mustache.render(template, {
@@ -225,7 +225,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                             descNotification: QUILocale.get(lg, lgPrefix + 'descNotification')
                         }));
 
-                        var Form = Content.getElement('form');
+                        const Form = Content.getElement('form');
 
                         ShippingStatus.getNextId().then(function(nextId) {
                             Form.elements.id.value = nextId;
@@ -239,14 +239,14 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                     onSubmit: function(Win) {
                         Win.Loader.show();
 
-                        var Form = Win.getContent().getElement('form');
+                        const Form = Win.getContent().getElement('form');
 
                         require([
                             'qui/utils/Form',
                             'package/quiqqer/shipping/bin/backend/ShippingStatus'
                         ], function(FormUtils, ShippingStatus) {
-                            var data = FormUtils.getFormData(Form),
-                                title = {};
+                            const data = FormUtils.getFormData(Form);
+                            let title = {};
 
                             try {
                                 title = JSON.decode(data.title);
@@ -275,8 +275,8 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * @param {Number|String} statusId - ID of the Status
          */
         openEditDialog: function(statusId) {
-            var self = this;
-            var data = this.$Grid.getData().filter(function(entry) {
+            const self = this;
+            let data = this.$Grid.getData().filter(function(entry) {
                 return entry.id === statusId;
             });
 
@@ -298,11 +298,11 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                 },
                 events: {
                     onOpen: function(Win) {
-                        var Content = Win.getContent();
+                        const Content = Win.getContent();
 
                         Win.Loader.show();
 
-                        var lgPrefix = 'dialog.shippingStatus.template.';
+                        const lgPrefix = 'dialog.shippingStatus.template.';
 
                         Content.addClass('quiqqer-order-shipping-status-window');
                         Content.set('html', Mustache.render(template, {
@@ -313,7 +313,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                             descNotification: QUILocale.get(lg, lgPrefix + 'descNotification')
                         }));
 
-                        var Form = Content.getElement('form');
+                        const Form = Content.getElement('form');
 
                         ShippingStatus.getShippingStatus(data.id).then(function(details) {
                             Form.elements.id.value = details.id;
@@ -330,14 +330,14 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                     onSubmit: function(Win) {
                         Win.Loader.show();
 
-                        var Form = Win.getContent().getElement('form');
+                        const Form = Win.getContent().getElement('form');
 
                         require([
                             'qui/utils/Form',
                             'package/quiqqer/shipping/bin/backend/ShippingStatus'
                         ], function(FormUtils, ShippingStatus) {
-                            var data = FormUtils.getFormData(Form),
-                                title = {};
+                            const data = FormUtils.getFormData(Form);
+                            let title = {};
 
                             try {
                                 title = JSON.decode(data.title);
@@ -366,8 +366,8 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * @param {Number|String} statusId - ID of the Status
          */
         openDeleteDialog: function(statusId) {
-            var self = this;
-            var data = this.$Grid.getData().filter(function(entry) {
+            const self = this;
+            const data = this.$Grid.getData().filter(function(entry) {
                 return entry.id === statusId;
             });
 
@@ -412,7 +412,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * event : on edit click
          */
         $onEditClick: function() {
-            var data = this.$Grid.getSelectedData();
+            const data = this.$Grid.getSelectedData();
 
             if (data.length) {
                 this.openEditDialog(data[0].id);
@@ -423,7 +423,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
          * event : on delete click
          */
         $onDeleteClick: function() {
-            var data = this.$Grid.getSelectedData();
+            const data = this.$Grid.getSelectedData();
 
             if (data.length) {
                 this.openDeleteDialog(data[0].id);

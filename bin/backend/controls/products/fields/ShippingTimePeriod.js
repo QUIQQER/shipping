@@ -13,7 +13,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
 ], function(QUI, TimePeriod, QUILocale) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
         Extends: TimePeriod,
@@ -53,14 +53,14 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          * Event: onImport
          */
         $onImport: function() {
-            var self = this,
-                Elm = this.getElm(),
-                Value = false;
+            const self = this,
+                Elm = this.getElm();
+            let Value = false;
 
             this.parent();
 
             // Options select
-            var OptionsContainer = new Element('div', {
+            const OptionsContainer = new Element('div', {
                 'class': 'quiqqer-shipping-fields-shippingtimeperiod'
             }).inject(this.$Content, 'top');
 
@@ -71,15 +71,15 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
                 }
             }).inject(OptionsContainer);
 
-            var options = this.getAttribute('selectOptions'),
+            const options = this.getAttribute('selectOptions'),
                 lgPrefix = 'controls.products.fields.ShippingTimePeriod.';
 
             if (this.getAttribute('show_default_option')) {
                 options.unshift('use_default');
             }
 
-            for (var i = 0, len = options.length; i < len; i++) {
-                var option = options[i];
+            for (let i = 0, len = options.length; i < len; i++) {
+                const option = options[i];
 
                 new Element('option', {
                     value: option,
@@ -94,7 +94,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
                 Elm.getParent().getElement('.quiqqer-products-fields-types-timeperiod')
             );
 
-            var CustomTextInput = new Element('input', {
+            const CustomTextInput = new Element('input', {
                 type: 'text',
                 'data-qui': 'package/quiqqer/products/bin/controls/fields/types/InputMultiLang'
             }).inject(this.$CustomTextContainer);
@@ -128,7 +128,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          * Executed if an option is selected
          */
         $onOptionSelectChange: function() {
-            var option = this.$OptionsSelect.value;
+            const option = this.$OptionsSelect.value;
 
             if (option === 'timeperiod') {
                 this.$UnitSelect.getParent().removeClass('quiqqer-shipping-fields-shippingtimeperiod__hidden');
@@ -153,7 +153,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          * Set field value to input
          */
         $setValue: function() {
-            var customText = this.$CustomText.getValue().trim();
+            let customText = this.$CustomText.getValue().trim();
 
             if (customText !== '') {
                 customText = JSON.decode(customText);
@@ -174,7 +174,7 @@ define('package/quiqqer/shipping/bin/backend/controls/products/fields/ShippingTi
          * @returns {Object}
          */
         getValue: function() {
-            var customText = this.$CustomText.getValue().trim();
+            let customText = this.$CustomText.getValue().trim();
 
             if (customText !== '') {
                 customText = JSON.decode(customText);

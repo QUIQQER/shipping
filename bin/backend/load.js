@@ -52,7 +52,7 @@ require(['qui/QUI'], function(QUI) {
                                                 currency
                                             );
                                         }).then((data) => {
-                                            let priceFactor = {
+                                            const priceFactor = {
                                                 calculation: 2,
                                                 calculation_basis: 2,
                                                 description: shippingData.title,

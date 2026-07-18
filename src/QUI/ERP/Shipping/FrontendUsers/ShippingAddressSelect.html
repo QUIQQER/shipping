@@ -8,8 +8,8 @@
     <select name="shipping-address">
         <option value=""></option>
         {foreach $addresses as $Address}
-        <option value="{$Address->getId()}" {if $current== $Address->getId()}selected{/if}>
-            {$Address->getText()}
+        <option value="{$Address->getId()|escape:'html'}" {if $current== $Address->getId()}selected{/if}>
+            {$Address->getText()|escape:'html'}
         </option>
         {/foreach}
     </select>

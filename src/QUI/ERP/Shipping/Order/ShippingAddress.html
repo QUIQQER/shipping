@@ -8,17 +8,17 @@
             {locale group="quiqqer/shipping" var="checkout.shipping.address.option.same"}
         </option>
         {foreach $addressList as $Address}
-        <option value="{$Address->getUUID()}"
+        <option value="{$Address->getUUID()|escape:'html'}"
                 {if $currentAddress === $Address->getUUID()}selected="selected"{/if}
             >
-            {$Address->getText()}
+            {$Address->getText()|escape:'html'}
         </option>
         {/foreach}
     </select>
 </label>
 
 {if $profileLink}
-<a href="{$profileLink}" class="button btn shipping-address-edit">
+<a href="{$profileLink|escape:'html'}" class="button btn shipping-address-edit">
     {locale group="quiqqer/shipping" var="checkout.shipping.address.manage.link"}
 </a>
 {/if}

@@ -41,7 +41,7 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise}
          */
         create: function(rules) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_create', function(ruleId) {
@@ -63,7 +63,7 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise}
          */
         update: function(ruleId, data) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_update', function() {
@@ -85,7 +85,7 @@ define('package/quiqqer/shipping/bin/backend/classes/ShippingRules', [
          * @return {Promise}
          */
         delete: function(ruleIds) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 QUIAjax.post('package_quiqqer_shipping_ajax_backend_rules_delete', function() {

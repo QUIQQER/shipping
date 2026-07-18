@@ -27,7 +27,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
 ) {
     'use strict';
 
-    var lg = 'quiqqer/shipping';
+    const lg = 'quiqqer/shipping';
 
     return new Class({
 
@@ -116,14 +116,14 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
          * event: on inject
          */
         $onInject: function() {
-            var self = this,
+            const self = this,
                 current = QUILocale.getCurrent();
 
-            var getOptions = function(field) {
-                var entries = field.options.entries,
+            const getOptions = function(field) {
+                const entries = field.options.entries,
                     result = [];
 
-                for (var i in entries) {
+                for (const i in entries) {
                     if (!entries.hasOwnProperty(i)) {
                         continue;
                     }
@@ -138,9 +138,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             };
 
             ShippingRules.getShippingRuleUnitFields().then(function(unitFields) {
-                var i, len, html, field;
+                let i, len, html, field;
 
-                var Table = self.getElm().getElement('.unit-table'),
+                const Table = self.getElm().getElement('.unit-table'),
                     Tbody = Table.getElement('tbody');
 
                 Tbody.set('html', '');
@@ -248,9 +248,9 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                             FormUtils.setDataToForm(rule, self.getElm().getElement('form'));
 
                             // unit terms
-                            var i, len, term, Row;
-                            var terms = rule.unit_terms;
-                            var UnitTable = self.getElm().getElement('.unit-table');
+                            let i, len, term, Row;
+                            const terms = rule.unit_terms;
+                            const UnitTable = self.getElm().getElement('.unit-table');
 
                             for (i = 0, len = terms.length; i < len; i++) {
                                 term = terms[i];
@@ -306,16 +306,16 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
                 return Promise.reject('Missing DOMNode Elements');
             }
 
-            var formData = FormUtils.getFormData(this.getElm().getElement('form'));
+            const formData = FormUtils.getFormData(this.getElm().getElement('form'));
 
             formData.title = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();
             formData.active = parseInt(formData.status);
 
-            var i, len, Unit, Term, Term2, Value, Value2, Label;
+            let i, len, Unit, Term, Term2, Value, Value2, Label;
 
-            var unitData = [];
-            var UnitRows = this.getElm().getElements('.unit-table td');
+            const unitData = [];
+            const UnitRows = this.getElm().getElements('.unit-table td');
 
             for (i = 0, len = UnitRows.length; i < len; i++) {
                 Unit = UnitRows[i].getElement('[name="unit"]');

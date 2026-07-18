@@ -32,7 +32,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingSelectItem', [
          * @returns {Promise}
          */
         refresh: function() {
-            var self = this;
+            const self = this;
 
             return Handler.getShippingEntry(this.getAttribute('id')).then(function(Shipping) {
                 self.$Text.set({

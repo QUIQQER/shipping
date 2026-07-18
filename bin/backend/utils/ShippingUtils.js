@@ -31,7 +31,7 @@ define('package/quiqqer/shipping/bin/backend/utils/ShippingUtils', [
          * @return {Object}
          */
         parseRuleDataForGrid: function(ruleData) {
-            let current = QUILocale.getCurrent();
+            const current = QUILocale.getCurrent();
 
             ruleData.title = ruleData.title[current];
             ruleData.workingTitle = ruleData.workingTitle[current];

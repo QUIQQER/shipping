@@ -7,11 +7,10 @@
  */
 define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
 
-    'qui/QUI',
     'qui/controls/Control',
     'Locale'
 
-], function(QUI, QUIControl, QUILocale) {
+], function(QUIControl, QUILocale) {
     'use strict';
 
     return new Class({
@@ -35,7 +34,7 @@ define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
          * event on import
          */
         $onImport: function() {
-            this.getElm().addEvent('click', this.showInfo);
+            this.getElm().addEventListener('click', this.showInfo);
         },
 
         /**
@@ -44,7 +43,8 @@ define('package/quiqqer/shipping/bin/frontend/controls/ShippingInfo', [
          * @param event
          */
         showInfo: function(event) {
-            event.stop();
+            event.preventDefault();
+            event.stopPropagation();
 
             require([
                 'qui/controls/windows/Popup'
