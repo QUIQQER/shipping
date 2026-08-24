@@ -9,6 +9,29 @@
             <locale group="quiqqer/shipping" var="package.description"/>
         </description>
 
+        <capabilities schemaVersion="1">
+            <capability id="commerce.shipping-methods">
+                <title>Shipping methods</title>
+                <description>
+                    Manages shipping methods, checkout selection, delivery details and configurable eligibility and pricing rules.
+                </description>
+            </capability>
+
+            <capability id="fulfillment.shipping-statuses">
+                <title>Shipping statuses</title>
+                <description>
+                    Manages configurable shipping statuses and optional customer notifications for status changes.
+                </description>
+            </capability>
+
+            <capability id="fulfillment.shipment-tracking">
+                <title>Shipment tracking</title>
+                <description>
+                    Records carrier tracking details and provides country-specific links to external tracking services.
+                </description>
+            </capability>
+        </capabilities>
+
         <image src="URL_OPT_DIR/quiqqer/shipping/bin/images/Logo.png"/>
 
         <preview>
