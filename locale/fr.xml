@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+    <groups name="quiqqer/shipping" datatype="php,js">
+        <locale name="package.title">
+<fr><![CDATA[QUIQQER - Boutique - Expédition]]></fr>
+        </locale>
+
+        <locale name="package.description">
+<fr><![CDATA[<p>QUIQQER Shipping ajoute une API d’expédition à QUIQQER et au système ERP de QUIQQER. Créez différents modes d’expédition pour vos produits.</p><p>Le module Shipping offre de nombreuses possibilités.</p><ul><li>- Définissez des frais d’expédition différents selon les périodes</li><li>- Définissez des frais d’expédition différents pour certains produits</li><li>- Définissez des frais d’expédition différents pour certains utilisateurs</li></ul>]]></fr>
+        </locale>
+
+        <locale name="menu.erp.title">
+<fr><![CDATA[Boutique]]></fr>
+        </locale>
+        <locale name="menu.erp.shipping.title">
+<fr><![CDATA[Modes d’expédition]]></fr>
+        </locale>
+        <locale name="menu.erp.shipping.rules.title">
+<fr><![CDATA[Règles de frais d’expédition]]></fr>
+        </locale>
+
+        <locale name="permission.quiqqer.shipping._header">
+<fr><![CDATA[Modes d’expédition]]></fr>
+        </locale>
+        <locale name="permission.quiqqer.shipping.delete">
+<fr><![CDATA[Peut supprimer des modes d’expédition]]></fr>
+        </locale>
+        <locale name="permission.quiqqer.shipping.edit">
+<fr><![CDATA[Peut modifier des modes d’expédition]]></fr>
+        </locale>
+        <locale name="permission.quiqqer.shipping.create">
+<fr><![CDATA[Peut créer des modes d’expédition]]></fr>
+        </locale>
+
+        <locale name="shipping.standard.title">
+<fr><![CDATA[Expédition standard]]></fr>
+        </locale>
+        <locale name="shipping.DigitalType.title">
+<fr><![CDATA[Livraison numérique]]></fr>
+        </locale>
+        <locale name="shipping.free.workingTitle">
+<fr><![CDATA[Expédition standard]]></fr>
+        </locale>
+
+        <locale name="new.shipping.placeholder">
+<fr><![CDATA[Nouvelle méthode d’expédition]]></fr>
+        </locale>
+        <locale name="new.shipping.rule.placeholder">
+<fr><![CDATA[Nouvelle règle d’expédition]]></fr>
+        </locale>
+
+        <locale name="discount.type.abs">
+<fr><![CDATA[Majoration/remise (montant fixe)]]></fr>
+        </locale>
+        <locale name="discount.type.percentage">
+<fr><![CDATA[Majoration/remise % (pourcentage)]]></fr>
+        </locale>
+        <locale name="discount.type.percentageOrder">
+<fr><![CDATA[Majoration/remise % sur la valeur des marchandises]]></fr>
+        </locale>
+
+        <locale name="message.no.rule.found.order.continue">
+<fr><![CDATA[Nous ne pouvons pas déterminer de mode d’expédition pour votre commande pour le moment. Nous vous contacterons dès que possible après l’avoir reçue.]]></fr>
+        </locale>
+        <locale name="message.no.rule.found.order.cancel">
+<fr><![CDATA[Nous ne pouvons pas déterminer de mode d’expédition pour votre commande pour le moment. Contactez l’administrateur de la boutique à l’adresse [adminmail].]]></fr>
+        </locale>
+        <locale name="exception.missing.shipping.order.canceled">
+<fr><![CDATA[Vous ne pouvez pas poursuivre la commande.]]></fr>
+        </locale>
+        <locale name="exception.no.shipping.selected">
+<fr><![CDATA[Sélectionnez un mode d’expédition.]]></fr>
+        </locale>
+
+        <locale name="shipping.mail.settings.title">
+<fr><![CDATA[Comportement de la commande]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.order.title">
+<fr><![CDATA[Comportement en l’absence de règle]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.order.description">
+<fr><![CDATA[Ce paramètre détermine le comportement de QUIQQER lorsqu’aucune règle ni aucun mode d’expédition n’est trouvé au cours de la commande.]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.order.continue">
+<fr><![CDATA[Poursuivre la commande]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.order.cancel">
+<fr><![CDATA[Ne pas poursuivre la commande]]></fr>
+        </locale>
+
+        <locale name="shipping.mail.settings.text.continue">
+<fr><![CDATA[Message pour : Poursuivre la commande]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.text.continue.description">
+<fr><![CDATA[Ce message s’affiche si l’utilisateur peut poursuivre la commande.]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.text.cancel">
+<fr><![CDATA[Message pour : Ne pas poursuivre la commande]]></fr>
+        </locale>
+        <locale name="shipping.mail.settings.text.cancel.description">
+<fr><![CDATA[Ce message s’affiche si l’utilisateur ne peut pas poursuivre la commande et que celle-ci est annulée.]]></fr>
+        </locale>
+
+<!-- Fields -->
+        <locale name="field.ShippingTimePeriod">
+<fr><![CDATA[Délai de livraison]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.unavailable">
+<fr><![CDATA[actuellement indisponible]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.immediately_available">
+<fr><![CDATA[disponible immédiatement]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.on_request">
+<fr><![CDATA[sur demande]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.available_soon">
+<fr><![CDATA[bientôt disponible]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.from_to">
+<fr><![CDATA[env. de [from] à [to]]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.period">
+<fr><![CDATA[env. [period]]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.second">
+<fr><![CDATA[s]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.minute">
+<fr><![CDATA[min]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.hour">
+<fr><![CDATA[h]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.day">
+<fr><![CDATA[j]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.week">
+<fr><![CDATA[sem.]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.month">
+<fr><![CDATA[mois]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_single.year">
+<fr><![CDATA[a]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.second">
+<fr><![CDATA[s]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.minute">
+<fr><![CDATA[min]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.hour">
+<fr><![CDATA[h]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.day">
+<fr><![CDATA[j]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.week">
+<fr><![CDATA[sem.]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.month">
+<fr><![CDATA[mois]]></fr>
+        </locale>
+        <locale name="fields.ShippingTimeFrontendView.timeperiod.unit_multi.year">
+<fr><![CDATA[a]]></fr>
+        </locale>
+        <locale name="shipping.settings.shippingStatus.title">
+<fr><![CDATA[État d’expédition]]></fr>
+        </locale>
+        <locale name="control.profile.orders.shipping">
+<fr><![CDATA[État d’expédition]]></fr>
+        </locale>
+
+        <locale name="frontend.shippingInfo.button.text">
+<fr><![CDATA[hors frais d’expédition]]></fr>
+        </locale>
+        <locale name="frontend.shippingInfo.popup.title">
+<fr><![CDATA[Informations d’expédition]]></fr>
+        </locale>
+        <locale name="frontend.shippingInfo.popup.content" html="true">
+<fr><![CDATA[<h2>Expédition gratuite en Allemagne</h2><p>Toutes les commandes à destination de l’Allemagne sont exemptes de frais d’expédition ! Nous expédions en Allemagne par <strong>DHL Warenpost</strong> ou <strong>Deutsche Post Warenpost</strong>.</p><h2>Délai de livraison</h2><p>Les articles sont expédiés dans un délai de 1 à 2 jours ouvrés après réception de la commande. Nous n’expédions pas les samedis, dimanches et jours fériés.</p><p>Le délai de livraison en Allemagne est de 3-6 jours ouvrés, sauf indication contraire dans l’offre. Vous recevrez également un e-mail lorsque vos articles quitteront notre entrepôt. Il contiendra un numéro de suivi permettant de suivre votre envoi en ligne à tout moment.</p><p class="content-message-information">Attention : les délais de livraison indiquent uniquement une date d’arrivée estimée après l’expédition !</p>]]></fr>
+        </locale>
+
+        <locale name="shipping.defaultShipping.settings.title">
+<fr><![CDATA[Expédition par défaut]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShippingPrice">
+<fr><![CDATA[Prix de l’expédition par défaut]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShippingPrice.desc">
+<fr><![CDATA[Définissez le prix à utiliser pour l’expédition par défaut.]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.considerCustomerCountry">
+<fr><![CDATA[Tenir compte du pays du client]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.considerCustomerCountry.desc">
+<fr><![CDATA[Si l’utilisateur d’une entité (par exemple une facture ou une commande) à laquelle l’expédition par défaut était affectée change, le système tente d’adapter l’expédition au pays du nouvel utilisateur.]]></fr>
+        </locale>
+
+        <locale name="shipping.defaultShipping.settings.addDefaultShipping">
+<fr><![CDATA[Ajouter automatiquement l’expédition par défaut]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.addDefaultShipping.desc">
+<fr><![CDATA[L’expédition par défaut est ajoutée à une liste d’articles si aucune expédition ne lui est encore affectée. Ce paramètre s’applique uniquement à l’administration, pas à la partie publique de la boutique.]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShippingTitle">
+<fr><![CDATA[Titre de l’expédition par défaut]]></fr>
+        </locale>
+        <locale name="shipping.defaultShipping.settings.defaultShippingTitle.desc">
+<fr><![CDATA[Ce texte sert de titre à l’expédition dans la liste d’articles.]]></fr>
+        </locale>
+        <locale name="shipping.default.pricefactor">
+<fr><![CDATA[Expédition]]></fr>
+        </locale>
+
+    </groups>
+
+    <groups name="quiqqer/shipping" datatype="php">
+        <locale name="exception.shipping.not.found">
+<fr><![CDATA[Le mode d’expédition [shipping] est introuvable.]]></fr>
+        </locale>
+        <locale name="exception.shipping.type.not.found">
+<fr><![CDATA[La méthode d’expédition [shippingType] est introuvable.]]></fr>
+        </locale>
+        <locale name="exception.shipping.type.not.abstractShipping">
+<fr><![CDATA[La méthode d’expédition [shippingType] n’hérite pas d’AbstractShippingEntry.]]></fr>
+        </locale>
+        <locale name="exception.shipping.is.not.allowed">
+<fr><![CDATA[Cette méthode d’expédition n’est pas autorisée. Choisissez-en une autre.]]></fr>
+        </locale>
+
+        <locale name="message.shipping.saved.successfully">
+<fr><![CDATA[Le mode d’expédition [shipping] a été enregistré.]]></fr>
+        </locale>
+        <locale name="message.shipping.activate.successfully">
+<fr><![CDATA[Le mode d’expédition [shipping] a été activé.]]></fr>
+        </locale>
+        <locale name="message.shipping.deactivate.successfully">
+<fr><![CDATA[Le mode d’expédition [shipping] a été désactivé.]]></fr>
+        </locale>
+
+        <locale name="comment.add.shipping">
+<fr><![CDATA[Expédition par [shipping] d’un montant de [amount] [currency] reçue.]]></fr>
+        </locale>
+
+        <locale name="exception.create.shipping.class.not.found">
+<fr><![CDATA[Impossible de créer le mode d’expédition. Une erreur s’est produite dans la méthode d’expédition.]]></fr>
+        </locale>
+        <locale name="exception.create.unique.shipping.already.exists">
+<fr><![CDATA[Vous ne pouvez créer cette méthode d’expédition qu’une seule fois.]]></fr>
+        </locale>
+
+        <locale name="ordering.step.title.Shipping">
+<fr><![CDATA[Expédition]]></fr>
+        </locale>
+        <locale name="window.erp.title">
+<fr><![CDATA[Expédition]]></fr>
+        </locale>
+        <locale name="window.erp.shipping.title">
+<fr><![CDATA[Expédition]]></fr>
+        </locale>
+        <locale name="shipping.settings.title">
+<fr><![CDATA[Général]]></fr>
+        </locale>
+
+        <locale name="shipping.settings.deactivated">
+<fr><![CDATA[Désactiver l’expédition]]></fr>
+        </locale>
+        <locale name="shipping.settings.deactivated.description">
+<fr><![CDATA[Si vos produits ne nécessitent pas d’expédition, vous pouvez la désactiver. L’étape d’expédition ne sera alors pas affichée lors de la commande.]]></fr>
+        </locale>
+
+        <locale name="shipping.settings.debug">
+<fr><![CDATA[Débogage de l’expédition]]></fr>
+        </locale>
+        <locale name="shipping.settings.debug.description">
+<fr><![CDATA[Active le débogage de l’expédition pour mieux repérer les erreurs dans les modes et règles d’expédition. La console du navigateur affiche des informations utiles à l’étape d’expédition de la commande.]]></fr>
+        </locale>
+
+        <locale name="shipping.settings.ruleFields">
+<fr><![CDATA[Champs d’unités pour les règles d’expédition]]></fr>
+        </locale>
+        <locale name="shipping.settings.ruleFields.description">
+<fr><![CDATA[Définissez les champs d’unités pouvant être pris en compte dans les règles d’expédition. Tous les champs sélectionnés ici peuvent être utilisés dans ces règles.]]></fr>
+        </locale>
+
+        <locale name="shipping.settings.deliveryTimeDefault">
+<fr><![CDATA[Délai de livraison par défaut]]></fr>
+        </locale>
+        <locale name="shipping.settings.deliveryTimeDefault.description">
+<fr><![CDATA[Définit la valeur par défaut du champ « Délai de livraison » pour les nouveaux produits ou lorsqu’aucune valeur n’est renseignée.]]></fr>
+        </locale>
+
+        <locale name="shipping.settings.showShippingInfoAfterPrice.enable">
+<fr><![CDATA[Activer les informations d’expédition]]></fr>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.enable.description">
+<fr><![CDATA[Si cette option est activée, un court texte s’affiche après chaque prix. Un clic dessus permet d’obtenir plus d’informations.]]></fr>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.button">
+<fr><![CDATA[Texte du bouton]]></fr>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.button.desc">
+<fr><![CDATA[Ce texte s’affiche après le prix.]]></fr>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.popup">
+<fr><![CDATA[Contenu de la fenêtre contextuelle]]></fr>
+        </locale>
+        <locale name="shipping.settings.showShippingInfoAfterPrice.popup.desc">
+<fr><![CDATA[Fenêtre contextuelle contenant des informations supplémentaires. Elle peut afficher un texte court ou des textes plus longs avec des tableaux.]]></fr>
+        </locale>
+
+        <locale name="shipping.order.title">
+<fr><![CDATA[Expédition : [shipping]]]></fr>
+        </locale>
+
+        <locale name="mail.admin.info.empty.shipping.subject" html="true">
+<fr><![CDATA[Aucune méthode d’expédition trouvée pour une commande]]></fr>
+        </locale>
+        <locale name="mail.admin.info.empty.shipping.body" html="true">
+<fr><![CDATA[Aucune méthode d’expédition n’a été trouvée pour la commande suivante :]]></fr>
+        </locale>
+
+        <locale name="checkout.shipping.address.title">
+<fr><![CDATA[Adresse de livraison]]></fr>
+        </locale>
+        <locale name="checkout.shipping.address.option.same">
+<fr><![CDATA[Identique à l’adresse de facturation]]></fr>
+        </locale>
+        <locale name="checkout.shipping.address.manage.link">
+<fr><![CDATA[Gérer les adresses de livraison]]></fr>
+        </locale>
+        <locale name="user.profile.invoice.address.title">
+<fr><![CDATA[Adresse de livraison]]></fr>
+        </locale>
+        <locale name="user.profile.invoice.address.description">
+<fr><![CDATA[Sélectionnez ici votre adresse de livraison par défaut.]]></fr>
+        </locale>
+
+        <locale name="shipping.status.notification.subject">
+<fr><![CDATA[Mise à jour de votre commande [prefixedNumber]]]></fr>
+        </locale>
+        <locale name="shipping.status.notification.template" html="true">
+<fr><![CDATA[<p>Bonjour [customerName],</p><p>L’état d’expédition de votre commande <b>[orderNo]</b> du <b>[orderDate]</b> a changé. Son état actuel est <b>[shippingStatus]</b>. [trackingInfo]</p>]]></fr>
+        </locale>
+
+        <locale name="shipping.status.default.1">
+<fr><![CDATA[Reçue]]></fr>
+        </locale>
+        <locale name="shipping.status.default.2">
+<fr><![CDATA[En cours de traitement]]></fr>
+        </locale>
+        <locale name="shipping.status.default.3">
+<fr><![CDATA[Expédiée]]></fr>
+        </locale>
+        <locale name="shipping.status.unknown">
+<fr><![CDATA[Inconnu]]></fr>
+        </locale>
+
+        <locale name="shipping.plus">
+<fr><![CDATA[plus]]></fr>
+        </locale>
+    </groups>
+
+
+    <groups name="quiqqer/shipping" datatype="js">
+        <locale name="shipping.type">
+<fr><![CDATA[Méthode d’expédition]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.general">
+<fr><![CDATA[Général]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.title">
+<fr><![CDATA[Titre]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.id">
+<fr><![CDATA[ID]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.type">
+<fr><![CDATA[Méthode d’expédition]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.unitTitle">
+<fr><![CDATA[Définir l’unité]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.unitTitle">
+<fr><![CDATA[Définir l’unité]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.usage">
+<fr><![CDATA[Utilisation]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.usage.from">
+<fr><![CDATA[Disponible à partir du]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.usage.to">
+<fr><![CDATA[Disponible jusqu’au]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.shopping.amount.of">
+<fr><![CDATA[Quantité d’achat minimale]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.shopping.amount.to">
+<fr><![CDATA[Quantité d’achat maximale]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.purchase.value.of">
+<fr><![CDATA[Montant d’achat minimal]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.purchase.value.to">
+<fr><![CDATA[Montant d’achat maximal]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment">
+<fr><![CDATA[Affectation]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.areas">
+<fr><![CDATA[Zones]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.calculationPriority">
+<fr><![CDATA[Priorité]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.shippingRules.description">
+<fr><![CDATA[Règles d’expédition]]></fr>
+        </locale>
+
+        <locale name="shipping.edit.template.assignment.product">
+<fr><![CDATA[Produit]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.header">
+<fr><![CDATA[Paramètres du produit]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.only">
+<fr><![CDATA[Produits seuls]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.only.text">
+<fr><![CDATA[Appliquer uniquement lorsque ces produits sont commandés seuls]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.product.only.desc">
+<fr><![CDATA[Cette règle ne s’applique que si l’un de ces produits est le seul produit de la commande.]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.payment.header">
+<fr><![CDATA[Paramètres des méthodes de paiement]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.payment.usage">
+<fr><![CDATA[Méthode de paiement]]></fr>
+        </locale>
+
+        <locale name="shipping.edit.template.assignment.category">
+<fr><![CDATA[Catégorie]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.user">
+<fr><![CDATA[Utilisateur]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.combine">
+<fr><![CDATA[Combinable avec]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.assignment.areas">
+<fr><![CDATA[Zones]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.customIcon">
+<fr><![CDATA[Image personnalisée]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.customIcon.description" html="true">
+<fr><![CDATA[Définissez une image personnalisée pour le mode d’expédition.]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.discount">
+<fr><![CDATA[Majoration/remise]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.discount.description">
+<fr><![CDATA[Détermine le montant ajouté au prix ou déduit de celui-ci.]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.discount.absolute">
+<fr><![CDATA[Majoration/remise (montant fixe)]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.discount.percentage">
+<fr><![CDATA[Majoration/remise % (pourcentage)]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.discount.percentageOrder">
+<fr><![CDATA[Majoration/remise % sur la valeur des marchandises]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.discount.type">
+<fr><![CDATA[Type]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.status">
+<fr><![CDATA[État]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.status.description">
+<fr><![CDATA[Active ou désactive la règle. Si elle est désactivée, elle sera entièrement ignorée.]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.unit">
+<fr><![CDATA[Unité]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.noRules">
+<fr><![CDATA[Ne pas appliquer d’autres règles]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.noRules.text">
+<fr><![CDATA[Aucune autre règle ne doit être prise en compte après celle-ci.]]></fr>
+        </locale>
+        <locale name="shipping.edit.template.and">
+<fr><![CDATA[et]]></fr>
+        </locale>
+
+        <locale name="window.delete.title">
+<fr><![CDATA[Supprimer le mode d’expédition]]></fr>
+        </locale>
+        <locale name="window.delete.text">
+<fr><![CDATA[Voulez-vous vraiment supprimer le mode d’expédition [shipping] ?]]></fr>
+        </locale>
+        <locale name="window.delete.information" html="true">
+<fr><![CDATA[Voulez-vous vraiment supprimer ce mode d’expédition ?<br /><br />Il ne pourra pas être restauré. Certaines commandes risquent de ne plus pouvoir être traitées correctement.]]></fr>
+        </locale>
+
+        <locale name="window.create.title">
+<fr><![CDATA[Créer un mode d’expédition]]></fr>
+        </locale>
+        <locale name="window.create.text">
+<fr><![CDATA[Créer un nouveau mode d’expédition]]></fr>
+        </locale>
+        <locale name="window.create.information" html="true">
+<fr><![CDATA[Le nouveau mode d’expédition sera inactif et s’ouvrira immédiatement après sa création.]]></fr>
+        </locale>
+
+        <locale name="window.create.shippingType">
+<fr><![CDATA[Quelle méthode d’expédition ce mode d’expédition doit-il utiliser ?]]></fr>
+        </locale>
+
+        <locale name="window.shipping.rules.title">
+<fr><![CDATA[Règles de frais d’expédition]]></fr>
+        </locale>
+        <locale name="window.shipping.rules.button.update">
+<fr><![CDATA[Actualiser]]></fr>
+        </locale>
+
+        <locale name="window.shipping.entry.remove.rule.title">
+<fr><![CDATA[Retirer la règle de frais d’expédition de l’entrée d’expédition]]></fr>
+        </locale>
+        <locale name="window.shipping.entry.remove.rule.text">
+<fr><![CDATA[Voulez-vous retirer les règles de frais d’expédition de l’entrée d’expédition ?]]></fr>
+        </locale>
+        <locale name="window.shipping.entry.remove.rule.information">
+<fr><![CDATA[Les règles de frais d’expédition ne seront pas supprimées. Seules les règles suivantes (identifiants) seront retirées de l’entrée d’expédition :<br />[ids]]]></fr>
+        </locale>
+
+        <locale name="window.shipping.entry.delete.rule.title">
+<fr><![CDATA[Supprimer la règle de frais d’expédition]]></fr>
+        </locale>
+        <locale name="window.shipping.entry.delete.rule.text">
+<fr><![CDATA[Voulez-vous vraiment supprimer les règles de frais d’expédition ?]]></fr>
+        </locale>
+        <locale name="window.shipping.entry.delete.rule.information">
+<fr><![CDATA[Les règles de frais d’expédition suivantes seront entièrement supprimées et ne pourront pas être restaurées :<br />[ids]]]></fr>
+        </locale>
+        <locale name="window.shipping.entry.delete.rule.delete">
+<fr><![CDATA[Supprimer]]></fr>
+        </locale>
+        <locale name="window.shipping.entry.delete.rule.create">
+<fr><![CDATA[Créer]]></fr>
+        </locale>
+
+<!-- Fields -->
+        <locale name="controls.products.fields.ShippingTimePeriod.option.timeperiod">
+<fr><![CDATA[Choisir le délai de livraison]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.unavailable">
+<fr><![CDATA[Actuellement indisponible]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.immediately_available">
+<fr><![CDATA[Disponible immédiatement]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.on_request">
+<fr><![CDATA[Sur demande]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.available_soon">
+<fr><![CDATA[Bientôt disponible]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.custom_text">
+<fr><![CDATA[Texte personnalisé]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.custom_text">
+<fr><![CDATA[Texte personnalisé]]></fr>
+        </locale>
+        <locale name="controls.products.fields.ShippingTimePeriod.option.use_default">
+<fr><![CDATA[Utiliser le paramètre par défaut]]></fr>
+        </locale>
+
+        <locale name="control.search.ShippingWindow.title">
+<fr><![CDATA[Rechercher des modes d’expédition]]></fr>
+        </locale>
+
+        <locale name="grid.shippingStatus">
+<fr><![CDATA[État d’expédition]]></fr>
+        </locale>
+        <locale name="shippingStatus.grid.id">
+<fr><![CDATA[ID]]></fr>
+        </locale>
+        <locale name="shippingStatus.grid.color">
+<fr><![CDATA[Couleur]]></fr>
+        </locale>
+        <locale name="shippingStatus.grid.notification">
+<fr><![CDATA[Notification automatique]]></fr>
+        </locale>
+
+        <locale name="dialog.shippingStatus.create.title">
+<fr><![CDATA[Ajouter un état d’expédition]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.edit.title">
+<fr><![CDATA[Modifier l’état d’expédition]]></fr>
+        </locale>
+
+        <locale name="dialog.shippingStatus.delete.title">
+<fr><![CDATA[Supprimer l’état d’expédition]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.delete.text">
+<fr><![CDATA[Voulez-vous vraiment supprimer cet état d’expédition ?]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.delete.information" html="true">
+<fr><![CDATA[L’état d’expédition suivant sera supprimé :<br /><strong>#[id] - [title]</strong><br /><br />Cet état d’expédition ne pourra pas être restauré.]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelTitle">
+<fr><![CDATA[Titre]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelStatusNo">
+<fr><![CDATA[N° d’état]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelColor">
+<fr><![CDATA[Couleur]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.template.labelNotification">
+<fr><![CDATA[Notifier le client]]></fr>
+        </locale>
+        <locale name="dialog.shippingStatus.template.descNotification" html="true">
+<fr><![CDATA[Les clients recevront automatiquement un e-mail lorsque l’état d’expédition d’une commande passera <b>automatiquement</b> à cet état. En cas de <b>changement manuel de l’état</b>, une confirmation sera demandée avant d’envoyer une notification.]]></fr>
+        </locale>
+
+        <locale name="add.shipping.priceFactor">
+<fr><![CDATA[Ajouter un mode d’expédition]]></fr>
+        </locale>
+        <locale name="shipping.window.title">
+<fr><![CDATA[Modes d’expédition]]></fr>
+        </locale>
+
+    </groups>
+
+    <groups name="quiqqer/order">
+        <locale name="ordering.step.title.Shipping">
+<fr><![CDATA[Expédition]]></fr>
+        </locale>
+
+        <locale name="exception.missing.shipping">
+<fr><![CDATA[Sélectionnez un mode d’expédition pour poursuivre la commande.]]></fr>
+        </locale>
+    </groups>
+</locales>
