@@ -75,7 +75,7 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/Rule', [
             this.$Elm.set('html', Mustache.render(template, {
                 generalHeader: QUILocale.get(lg, 'shipping.edit.template.general'),
                 title: QUILocale.get(lg, 'shipping.edit.template.title'),
-                workingTitle: QUILocale.get('quiqqer/system', 'workingtitle'),
+                workingTitle: QUILocale.get('quiqqer/core', 'workingtitle'),
                 calculationPriority: QUILocale.get(lg, 'shipping.edit.template.calculationPriority'),
                 discountTitle: QUILocale.get(lg, 'shipping.edit.template.discount'),
                 discountDescription: QUILocale.get(lg, 'shipping.edit.template.discount.description'),

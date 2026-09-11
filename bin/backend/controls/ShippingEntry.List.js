@@ -133,7 +133,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                         }
                     }, {
                         name: 'remove',
-                        text: QUILocale.get('quiqqer/system', 'remove'),
+                        text: QUILocale.get('quiqqer/core', 'remove'),
                         textimage: 'fa fa-trash',
                         disabled: true,
                         events: {
@@ -143,23 +143,23 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry.List', [
                 ],
                 columnModel: [
                     {
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
                         width: 50
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'priority'),
+                        header: QUILocale.get('quiqqer/core', 'priority'),
                         dataIndex: 'priority',
                         dataType: 'number',
                         width: 50
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'status'),
+                        header: QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'statusNode',
                         dataType: 'node',
                         width: 60,
                         className: 'grid-align-center'
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType: 'string',
                         width: 200
