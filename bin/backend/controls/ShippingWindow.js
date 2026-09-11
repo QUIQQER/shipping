@@ -139,31 +139,31 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingWindow', [
             this.$Grid = new Grid(Container, {
                 columnModel: [
                     {
-                        header: QUILocale.get('quiqqer/system', 'priority'),
+                        header: QUILocale.get('quiqqer/core', 'priority'),
                         dataIndex: 'priority',
                         dataType: 'number',
                         width: 50
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'status'),
+                        header: QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'status',
                         dataType: 'button',
                         width: 60
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType: 'string',
                         width: 200
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'workingtitle'),
+                        header: QUILocale.get('quiqqer/core', 'workingtitle'),
                         dataIndex: 'workingTitle',
                         dataType: 'string',
                         width: 200
                     },
                     {
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
                         width: 30

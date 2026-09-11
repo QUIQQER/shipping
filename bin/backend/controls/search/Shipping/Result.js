@@ -64,22 +64,22 @@ define('package/quiqqer/shipping/bin/backend/controls/search/Shipping/Result', [
                 multipleSelection: this.getAttribute('multipleSelection'),
                 columnModel: [
                     {
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header: QUILocale.get('quiqqer/core', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
                         width: 30
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'priority'),
+                        header: QUILocale.get('quiqqer/core', 'priority'),
                         dataIndex: 'priority',
                         dataType: 'number',
                         width: 50
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'currentTitle',
                         dataType: 'string',
                         width: 200
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'workingtitle'),
+                        header: QUILocale.get('quiqqer/core', 'workingtitle'),
                         dataIndex: 'currentWorkingTitle',
                         dataType: 'string',
                         width: 200
