@@ -102,7 +102,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
             this.addButton({
                 name: 'delete',
-                title: QUILocale.get('quiqqer/system', 'delete'),
+                title: QUILocale.get('quiqqer/core', 'delete'),
                 icon: 'fa fa-trash',
                 events: {
                     onClick: this.openDeleteDialog
@@ -115,7 +115,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
             this.addCategory({
                 name: 'information',
-                text: QUILocale.get('quiqqer/system', 'information'),
+                text: QUILocale.get('quiqqer/core', 'information'),
                 icon: 'fa fa-file-o',
                 events: {
                     onClick: this.showInformation
@@ -124,7 +124,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
 
             this.addCategory({
                 name: 'description',
-                text: QUILocale.get('quiqqer/system', 'description'),
+                text: QUILocale.get('quiqqer/core', 'description'),
                 icon: 'fa fa-file-text-o',
                 events: {
                     onClick: this.showDescription
@@ -349,7 +349,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                         id: QUILocale.get(lg, 'shipping.edit.template.id'),
                         type: QUILocale.get(lg, 'shipping.edit.template.type'),
                         title: QUILocale.get(lg, 'shipping.edit.template.title'),
-                        workingTitle: QUILocale.get('quiqqer/system', 'workingtitle'),
+                        workingTitle: QUILocale.get('quiqqer/core', 'workingtitle'),
                         usageHeader: QUILocale.get(lg, 'shipping.edit.template.usage'),
                         usageFrom: QUILocale.get(lg, 'shipping.edit.template.usage.from'),
                         usageTo: QUILocale.get(lg, 'shipping.edit.template.usage.to'),
@@ -483,7 +483,7 @@ define('package/quiqqer/shipping/bin/backend/controls/ShippingEntry', [
                 maxHeight: 400,
                 maxWidth: 600,
                 ok_button: {
-                    text: QUILocale.get('quiqqer/system', 'delete'),
+                    text: QUILocale.get('quiqqer/core', 'delete'),
                     textimage: 'fa fa-trash'
                 },
                 events: {

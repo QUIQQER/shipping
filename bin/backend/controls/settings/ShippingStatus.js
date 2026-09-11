@@ -112,7 +112,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                 buttons: [
                     {
                         name: 'add',
-                        text: QUILocale.get('quiqqer/system', 'add'),
+                        text: QUILocale.get('quiqqer/core', 'add'),
                         events: {
                             onClick: this.openCreateDialog
                         }
@@ -120,14 +120,14 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                         type: 'separator'
                     }, {
                         name: 'edit',
-                        text: QUILocale.get('quiqqer/system', 'edit'),
+                        text: QUILocale.get('quiqqer/core', 'edit'),
                         disabled: true,
                         events: {
                             onClick: this.$onEditClick
                         }
                     }, {
                         name: 'delete',
-                        text: QUILocale.get('quiqqer/system', 'remove'),
+                        text: QUILocale.get('quiqqer/core', 'remove'),
                         disabled: true,
                         events: {
                             onClick: this.$onDeleteClick
@@ -146,7 +146,7 @@ define('package/quiqqer/shipping/bin/backend/controls/settings/ShippingStatus', 
                         dataType: 'node',
                         width: 60
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/core', 'title'),
                         dataIndex: 'title',
                         dataType: 'integer',
                         width: 200
