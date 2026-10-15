@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/locale.xsd">
 <locales>
     <groups name="quiqqer/shipping" datatype="php,js">
         <locale name="package.title">
@@ -26,6 +28,10 @@
         </locale>
         <locale name="menu.erp.shipping.rules.title">
 <de><![CDATA[Versandkostenregeln]]></de>
+        </locale>
+
+        <locale name="permission.quiqqer.shipping.mcp">
+            <de><![CDATA[Versandverwaltung über MCP verwenden]]></de>
         </locale>
 
         <locale name="permission.quiqqer.shipping._header">
@@ -726,3 +732,4 @@
         </locale>
     </groups>
 </locales>
+</quiqqer>

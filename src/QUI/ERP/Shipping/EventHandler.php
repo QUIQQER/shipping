@@ -757,21 +757,18 @@ class EventHandler
 
         // check if shipping factor exist
         $shippingFactor = null;
-        $factors = $PriceFactors->toArray();
         $Shipping = $Order->getShipping();
+        $shippingFactorIndex = null;
 
-        foreach ($factors as $index => $factor) {
-            if (str_contains($factor['identifier'], 'shipping-pricefactor-')) {
-                $shippingFactor = $factor;
+        foreach ($PriceFactors as $index => $Factor) {
+            if (str_contains($Factor->getIdentifier(), 'shipping-pricefactor-')) {
+                $shippingFactor = $Factor->toArray();
+                $shippingFactorIndex = $index;
                 break;
             }
         }
 
-        if (!$shippingFactor && !$Shipping) {
-            return;
-        }
-
-        if (!$shippingFactor) {
+        if ($shippingFactor === null || $shippingFactorIndex === null) {
             return;
         }
 
@@ -789,23 +786,21 @@ class EventHandler
             }
         }
 
-        if (!$Shipping && isset($index) && $identifier !== 'default') {
+        if (!$Shipping && $identifier !== 'default') {
             // kill shipping factor
-            $PriceFactors->removeFactor($index);
-        } elseif ($Shipping && $id !== $Shipping->getId() && isset($index)) {
+            $PriceFactors->removeFactor($shippingFactorIndex);
+        } elseif ($Shipping && $id !== $Shipping->getId()) {
             // replace shipping
             $shippingFactor['identifier'] = 'shipping-pricefactor-' . $Shipping->getId();
             $shippingFactor['title'] = $Shipping->getTitle();
 
             $PriceFactors->setFactor(
-                $index,
+                $shippingFactorIndex,
                 new QUI\ERP\Accounting\PriceFactors\Factor($shippingFactor)
             );
 
             $data['articles'] = $Articles->toJSON();
-        } elseif ($Shipping && !isset($index)) {
-            $PriceFactors->addFactor($Shipping->toPriceFactor()->toErpPriceFactor());
-        } elseif (!$Shipping && isset($index)) {
+        } elseif (!$Shipping) {
             self::onQuiqqerCustomerChange($Order);
         }
     }

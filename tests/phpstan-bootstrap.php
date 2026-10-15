@@ -13,6 +13,7 @@ putenv("QUIQQER_OTHER_AUTOLOADERS=KEEP");
 require_once __DIR__ . '/../../../../bootstrap.php';
 
 require_once __DIR__ . '/package-autoload.php';
+require_once __DIR__ . '/mcp-bootstrap.php';
 
 $optionalClassStubs = [
     QUI\ERP\Accounting\Invoice\Invoice::class

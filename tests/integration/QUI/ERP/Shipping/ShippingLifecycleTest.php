@@ -96,6 +96,17 @@ class ShippingLifecycleTest extends TestCase
         }
     }
 
+    public function testRuleFactoryPreservesCategoryRestrictionsOnCreation(): void
+    {
+        $Rule = RuleFactory::getInstance()->createChild([
+            'discount_type' => 0,
+            'categories' => '123,456'
+        ]);
+        $this->additionalRuleIds[] = $Rule->getId();
+
+        self::assertSame('123,456', RuleFactory::getInstance()->getChild($Rule->getId())->getAttribute('categories'));
+    }
+
     public function testCrudFactoriesLoadFilterAndPersistShippingConfiguration(): void
     {
         $RuleFactory = RuleFactory::getInstance();
