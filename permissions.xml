@@ -1,4 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/permissions.xsd">
 <permissions>
+    <permission name="quiqqer.shipping.mcp" type="bool">
+        <defaultvalue>0</defaultvalue>
+        <rootPermission>1</rootPermission>
+        <everyonePermission>0</everyonePermission>
+        <guestPermission>0</guestPermission>
+    </permission>
     <permission name="quiqqer.shipping.create" type="bool">
         <defaultvalue>1</defaultvalue>
     </permission>
@@ -9,3 +18,4 @@
         <defaultvalue>1</defaultvalue>
     </permission>
 </permissions>
+</quiqqer>

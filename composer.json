@@ -31,6 +31,9 @@
         "quiqqer/order": "^2.11",
         "quiqqer/products": "^2.8.3"
     },
+    "suggest": {
+        "quiqqer/ai-mcp": "Expose shipping methods and rules through MCP"
+    },
     "autoload": {
         "psr-4": {
             "QUI\\ERP\\Shipping\\": "src/QUI/ERP/Shipping"
