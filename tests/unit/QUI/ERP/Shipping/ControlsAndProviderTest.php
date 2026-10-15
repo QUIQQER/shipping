@@ -488,6 +488,54 @@ class ControlsAndProviderTest extends TestCase
         self::assertSame([], $data);
     }
 
+    public function testOrderUpdateEventPreservesUnrelatedFactorsWhenShippingFactorIsAbsent(): void
+    {
+        $Articles = new QUI\ERP\Accounting\ArticleList();
+        $Factors = $Articles->getPriceFactors();
+        $Factor = new QUI\ERP\Products\Utils\PriceFactor([
+            'identifier' => 'service-fee',
+            'value' => 2
+        ]);
+        $Factors->addFactor($Factor->toErpPriceFactor());
+        $Shipping = $this->createMock(QUI\ERP\Shipping\Types\ShippingEntry::class);
+        $Shipping->expects(self::never())->method('toPriceFactor');
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getArticles')->willReturn($Articles);
+        $Order->method('getShipping')->willReturn($Shipping);
+        $data = [];
+
+        EventHandler::onQuiqqerOrderUpdateBegin($Order, $data);
+
+        self::assertSame(1, $Factors->count());
+        self::assertSame('service-fee', $Factors->getFactor(0)->getIdentifier());
+        self::assertSame([], $data);
+    }
+
+    public function testOrderUpdateEventRemovesShippingFactorAtItsMatchingIndex(): void
+    {
+        $Articles = new QUI\ERP\Accounting\ArticleList();
+        $Factors = $Articles->getPriceFactors();
+
+        foreach (['service-fee', 'shipping-pricefactor-55'] as $identifier) {
+            $Factor = new QUI\ERP\Products\Utils\PriceFactor([
+                'identifier' => $identifier,
+                'value' => 2
+            ]);
+            $Factors->addFactor($Factor->toErpPriceFactor());
+        }
+
+        $Order = $this->createMock(QUI\ERP\Order\AbstractOrder::class);
+        $Order->method('getArticles')->willReturn($Articles);
+        $Order->method('getShipping')->willReturn(null);
+        $data = [];
+
+        EventHandler::onQuiqqerOrderUpdateBegin($Order, $data);
+
+        self::assertSame(1, $Factors->count());
+        self::assertSame('service-fee', $Factors->getFactor(0)->getIdentifier());
+        self::assertSame([], $data);
+    }
+
     public function testDefaultShippingInvoiceEventIgnoresAlreadyProcessedEntity(): void
     {
         $Invoice = $this->createMock(QUI\ERP\Accounting\Invoice\InvoiceTemporary::class);

@@ -85,6 +85,7 @@ class Factory extends QUI\CRUD\Factory
             'articles',
             'articles_only',
             'areas',
+            'categories',
             'user_groups',
             'unit_terms',
             'no_rule_after'
