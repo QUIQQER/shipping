@@ -108,6 +108,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         result[i].status = {
                             icon: 'fa fa-check',
                             styles: {
+                                float: 'none',
                                 lineHeight: 20,
                                 padding: 0,
                                 width: 20
@@ -120,6 +121,7 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         result[i].status = {
                             icon: 'fa fa-remove',
                             styles: {
+                                float: 'none',
                                 lineHeight: 20,
                                 padding: 0,
                                 width: 20
@@ -175,9 +177,6 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         }
                     },
                     {
-                        type: 'separator'
-                    },
-                    {
                         name: 'edit',
                         text: QUILocale.get('quiqqer/core', 'edit'),
                         textimage: 'fa fa-edit',
@@ -188,10 +187,14 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                     },
                     {
                         name: 'delete',
-                        text: QUILocale.get('quiqqer/core', 'delete'),
-                        textimage: 'fa fa-trash',
+                        title: QUILocale.get('quiqqer/core', 'delete'),
+                        icon: 'fa fa-trash',
+                        position: 'right',
                         disabled: true,
                         events: {
+                            onCreate: (Button) => {
+                                Button.getElm().setAttribute('aria-label', QUILocale.get('quiqqer/core', 'delete'));
+                            },
                             onClick: this.$openDeleteDialog
                         }
                     }
@@ -207,6 +210,11 @@ define('package/quiqqer/shipping/bin/backend/controls/Shipping', [
                         header: QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'status',
                         dataType: 'button',
+                        className: 'grid-align-center',
+                        styles: {
+                            textAlign: 'center',
+                            justifyContent: 'center'
+                        },
                         width: 60
                     },
                     {

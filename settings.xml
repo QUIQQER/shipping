@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<quiqqer>
+<quiqqer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://www.quiqqer.com/docs/schemas/2.x/settings.xsd">
     <settings name="ERP">
 
         <config>
@@ -172,7 +173,9 @@
                             </description>
                         </input>
 
-                        <input conf="shipping.defaultShippingPrice">
+                        <input conf="shipping.defaultShippingPrice"
+                               data-qui="package/quiqqer/shipping/bin/backend/controls/settings/DefaultShippingPrice"
+                        >
                             <text>
                                 <locale group="quiqqer/shipping"
                                         var="shipping.defaultShipping.settings.defaultShippingPrice"/>

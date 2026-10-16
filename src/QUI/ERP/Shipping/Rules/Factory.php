@@ -18,6 +18,7 @@ use function is_integer;
 use function is_numeric;
 use function json_encode;
 use function mb_strlen;
+use function trim;
 
 use const ARRAY_FILTER_USE_KEY;
 
@@ -196,7 +197,16 @@ class Factory extends QUI\CRUD\Factory
 
             foreach ($data['title'] as $lang => $v) {
                 if (mb_strlen($lang) === 2) {
+                    if (trim($v) === '') {
+                        $v = QUI::getLocale()->getByLang(
+                            $lang,
+                            'quiqqer/shipping',
+                            'new.shipping.rule.placeholder'
+                        );
+                    }
+
                     $title[$lang] = $v;
+                    $title[$lang . '_edit'] = $v;
                 }
             }
 
@@ -213,7 +223,16 @@ class Factory extends QUI\CRUD\Factory
 
             foreach ($data['workingTitle'] as $lang => $v) {
                 if (mb_strlen($lang) === 2) {
+                    if (trim($v) === '') {
+                        $v = QUI::getLocale()->getByLang(
+                            $lang,
+                            'quiqqer/shipping',
+                            'new.shipping.rule.placeholder'
+                        );
+                    }
+
                     $title[$lang] = $v;
+                    $title[$lang . '_edit'] = $v;
                 }
             }
 
