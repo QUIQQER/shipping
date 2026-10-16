@@ -117,6 +117,77 @@ class ShippingLifecycleTest extends TestCase
     }
 
     #[DataProvider('ruleCreationModes')]
+    public function testRuleCreationUsesDefaultsForEmptyNames(bool $development): void
+    {
+        $Config = QUI::getConfig('etc/conf.ini.php');
+        $previousDevelopment = $Config->get('globals', 'development');
+        $current = QUI::getLocale()->getCurrent();
+        $languages = QUI\Translator::langs();
+
+        try {
+            $Config->set('globals', 'development', $development);
+
+            foreach ([null, [], array_fill_keys($languages, ''), array_fill_keys($languages, " \t ")] as $names) {
+                $attributes = ['discount_type' => 'ABS'];
+
+                if ($names !== null) {
+                    $attributes['title'] = $names;
+                    $attributes['workingTitle'] = $names;
+                }
+
+                $Rule = RuleFactory::getInstance()->createChild($attributes);
+                $this->additionalRuleIds[] = $Rule->getId();
+                $data = $Rule->toArray();
+
+                foreach ($languages as $language) {
+                    $expected = QUI::getLocale()->getByLang(
+                        $language,
+                        'quiqqer/shipping',
+                        'new.shipping.rule.placeholder'
+                    );
+                    self::assertSame($expected, $data['title'][$language]);
+                    self::assertSame($expected, $data['workingTitle'][$language]);
+                }
+
+                $expectedCurrent = QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder');
+                self::assertSame($expectedCurrent, $Rule->getTitle());
+
+                foreach (['title', 'workingTitle'] as $field) {
+                    $translation = QUI\Translator::getVarData(
+                        'quiqqer/shipping',
+                        'shipping.' . $Rule->getId() . '.rule.' . $field,
+                        'quiqqer/shipping'
+                    );
+                    self::assertSame($expectedCurrent, $translation[$current . '_edit']);
+                }
+            }
+        } finally {
+            $Config->set('globals', 'development', $previousDevelopment);
+        }
+    }
+
+    public function testRuleWithoutTranslationsDisplaysDefaultNames(): void
+    {
+        $Rule = RuleFactory::getInstance()->getChild($this->ruleId);
+        $data = $Rule->toArray();
+
+        foreach (QUI::availableLanguages() as $language) {
+            $expected = QUI::getLocale()->getByLang(
+                $language,
+                'quiqqer/shipping',
+                'new.shipping.rule.placeholder'
+            );
+            self::assertSame($expected, $data['title'][$language]);
+            self::assertSame($expected, $data['workingTitle'][$language]);
+        }
+
+        self::assertSame(
+            QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder'),
+            $Rule->getTitle()
+        );
+    }
+
+    #[DataProvider('ruleCreationModes')]
     public function testRuleCreationPreservesMultilingualNames(bool $development): void
     {
         $current = QUI::getLocale()->getCurrent();
