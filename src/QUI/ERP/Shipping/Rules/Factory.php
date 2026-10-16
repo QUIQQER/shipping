@@ -197,6 +197,7 @@ class Factory extends QUI\CRUD\Factory
             foreach ($data['title'] as $lang => $v) {
                 if (mb_strlen($lang) === 2) {
                     $title[$lang] = $v;
+                    $title[$lang . '_edit'] = $v;
                 }
             }
 
@@ -214,6 +215,7 @@ class Factory extends QUI\CRUD\Factory
             foreach ($data['workingTitle'] as $lang => $v) {
                 if (mb_strlen($lang) === 2) {
                     $title[$lang] = $v;
+                    $title[$lang . '_edit'] = $v;
                 }
             }
 
