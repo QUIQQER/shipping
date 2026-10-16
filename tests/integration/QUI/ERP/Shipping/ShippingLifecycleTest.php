@@ -3,6 +3,7 @@
 namespace QUI\ERP\Shipping;
 
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use QUI;
 use QUI\ERP\Accounting\Article;
@@ -105,6 +106,143 @@ class ShippingLifecycleTest extends TestCase
         $this->additionalRuleIds[] = $Rule->getId();
 
         self::assertSame('123,456', RuleFactory::getInstance()->getChild($Rule->getId())->getAttribute('categories'));
+    }
+
+    public static function ruleCreationModes(): array
+    {
+        return [
+            'normal mode' => [false],
+            'development mode' => [true]
+        ];
+    }
+
+    #[DataProvider('ruleCreationModes')]
+    public function testRuleCreationUsesDefaultsForEmptyNames(bool $development): void
+    {
+        $Config = QUI::getConfig('etc/conf.ini.php');
+        $previousDevelopment = $Config->get('globals', 'development');
+        $current = QUI::getLocale()->getCurrent();
+        $languages = QUI\Translator::langs();
+
+        try {
+            $Config->set('globals', 'development', $development);
+
+            foreach ([null, [], array_fill_keys($languages, ''), array_fill_keys($languages, " \t ")] as $names) {
+                $attributes = ['discount_type' => 'ABS'];
+
+                if ($names !== null) {
+                    $attributes['title'] = $names;
+                    $attributes['workingTitle'] = $names;
+                }
+
+                $Rule = RuleFactory::getInstance()->createChild($attributes);
+                $this->additionalRuleIds[] = $Rule->getId();
+                $data = $Rule->toArray();
+
+                foreach ($languages as $language) {
+                    $expected = QUI::getLocale()->getByLang(
+                        $language,
+                        'quiqqer/shipping',
+                        'new.shipping.rule.placeholder'
+                    );
+                    self::assertSame($expected, $data['title'][$language]);
+                    self::assertSame($expected, $data['workingTitle'][$language]);
+                }
+
+                $expectedCurrent = QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder');
+                self::assertSame($expectedCurrent, $Rule->getTitle());
+
+                foreach (['title', 'workingTitle'] as $field) {
+                    $translation = QUI\Translator::getVarData(
+                        'quiqqer/shipping',
+                        'shipping.' . $Rule->getId() . '.rule.' . $field,
+                        'quiqqer/shipping'
+                    );
+                    self::assertSame($expectedCurrent, $translation[$current . '_edit']);
+                }
+            }
+        } finally {
+            $Config->set('globals', 'development', $previousDevelopment);
+        }
+    }
+
+    public function testRuleWithoutTranslationsDisplaysDefaultNames(): void
+    {
+        $Rule = RuleFactory::getInstance()->getChild($this->ruleId);
+        $data = $Rule->toArray();
+
+        foreach (QUI::availableLanguages() as $language) {
+            $expected = QUI::getLocale()->getByLang(
+                $language,
+                'quiqqer/shipping',
+                'new.shipping.rule.placeholder'
+            );
+            self::assertSame($expected, $data['title'][$language]);
+            self::assertSame($expected, $data['workingTitle'][$language]);
+        }
+
+        self::assertSame(
+            QUI::getLocale()->get('quiqqer/shipping', 'new.shipping.rule.placeholder'),
+            $Rule->getTitle()
+        );
+    }
+
+    #[DataProvider('ruleCreationModes')]
+    public function testRuleCreationPreservesMultilingualNames(bool $development): void
+    {
+        $current = QUI::getLocale()->getCurrent();
+        $otherLanguages = array_values(array_diff(QUI\Translator::langs(), [$current]));
+
+        if ($otherLanguages === []) {
+            self::markTestSkipped('Two installed translator languages are required.');
+        }
+
+        $languages = [$current, $otherLanguages[0]];
+        $Config = QUI::getConfig('etc/conf.ini.php');
+        $previousDevelopment = $Config->get('globals', 'development');
+        $titles = [];
+        $workingTitles = [];
+
+        foreach ($languages as $language) {
+            $titles[$language] = 'PHPUnit shipping rule ' . $language;
+            $workingTitles[$language] = 'PHPUnit internal rule ' . $language;
+        }
+
+        try {
+            $Config->set('globals', 'development', $development);
+
+            $Rule = RuleFactory::getInstance()->createChild([
+                'discount_type' => 'ABS',
+                'discount' => '12.50',
+                'title' => $titles,
+                'workingTitle' => $workingTitles
+            ]);
+            $this->additionalRuleIds[] = $Rule->getId();
+            $Locale = new QUI\Locale();
+
+            foreach ($languages as $language) {
+                self::assertSame(
+                    $titles[$language],
+                    $Locale->getByLang(
+                        $language,
+                        'quiqqer/shipping',
+                        'shipping.' . $Rule->getId() . '.rule.title'
+                    )
+                );
+                self::assertSame(
+                    $workingTitles[$language],
+                    $Locale->getByLang(
+                        $language,
+                        'quiqqer/shipping',
+                        'shipping.' . $Rule->getId() . '.rule.workingTitle'
+                    )
+                );
+            }
+
+            self::assertSame(12.5, RuleFactory::getInstance()->getChild($Rule->getId())->getDiscount());
+        } finally {
+            $Config->set('globals', 'development', $previousDevelopment);
+        }
     }
 
     public function testCrudFactoriesLoadFilterAndPersistShippingConfiguration(): void

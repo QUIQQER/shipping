@@ -164,12 +164,36 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRule',
          *
          * @return {Promise}
          */
-        submit: function() {
+        submit: async function() {
             if (!this.$DataTitle || !this.$DataWorkingTitle) {
-                return Promise.reject('Missing DOMNode Elements');
+                throw new Error('Missing DOMNode Elements');
             }
 
-            const formData = FormUtils.getFormData(this.getElm().getElement('form'));
+            const Form = this.getElm().querySelector('[data-name="create-rule"]');
+            const priceInputs = Array.from(Form.querySelectorAll('[data-name="price"]'));
+
+            await Promise.all(priceInputs.map(async (Input) => {
+                const Price = QUI.Controls.getById(Input.getAttribute('data-quiid'));
+                const Editor = Array.from(Form.elements).find((Field) => {
+                    return Price.getElm().contains(Field) && Field.type === 'text' && !Field.disabled;
+                });
+
+                if (Editor.value === '') {
+                    Input.value = '';
+                    return;
+                }
+
+                if (Price.isNetto()) {
+                    await Price.setNettoByUser(Editor.value);
+                } else {
+                    await Price.setBruttoByUser(Editor.value);
+                }
+            }));
+
+            this.$DataTitle.refreshData();
+            this.$DataWorkingTitle.refreshData();
+
+            const formData = FormUtils.getFormData(Form);
 
             formData.title = this.$DataTitle.getData();
             formData.workingTitle = this.$DataWorkingTitle.getData();

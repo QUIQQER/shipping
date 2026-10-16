@@ -158,7 +158,6 @@ class ShippingRule extends QUI\CRUD\Child
      */
     public function toArray(): array
     {
-        $lg = 'quiqqer/shipping';
         $id = $this->getId();
 
         $attributes = $this->getAttributes();
@@ -167,15 +166,15 @@ class ShippingRule extends QUI\CRUD\Child
         $availableLanguages = QUI::availableLanguages();
 
         foreach ($availableLanguages as $language) {
-            $attributes['title'][$language] = $Locale->getByLang(
+            $attributes['title'][$language] = $this->getTranslatedTitle(
+                $Locale,
                 $language,
-                $lg,
                 'shipping.' . $id . '.rule.title'
             );
 
-            $attributes['workingTitle'][$language] = $Locale->getByLang(
+            $attributes['workingTitle'][$language] = $this->getTranslatedTitle(
+                $Locale,
                 $language,
-                $lg,
                 'shipping.' . $id . '.rule.workingTitle'
             );
         }
@@ -200,14 +199,19 @@ class ShippingRule extends QUI\CRUD\Child
         $language = $Locale->getCurrent();
         $id = $this->getId();
 
-        $title = $Locale->getByLang(
+        return $this->getTranslatedTitle(
+            $Locale,
             $language,
-            'quiqqer/shipping',
             'shipping.' . $id . '.rule.title'
         );
+    }
 
-        if (is_array($title)) {
-            return '';
+    private function getTranslatedTitle(Locale $Locale, string $language, string $variable): string
+    {
+        $title = $Locale->getByLang($language, 'quiqqer/shipping', $variable);
+
+        if (trim($title) === '' || $Locale->isLocaleString($title)) {
+            return $Locale->getByLang($language, 'quiqqer/shipping', 'new.shipping.rule.placeholder');
         }
 
         return $title;

@@ -108,10 +108,14 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                         }
                     }, {
                         name: 'delete',
-                        text: QUILocale.get('quiqqer/core', 'delete'),
-                        textimage: 'fa fa-trash',
+                        title: QUILocale.get('quiqqer/core', 'delete'),
+                        icon: 'fa fa-trash',
+                        position: 'right',
                         disabled: true,
                         events: {
+                            onCreate: (Button) => {
+                                Button.getElm().setAttribute('aria-label', QUILocale.get('quiqqer/core', 'delete'));
+                            },
                             onClick: this.$openDeleteDialog
                         }
                     }
@@ -131,6 +135,11 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/ShippingRule
                         header: QUILocale.get('quiqqer/core', 'status'),
                         dataIndex: 'statusNode',
                         dataType: 'node',
+                        className: 'grid-align-center',
+                        styles: {
+                            textAlign: 'center',
+                            justifyContent: 'center'
+                        },
                         width: 60
                     }, {
                         header: QUILocale.get('quiqqer/core', 'title'),

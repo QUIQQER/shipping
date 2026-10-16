@@ -36,11 +36,12 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
                 icon: 'fa fa-truck',
                 ok_button: {
                     text: QUILocale.get('quiqqer/shipping', 'window.shipping.entry.delete.rule.create'),
-                    textimage: 'fa fa-trash'
+                    textimage: 'fa fa-plus'
                 }
             });
 
             this.$Create = null;
+            this.$submitting = false;
 
             this.addEvents({
                 onOpen: this.$onOpen,
@@ -70,12 +71,18 @@ define('package/quiqqer/shipping/bin/backend/controls/shippingRules/CreateRuleWi
          * event: on submit
          */
         $onSubmit: function() {
-            const self = this;
+            if (this.$submitting) {
+                return;
+            }
 
-            this.Loader.hide();
-            this.$Create.submit().then(function() {
-                self.Loader.hide();
-                self.close();
+            this.$submitting = true;
+            this.Loader.show();
+
+            return this.$Create.submit().finally(() => {
+                this.$submitting = false;
+                this.Loader.hide();
+            }).then(() => {
+                this.close();
             });
         }
     });
